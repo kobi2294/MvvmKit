@@ -34,7 +34,7 @@ namespace MvvmKit
         public static WeakEvent operator+ (WeakEvent e, (object observer, Action<object> action) listener)
         {
             var listeners = new HashSet<WeakAction<object>>(e._listeners);
-            listeners.Add(new WeakAction<object>(listener.observer, listener.action));
+            listeners.Add(listener.action.ToWeak(listener.observer));
             return new WeakEvent(listeners);
         }
 

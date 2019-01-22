@@ -67,6 +67,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tools\Async\DeferredTask.cs" />
+    <Compile Include="Tools\Async\Primitives\AsyncMutex.cs" />
+    <Compile Include="Tools\Async\Primitives\AsyncReaderWriterLock.cs" />
+    <Compile Include="Tools\Async\Primitives\AsyncSemaphore.cs" />
+    <Compile Include="Tools\Async\Primitives\LockState.cs" />
+    <Compile Include="Tools\Async\SchedulerTaskFactory.cs" />
+    <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
+    <Compile Include="Tools\Async\Tasks.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
     <Compile Include="Tools\Disposables\BaseDisposableWithData.cs" />
     <Compile Include="Tools\Disposables\Disposables.Callback.cs" />
@@ -85,6 +93,7 @@
     <Compile Include="Tools\Weak\WeakEventT.cs" />
     <Compile Include="Tools\Weak\WeakFunc.cs" />
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
+    <Compile Include="Tools\Weak\Weaks.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -94,8 +103,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tools\Async\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
