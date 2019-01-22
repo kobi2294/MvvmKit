@@ -3,9 +3,35 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{DA873BBD-9C18-4401-8821-57DB17DF16FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{144B7100-AAB6-4094-9912-0B99EED95EB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleDemo", "Demos\ConsoleDemo\ConsoleDemo.csproj", "{70D1843C-6E87-48C6-8B23-DCE6217AE84E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmKit", "Source\MvvmKit\MvvmKit.csproj", "{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70D1843C-6E87-48C6-8B23-DCE6217AE84E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D1843C-6E87-48C6-8B23-DCE6217AE84E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D1843C-6E87-48C6-8B23-DCE6217AE84E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D1843C-6E87-48C6-8B23-DCE6217AE84E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{70D1843C-6E87-48C6-8B23-DCE6217AE84E} = {DA873BBD-9C18-4401-8821-57DB17DF16FE}
+		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC} = {144B7100-AAB6-4094-9912-0B99EED95EB0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3375F479-F225-49C7-92F5-F618857DD1C2}
