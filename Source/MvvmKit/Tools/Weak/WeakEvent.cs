@@ -31,25 +31,40 @@ namespace MvvmKit
             _listeners = listeners;
         }
 
-        public static WeakEvent operator+ (WeakEvent e, (object observer, Action<object> action) listener)
+        public static WeakEvent operator+ (WeakEvent e, (object owner, Action<object> action) listener)
         {
             var listeners = new HashSet<WeakAction<object>>(e._listeners);
-            listeners.Add(listener.action.ToWeak(listener.observer));
+            listeners.Add(listener.action.ToWeak(listener.owner));
             return new WeakEvent(listeners);
         }
 
-        public static WeakEvent operator-(WeakEvent e, (object observer, Action<object> action) listener)
+        public static WeakEvent operator-(WeakEvent e, (object owner, Action<object> action) listener)
         {
             var listeners = new HashSet<WeakAction<object>>(e._listeners);
-            listeners.RemoveWhere(wa => (wa.Target == listener.observer) && (wa.Method == listener.action.Method));
+            listeners.RemoveWhere(wa => (wa.Owner == listener.owner) && (wa.Method == listener.action.Method));
             return new WeakEvent(listeners);
         }
 
-        public static WeakEvent operator-(WeakEvent e, object observer)
+        public static WeakEvent operator-(WeakEvent e, object owner)
         {
             var listeners = new HashSet<WeakAction<object>>(e._listeners);
-            listeners.RemoveWhere(wa => (wa.Target == observer));
+            listeners.RemoveWhere(wa => (wa.Owner == owner));
             return new WeakEvent(listeners);
+        }
+
+        public  WeakEvent Add(object owner, Action<object> action)
+        {
+            return this + (owner, action);
+        }
+
+        public  WeakEvent Remove(object owner, Action<object> action)
+        {
+            return this - (owner, action);
+        }
+
+        public  WeakEvent Remove(object owner)
+        {
+            return this - owner;
         }
     }
 }

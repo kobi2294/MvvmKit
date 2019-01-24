@@ -31,25 +31,40 @@ namespace MvvmKit
             _listeners = listeners;
         }
 
-        public static WeakEvent<T> operator +(WeakEvent<T> e, (object observer, Action<object, T> action) listener)
+        public static WeakEvent<T> operator +(WeakEvent<T> e, (object owner, Action<object, T> action) listener)
         {
             var listeners = new HashSet<WeakAction<object, T>>(e._listeners);
-            listeners.Add(listener.action.ToWeak(listener.observer));
+            listeners.Add(listener.action.ToWeak(listener.owner));
             return new WeakEvent<T>(listeners);
         }
 
-        public static WeakEvent<T> operator -(WeakEvent<T> e, (object observer, Action<object, T> action) listener)
+        public static WeakEvent<T> operator -(WeakEvent<T> e, (object owner, Action<object, T> action) listener)
         {
             var listeners = new HashSet<WeakAction<object, T>>(e._listeners);
-            listeners.RemoveWhere(wa => (wa.Target == listener.observer) && (wa.Method == listener.action.Method));
+            listeners.RemoveWhere(wa => (wa.Owner == listener.owner) && (wa.Method == listener.action.Method));
             return new WeakEvent<T>(listeners);
         }
 
-        public static WeakEvent<T> operator -(WeakEvent<T> e, object observer)
+        public static WeakEvent<T> operator -(WeakEvent<T> e, object owner)
         {
             var listeners = new HashSet<WeakAction<object, T>>(e._listeners);
-            listeners.RemoveWhere(wa => (wa.Target == observer));
+            listeners.RemoveWhere(wa => (wa.Owner == owner));
             return new WeakEvent<T>(listeners);
+        }
+
+        public WeakEvent<T> Add(object owner, Action<object, T> action)
+        {
+            return this + (owner, action);
+        }
+
+        public WeakEvent<T> Remove(object owner, Action<object, T> action)
+        {
+            return this - (owner, action);
+        }
+
+        public WeakEvent<T> Remove(object owner)
+        {
+            return this - owner;
         }
     }
 }

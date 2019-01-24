@@ -11,13 +11,13 @@ namespace MvvmKit
     {
         private Action<object, T> _executer = null;
 
-        public WeakAction(object target, object actionTarget, MethodInfo methodInfo)
-            : base(target, actionTarget, methodInfo)
+        public WeakAction(object lifetimeController, object actionTarget, MethodInfo methodInfo)
+            : base(lifetimeController, actionTarget, methodInfo)
         {
         }
 
-        public WeakAction(object target, Action<T> action)
-            : base(target, action.Target, action.GetMethodInfo())
+        public WeakAction(object lifetimeController, Action<T> action)
+            : base(lifetimeController, action.Target, action.GetMethodInfo())
         {
         }
 

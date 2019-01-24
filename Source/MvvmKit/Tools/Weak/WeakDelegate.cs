@@ -11,8 +11,8 @@ namespace MvvmKit
     public abstract class WeakDelegate
     {
         protected MethodInfo _methodInfo;
-        protected WeakReference _targetReference;
-        protected WeakReference _actionTargetReference;
+        protected WeakReference _lifetimeController;
+        protected WeakReference _delegateTargetReference;
         private bool _isTargetClosure = false;
         private object _strongReferenceToClosure;
         private ConditionalWeakTable<object, object> _conditionalTable; // to be used only for closures
@@ -29,62 +29,66 @@ namespace MvvmKit
             return isNested && isCompilerGenerated && isInvisible;
         }
 
-        private void _handleClosures(object target, object actionTarget)
+        private void _handleClosures(object lifetimeController, object methodTarget)
         {
-            if ((actionTarget != null) && (_isClosure(actionTarget)))
+            if ((methodTarget != null) && (_isClosure(methodTarget)))
             {
-                // closures are a special case. They may be holding a reference to their parent, and at the same time there may not be a reference to them
-                // we make several attempts to grab a hold of a parent instance and tie the closure instance to it.
+                // closures are a special case. Their target is an instance of a class that is generated automatically, and there may not be a refernce to them at all,
+                // except the one that the delegate is holding. In that case, the garbage collector may collect them instantly. We would prefer that their lifetime
+                // will be decided by the instance of the class inside which they were defined. But we may not have it.
+                // They may be holding a reference to their parent, so we make several attempts to grab a hold of a parent instance and tie 
+                // the closure instance to it.
 
-                // if we have a supplied target, we will tie the closure to it, otherwise, we try to find a field inside the closure that points to the right class
+                // if we have a supplied lifetime controller, we will tie the closure to it, 
+                // otherwise, we try to find a field inside the closure that points to the right class
                 _isTargetClosure = true;
 
-                if (target == null)
+                if (lifetimeController == null)
                 {
-                    var typ = actionTarget.GetType();
+                    var typ = methodTarget.GetType();
                     var fieldToParent = typ.GetRuntimeFields().Where(f => f.FieldType == typ.DeclaringType).LastOrDefault();
 
                     if (fieldToParent != null)
                     {
-                        target = fieldToParent.GetValue(actionTarget);
+                        lifetimeController = fieldToParent.GetValue(methodTarget);
                     }
                 }
 
-                if (target == null)
+                if (lifetimeController == null)
                 {
                     // if there is absolutely no target to rely on, we make a strong reference to the action target, even though this WILL lead to memory leak, 
                     // we just hope its a small one since its a "PURE" closure.
 
-                    _strongReferenceToClosure = actionTarget;
+                    _strongReferenceToClosure = methodTarget;
                 }
                 else
                 {
-                    // since we have a target, we dont need to hold a close reference to the closure, we can save it from instantly dying by create a garbage collection
-                    // conditional weak table, that associates the target with the closure
-                    if (_targetReference == null) _targetReference = new WeakReference(target);
+                    // since we have a target, we dont need to hold a close reference to the closure, we can save it from instantly dying by 
+                    // creating a garbage collection conditional weak table, that associates the method target (the closure) with the lifetime controller
+                    if (_lifetimeController == null) _lifetimeController = new WeakReference(lifetimeController);
 
                     _conditionalTable = new ConditionalWeakTable<object, object>();
-                    _conditionalTable.Add(target, actionTarget);
+                    _conditionalTable.Add(lifetimeController, methodTarget);
                 }
             }
 
         }
 
-        protected WeakDelegate(object target, object actionTarget, MethodInfo methodInfo)
+        protected WeakDelegate(object lifetimeController, object methodTarget, MethodInfo methodInfo)
         {
             _methodInfo = methodInfo;
 
             if (!_methodInfo.IsStatic)
             {
-                if (target != null)
+                if (lifetimeController != null)
                 {
-                    _targetReference = new WeakReference(target);
+                    _lifetimeController = new WeakReference(lifetimeController);
                 }
 
-                _actionTargetReference = new WeakReference(actionTarget);
+                _delegateTargetReference = new WeakReference(methodTarget);
             }
 
-            _handleClosures(target, actionTarget);
+            _handleClosures(lifetimeController, methodTarget);
         }
 
         public MethodInfo Method
@@ -109,16 +113,21 @@ namespace MvvmKit
 
         public object Target
         {
-            get { return (IsStatic) ? null : _actionTargetReference.Target; }
+            get { return (IsStatic) ? null : _delegateTargetReference.Target; }
+        }
+
+        public object Owner
+        {
+            get { return _lifetimeController; }
         }
 
         public bool IsAlive
         {
             get
             {
-                var isTargetAlive = ((_targetReference == null) || (_targetReference.IsAlive));
+                var isTargetAlive = ((_lifetimeController == null) || (_lifetimeController.IsAlive));
 
-                return IsStatic || (isTargetAlive && _actionTargetReference.IsAlive);
+                return IsStatic || (isTargetAlive && _delegateTargetReference.IsAlive);
             }
         }
 

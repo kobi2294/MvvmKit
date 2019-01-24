@@ -24,9 +24,9 @@ namespace MvvmKit
             return new DeferredTask<T>(value);
         }
 
-        public static SchedulerTaskFactory ToFactory(this TaskScheduler scheduler)
+        public static AsyncContextRunner ToContextRunner(this TaskScheduler scheduler)
         {
-            return SchedulerTaskFactory.For(scheduler);
+            return AsyncContextRunner.For(scheduler);
         }
     }
 }

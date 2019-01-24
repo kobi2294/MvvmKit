@@ -11,13 +11,13 @@ namespace MvvmKit
     {
         private Func<object, T, TResult> _executer = null;
 
-        public WeakFunc(object target, object actionTarget, MethodInfo methodInfo)
-            : base(target, actionTarget, methodInfo)
+        public WeakFunc(object lifetimeController, object actionTarget, MethodInfo methodInfo)
+            : base(lifetimeController, actionTarget, methodInfo)
         {
         }
 
-        public WeakFunc(object target, Func<T, TResult> action)
-            : base(target, action.Target, action.GetMethodInfo())
+        public WeakFunc(object lifetimeController, Func<T, TResult> action)
+            : base(lifetimeController, action.Target, action.GetMethodInfo())
         {
         }
 

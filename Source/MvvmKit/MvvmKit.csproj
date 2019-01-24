@@ -67,12 +67,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tools\Async\ContextDelegates\ContextActionT1T2.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextDelegates.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextFuncT.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextFunc.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextActionT.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextAction.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextMulticastActionT1T2.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextMulticastActionT.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextMulticastAction.cs" />
     <Compile Include="Tools\Async\DeferredTask.cs" />
+    <Compile Include="Services\ServiceBase.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncMutex.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncReaderWriterLock.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncSemaphore.cs" />
     <Compile Include="Tools\Async\Primitives\LockState.cs" />
-    <Compile Include="Tools\Async\SchedulerTaskFactory.cs" />
+    <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
@@ -83,6 +93,8 @@
     <Compile Include="Tools\Disposables\Disposables.CallbackWithSelfAndData.cs" />
     <Compile Include="Tools\Disposables\Disposables.cs" />
     <Compile Include="Tools\Disposables\Disposables.IDisposableWithData.cs" />
+    <Compile Include="Tools\Extensions\ComparerExtensions.cs" />
+    <Compile Include="Tools\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Tools\Weak\FastCaller.cs" />
     <Compile Include="Tools\Weak\IWeakAction.cs" />
     <Compile Include="Tools\Weak\IWeakFunc.cs" />

@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class SchedulerTaskFactory
+    public class AsyncContextRunner
     {
         #region Static repository
 
-        private static Dictionary<TaskScheduler, SchedulerTaskFactory> _knownFactories = new Dictionary<TaskScheduler, SchedulerTaskFactory>();
+        private static Dictionary<TaskScheduler, AsyncContextRunner> _knownFactories = new Dictionary<TaskScheduler, AsyncContextRunner>();
 
-        public static SchedulerTaskFactory For(TaskScheduler scheduler)
+        public static AsyncContextRunner For(TaskScheduler scheduler)
         {
             if (!_knownFactories.ContainsKey(scheduler))
             {
-                _knownFactories.Add(scheduler, new SchedulerTaskFactory(scheduler));
+                _knownFactories.Add(scheduler, new AsyncContextRunner(scheduler));
             }
             return _knownFactories[scheduler];
         }
@@ -26,7 +26,9 @@ namespace MvvmKit
 
         private TaskFactory _factory;
 
-        private SchedulerTaskFactory(TaskScheduler scheduler)
+        public TaskScheduler Scheduler => _factory.Scheduler;
+
+        private AsyncContextRunner(TaskScheduler scheduler)
         {
             _factory = new TaskFactory(CancellationToken.None, TaskCreationOptions.DenyChildAttach,
                                            TaskContinuationOptions.None, scheduler);
