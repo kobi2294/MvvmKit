@@ -67,12 +67,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Tools\Async\ContextDelegates\AsyncEvent.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\AsyncEventT.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextActionT1T2.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextDelegates.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextFuncT.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextFunc.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextActionT.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextAction.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextMulticastFuncTTask.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\ContextMulticastFuncTask.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextMulticastActionT1T2.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextMulticastActionT.cs" />
     <Compile Include="Tools\Async\ContextDelegates\ContextMulticastAction.cs" />

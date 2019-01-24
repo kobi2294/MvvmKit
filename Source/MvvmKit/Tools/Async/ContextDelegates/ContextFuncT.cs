@@ -9,7 +9,7 @@ namespace MvvmKit
 {
     public class ContextFunc<T, TResult>
     {
-        private readonly WeakFunc<T, TResult> WeakFunc;
+        public WeakFunc<T, TResult> WeakFunc { get; }
 
         public AsyncContextRunner ContextRunner { get; }
 
@@ -22,26 +22,26 @@ namespace MvvmKit
         public MethodInfo Method => WeakFunc.Method;
 
 
-        public ContextFunc(WeakFunc<T, TResult> wa, AsyncContextRunner contextRunner)
+        public ContextFunc(AsyncContextRunner contextRunner, WeakFunc<T, TResult> wa)
         {
             WeakFunc = wa;
             ContextRunner = contextRunner;
         }
 
-        public ContextFunc(WeakFunc<T, TResult> wa, TaskScheduler scheduler)
-            :this(wa, scheduler.ToContextRunner()) { }
+        public ContextFunc(TaskScheduler scheduler, WeakFunc<T, TResult> wa)
+            :this(scheduler.ToContextRunner(), wa) { }
 
-        public ContextFunc(Func<T, TResult> action, object owner, AsyncContextRunner contextRunner)
-            :this(action.ToWeak(owner), contextRunner) { }
+        public ContextFunc(AsyncContextRunner contextRunner, object owner, Func<T, TResult> action)
+            :this(contextRunner, action.ToWeak(owner)) { }
 
-        public ContextFunc(Func<T, TResult> action, object owner, TaskScheduler scheduler)
-            : this(action.ToWeak(owner), scheduler.ToContextRunner()) { }
+        public ContextFunc(TaskScheduler scheduler, object owner, Func<T, TResult> action)
+            : this(scheduler.ToContextRunner(), action.ToWeak(owner)) { }
 
         public ContextFunc(WeakFunc<T, TResult> wa)
-            : this(wa, TaskScheduler.FromCurrentSynchronizationContext()) { }
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), wa) { }
 
-        public ContextFunc(Func<T, TResult> a, object owner)
-            : this(a.ToWeak(owner), TaskScheduler.FromCurrentSynchronizationContext()) { }
+        public ContextFunc(object owner, Func<T, TResult> a)
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), a.ToWeak(owner)) { }
 
         public Task<TResult> Invoke(T arg)
         {

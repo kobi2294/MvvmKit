@@ -22,26 +22,26 @@ namespace MvvmKit
         public MethodInfo Method => WeakAction.Method;
 
 
-        public ContextAction(WeakAction<T> wa, AsyncContextRunner contextRunner)
+        public ContextAction(AsyncContextRunner contextRunner, WeakAction<T> wa)
         {
             WeakAction = wa;
             ContextRunner = contextRunner;
         }
 
-        public ContextAction(WeakAction<T> wa, TaskScheduler scheduler)
-            :this(wa, scheduler.ToContextRunner()) { }
+        public ContextAction(TaskScheduler scheduler, WeakAction<T> wa)
+            :this(scheduler.ToContextRunner(), wa) { }
 
-        public ContextAction(Action<T> action, object owner, AsyncContextRunner contextRunner)
-            :this(action.ToWeak(owner), contextRunner) { }
+        public ContextAction(AsyncContextRunner contextRunner, object owner, Action<T> action)
+            :this(contextRunner, action.ToWeak(owner)) { }
 
-        public ContextAction(Action<T> action, object owner, TaskScheduler scheduler)
-            : this(action.ToWeak(owner), scheduler.ToContextRunner()) { }
+        public ContextAction(TaskScheduler scheduler, object owner, Action<T> action)
+            : this(scheduler.ToContextRunner(), action.ToWeak(owner)) { }
 
         public ContextAction(WeakAction<T> wa)
-            : this(wa, TaskScheduler.FromCurrentSynchronizationContext()) { }
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), wa) { }
 
-        public ContextAction(Action<T> a, object owner)
-            : this(a.ToWeak(owner), TaskScheduler.FromCurrentSynchronizationContext()) { }
+        public ContextAction(object owner, Action<T> a)
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), a.ToWeak(owner)) { }
 
 
         public Task Invoke(T arg)

@@ -9,7 +9,7 @@ namespace MvvmKit
 {
     public class ContextFunc<TResult>
     {
-        private readonly WeakFunc<TResult> WeakFunc;
+        public WeakFunc<TResult> WeakFunc { get; }
 
         public AsyncContextRunner ContextRunner { get; }
 
@@ -22,26 +22,26 @@ namespace MvvmKit
         public MethodInfo Method => WeakFunc.Method;
 
 
-        public ContextFunc(WeakFunc<TResult> wa, AsyncContextRunner contextRunner)
+        public ContextFunc(AsyncContextRunner contextRunner, WeakFunc<TResult> wa)
         {
             WeakFunc = wa;
             ContextRunner = contextRunner;
         }
 
-        public ContextFunc(WeakFunc<TResult> wa, TaskScheduler scheduler)
-            :this(wa, scheduler.ToContextRunner()) { }
+        public ContextFunc(TaskScheduler scheduler, WeakFunc<TResult> wa)
+            :this(scheduler.ToContextRunner(), wa) { }
 
-        public ContextFunc(Func<TResult> action, object owner, AsyncContextRunner contextRunner)
-            :this(action.ToWeak(owner), contextRunner) { }
+        public ContextFunc(AsyncContextRunner contextRunner, object owner, Func<TResult> action)
+            :this(contextRunner, action.ToWeak(owner)) { }
 
-        public ContextFunc(Func<TResult> action, object owner, TaskScheduler scheduler)
-            : this(action.ToWeak(owner), scheduler.ToContextRunner()) { }
+        public ContextFunc(TaskScheduler scheduler, object owner, Func<TResult> action)
+            : this(scheduler.ToContextRunner(), action.ToWeak(owner)) { }
 
         public ContextFunc(WeakFunc<TResult> wa)
-            : this(wa, TaskScheduler.FromCurrentSynchronizationContext()) { }
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), wa) { }
 
-        public ContextFunc(Func<TResult> a, object owner)
-            : this(a.ToWeak(owner), TaskScheduler.FromCurrentSynchronizationContext()) { }
+        public ContextFunc(object owner, Func<TResult> a)
+            : this(TaskScheduler.FromCurrentSynchronizationContext(), a.ToWeak(owner)) { }
 
 
         public Task<TResult> Invoke()
