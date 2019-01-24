@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Kobi Hari</authors>
+    <owners>Kobi Hari</owners>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/kobi2294/MvvmKit</projectUrl>
+    <iconUrl>http://www.applicolors.com/wp-content/uploads/2019/01/Icon-1.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial Very early version</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>Mvvm WPF Async Unidirectional Kobi Hari</tags>
+  </metadata>
+</package>
