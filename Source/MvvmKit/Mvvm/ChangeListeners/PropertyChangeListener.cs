@@ -39,42 +39,42 @@ namespace MvvmKit
             }
         }
 
-        public void Invoke(object oldValue, object newValue)
+        internal void Invoke(object oldValue, object newValue)
         {
             _invoke(oldValue, newValue);
         }
 
-        public void Observe(object owner, Action a)
+        internal void Observe(object owner, Action a)
         {
             _ensureListeners().Add(new WeakAction(owner, a));
         }
 
-        public void Observe<T>(object owner, Action<T> a)
+        internal void Observe<T>(object owner, Action<T> a)
         {
             _ensureListeners().Add(new WeakAction<T>(owner, a));
         }
 
-        public void Observe<T>(object owner, Action<T, T> a)
+        internal void Observe<T>(object owner, Action<T, T> a)
         {
             _ensureListeners().Add(new WeakAction<T, T>(owner, a));
         }
 
-        public void Unobserve(object owner)
+        internal void Unobserve(object owner)
         {
             _ensureListeners().RemoveWhere(wa => wa.Owner == owner);
         }
 
-        public void Unobserve(object owner, Action a)
+        internal void Unobserve(object owner, Action a)
         {
             _ensureListeners().RemoveWhere(wa => (wa.Owner == owner) && (wa.Method == a.Method));
         }
 
-        public void Unobserve<T>(object owner, Action<T> a)
+        internal void Unobserve<T>(object owner, Action<T> a)
         {
             _ensureListeners().RemoveWhere(wa => (wa.Owner == owner) && (wa.Method == a.Method));
         }
 
-        public void Unobserve<T>(object owner, Action<T, T> a)
+        internal void Unobserve<T>(object owner, Action<T, T> a)
         {
             _ensureListeners().RemoveWhere(wa => (wa.Owner == owner) && (wa.Method == a.Method));
         }

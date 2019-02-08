@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Mvvm\Bindable.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerSourceT.cs" />
     <Compile Include="Mvvm\Prism\Commands\DelegateCommand.cs" />
     <Compile Include="Mvvm\Prism\Commands\DelegateCommandBase.cs" />
     <Compile Include="Mvvm\Prism\Commands\DelegateCommand{T}.cs" />
@@ -67,7 +68,8 @@
     <Compile Include="Mvvm\Prism\Mvvm\ErrorsContainer.cs" />
     <Compile Include="Mvvm\Prism\Mvvm\PropertySupport.cs" />
     <Compile Include="Mvvm\Prism\Mvvm\ViewModelLocationProvider.cs" />
-    <Compile Include="Mvvm\PropertyChangeListener.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

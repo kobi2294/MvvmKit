@@ -20,12 +20,17 @@ namespace ConsoleDemo
         static void Main(string[] args)
         {
             var vm = new Vm();
+            var x = new object();
 
-            var pch = vm.Properties[nameof(vm.Num)];
-            pch.Observe<int>(vm, (o, n) => Console.WriteLine("Value changed from " + o + "to " + n));
+            vm.Observe(() => vm.Num, (oldv, newv) => Console.WriteLine($"Value Changed from {oldv} to {newv}"));
+            vm.Observe(() => vm.Num, x, (oldv, newv) => Console.WriteLine($"XXXXX!!! Value Changed from {oldv} to {newv}"));
 
             vm.Num = 20;
             vm.Num = 50;
+
+            vm.Unobserve(() => vm.Num);
+            vm.Num = 80;
+
             Console.ReadLine();
             
         }
