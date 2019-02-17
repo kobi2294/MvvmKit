@@ -116,6 +116,7 @@
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Controls\Design Time Support\DesignTimeResource.cs" />
     <Compile Include="Ui\Controls\Design Time Support\SelectiveResources.cs" />
+    <Compile Include="Ui\Tools\ConverterExtension.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -128,5 +129,6 @@
   <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
