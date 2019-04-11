@@ -19,6 +19,8 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
+            // before new development
+            // Kobi
             // Master
 
             var vm = new Vm();
