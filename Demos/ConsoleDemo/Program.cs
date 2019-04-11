@@ -20,6 +20,7 @@ namespace ConsoleDemo
         static void Main(string[] args)
         {
             // before new development
+            // Kobi
 
             var vm = new Vm();
             var x = new object();
