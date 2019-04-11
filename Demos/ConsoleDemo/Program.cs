@@ -22,6 +22,8 @@ namespace ConsoleDemo
             // before new development
             // Kobi
             // Master
+            // before new development
+            // Kobi
 
             var vm = new Vm();
             var x = new object();
