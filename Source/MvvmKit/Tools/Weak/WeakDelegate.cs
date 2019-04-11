@@ -118,7 +118,7 @@ namespace MvvmKit
 
         public object Owner
         {
-            get { return _lifetimeController; }
+            get { return _lifetimeController.Target; }
         }
 
         public bool IsAlive

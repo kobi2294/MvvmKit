@@ -57,6 +57,19 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mvvm\Bindable.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerSourceT.cs" />
+    <Compile Include="Mvvm\Prism\Commands\DelegateCommand.cs" />
+    <Compile Include="Mvvm\Prism\Commands\DelegateCommandBase.cs" />
+    <Compile Include="Mvvm\Prism\Commands\DelegateCommand{T}.cs" />
+    <Compile Include="Mvvm\Prism\Commands\PropertyObserver.cs" />
+    <Compile Include="Mvvm\Prism\Commands\PropertyObserverNode.cs" />
+    <Compile Include="Mvvm\Prism\Mvvm\BindableBase.cs" />
+    <Compile Include="Mvvm\Prism\Mvvm\ErrorsContainer.cs" />
+    <Compile Include="Mvvm\Prism\Mvvm\PropertySupport.cs" />
+    <Compile Include="Mvvm\Prism\Mvvm\ViewModelLocationProvider.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
+    <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,6 +105,7 @@
     <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
+    <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
     <Compile Include="Tools\Disposables\BaseDisposableWithData.cs" />
     <Compile Include="Tools\Disposables\Disposables.Callback.cs" />
@@ -103,6 +117,12 @@
     <Compile Include="Tools\Exec.cs" />
     <Compile Include="Tools\Extensions\ComparerExtensions.cs" />
     <Compile Include="Tools\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Tools\Extensions\ExpressionExtensions.cs" />
+    <Compile Include="Tools\Indexers\Indexers.cs" />
+    <Compile Include="Tools\Indexers\IReadOnlyIndexer.cs" />
+    <Compile Include="Tools\Indexers\IWriteableIndexer.cs" />
+    <Compile Include="Tools\Indexers\ReadOnlyIndexer.cs" />
+    <Compile Include="Tools\Indexers\WriteableIndexer.cs" />
     <Compile Include="Tools\Weak\FastCaller.cs" />
     <Compile Include="Tools\Weak\IWeakAction.cs" />
     <Compile Include="Tools\Weak\IWeakFunc.cs" />
