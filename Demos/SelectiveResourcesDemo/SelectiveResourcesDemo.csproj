@@ -98,7 +98,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Source\MvvmKit\MvvmKit.csproj">
+    <ProjectReference Include="..\..\Source\MvvmKit\MvvmKit.csproj">
       <Project>{1a0cf5e1-fca7-48c2-b227-faf5d6ec59bc}</Project>
       <Name>MvvmKit</Name>
     </ProjectReference>
