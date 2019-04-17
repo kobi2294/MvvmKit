@@ -8,5 +8,9 @@ namespace MvvmKit
 {
     public static partial class Disposables
     {
+        public static BaseDisposableWithData<T> WithData<T>(T data)
+        {
+            return new BaseDisposableWithData<T>(data);
+        }
     }
 }

@@ -11,5 +11,14 @@ namespace MvvmKit
         public T Data { get; protected set; }
 
         object IDisposableWithData.Data { get { return this.Data; } }
+
+        public BaseDisposableWithData(T data)
+        {
+            Data = data;
+        }
+
+        public BaseDisposableWithData()
+        {
+        }
     }
 }

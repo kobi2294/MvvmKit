@@ -1,4 +1,5 @@
-﻿using MvvmKit;
+﻿using ConsoleDemo.Samples.Disposables;
+using MvvmKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace ConsoleDemo
     {
         class Vm: Bindable
         {
-
             private int _Num;
             public int Num { get { return _Num; } set { SetProperty(ref _Num, value); } }
 
@@ -19,6 +19,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
+            Samples.Weaks.WeakDelegateDemo.Run();
             // before new development
 
             var vm = new Vm();

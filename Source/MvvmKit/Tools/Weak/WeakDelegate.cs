@@ -86,7 +86,7 @@ namespace MvvmKit
                 }
 
                 _delegateTargetReference = new WeakReference(methodTarget);
-            }
+            } 
 
             _handleClosures(lifetimeController, methodTarget);
         }
@@ -118,7 +118,7 @@ namespace MvvmKit
 
         public object Owner
         {
-            get { return _lifetimeController.Target; }
+            get { return IsStatic ? null : _lifetimeController.Target; }
         }
 
         public bool IsAlive

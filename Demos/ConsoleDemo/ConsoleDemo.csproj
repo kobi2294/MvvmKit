@@ -45,6 +45,10 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
+    <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
+    <Compile Include="Samples\Disposables\OneTimeCalc.cs" />
+    <Compile Include="Samples\Weaks\WeakDelegateDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
