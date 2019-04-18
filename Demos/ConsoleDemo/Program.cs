@@ -19,7 +19,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.Weaks.WeakDelegateDemo.Run();
+            Samples.EditableLookupSample.Run();
             // before new development
 
             var vm = new Vm();

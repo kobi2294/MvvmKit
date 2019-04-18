@@ -105,6 +105,8 @@
     <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
+    <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
+    <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
     <Compile Include="Tools\Disposables\BaseDisposableWithData.cs" />
@@ -116,7 +118,9 @@
     <Compile Include="Tools\Disposables\Disposables.IDisposableWithData.cs" />
     <Compile Include="Tools\Exec.cs" />
     <Compile Include="Tools\Extensions\ComparerExtensions.cs" />
+    <Compile Include="Tools\Extensions\EditableLookupExtensions.cs" />
     <Compile Include="Tools\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Tools\Extensions\EnumExtensions.cs" />
     <Compile Include="Tools\Extensions\ExpressionExtensions.cs" />
     <Compile Include="Tools\Indexers\Indexers.cs" />
     <Compile Include="Tools\Indexers\IReadOnlyIndexer.cs" />

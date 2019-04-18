@@ -48,7 +48,10 @@
     <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
     <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
     <Compile Include="Samples\Disposables\OneTimeCalc.cs" />
+    <Compile Include="Samples\EditableGroupingSample.cs" />
+    <Compile Include="Samples\EditableLookupSample.cs" />
     <Compile Include="Samples\Indexers\IndexerDemo.cs" />
+    <Compile Include="Samples\LazyDictionaryDemo.cs" />
     <Compile Include="Samples\Weaks\WeakDelegateDemo.cs" />
   </ItemGroup>
   <ItemGroup>
