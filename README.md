@@ -5,6 +5,10 @@ By Kobi Hari (2019)
 
 ## A strongly opinionated Mvvm framework and Toolkit
 
+## This repository is actually 2 products: 
+* A general purpose toolkit containing several useful .net packages
+* A strongly opinionated MVVM framework that is the sum of my experience develping enterprise WPF Applications
+
 ## This framework believes in:
 * Unidirectional Binding
 * View Model First
