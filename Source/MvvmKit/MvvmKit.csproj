@@ -66,11 +66,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mvvm\Bindable.cs" />
-    <Compile Include="Mvvm\BootstrapperBase.cs" />
+    <Compile Include="Mvvm\Core\Bindable.cs" />
+    <Compile Include="Mvvm\Core\BootstrapperBase.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerSourceT.cs" />
-    <Compile Include="Mvvm\DelegateCommand.cs" />
-    <Compile Include="Mvvm\DelegateCommandT.cs" />
+    <Compile Include="Mvvm\Core\DelegateCommand.cs" />
+    <Compile Include="Mvvm\Core\DelegateCommandT.cs" />
     <Compile Include="Mvvm\Internal Prism\Commands\DelegateCommand.cs" />
     <Compile Include="Mvvm\Internal Prism\Commands\DelegateCommandBase.cs" />
     <Compile Include="Mvvm\Internal Prism\Commands\DelegateCommand{T}.cs" />
