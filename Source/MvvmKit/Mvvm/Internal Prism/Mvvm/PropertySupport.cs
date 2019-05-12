@@ -7,7 +7,7 @@ namespace Prism.Mvvm
     ///<summary>
     /// Provides support for extracting property information based on a property expression.
     ///</summary>
-    public static class PropertySupport
+    internal static class PropertySupport
     {
         /// <summary>
         /// Extracts the property name from a property expression.
