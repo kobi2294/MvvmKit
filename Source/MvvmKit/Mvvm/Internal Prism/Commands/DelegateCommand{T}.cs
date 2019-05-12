@@ -28,28 +28,28 @@ namespace Prism.Commands
     ///     </code>
     /// </example>
     /// </remarks>
-    public class DelegateCommand<T> : DelegateCommandBase
+    public class PrismDelegateCommand<T> : PrismDelegateCommandBase
     {
         readonly Action<T> _executeMethod;
         Func<T, bool> _canExecuteMethod;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
+        /// Initializes a new instance of <see cref="PrismDelegateCommand{T}"/>.
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
         /// <remarks><see cref="CanExecute"/> will always return true.</remarks>
-        public DelegateCommand(Action<T> executeMethod)
+        public PrismDelegateCommand(Action<T> executeMethod)
             : this(executeMethod, (o) => true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
+        /// Initializes a new instance of <see cref="PrismDelegateCommand{T}"/>.
         /// </summary>
         /// <param name="executeMethod">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
         /// <param name="canExecuteMethod">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <exception cref="ArgumentNullException">When both <paramref name="executeMethod"/> and <paramref name="canExecuteMethod"/> ar <see langword="null" />.</exception>
-        public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
+        public PrismDelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
             : base()
         {
             if (executeMethod == null || canExecuteMethod == null)
@@ -108,7 +108,7 @@ namespace Prism.Commands
         /// <typeparam name="TType">The type of the return value of the method that this delegate encapulates</typeparam>
         /// <param name="propertyExpression">The property expression. Example: ObservesProperty(() => PropertyName).</param>
         /// <returns>The current instance of DelegateCommand</returns>
-        public DelegateCommand<T> ObservesProperty<TType>(Expression<Func<TType>> propertyExpression)
+        public PrismDelegateCommand<T> ObservesProperty<TType>(Expression<Func<TType>> propertyExpression)
         {
             ObservesPropertyInternal(propertyExpression);
             return this;
@@ -119,7 +119,7 @@ namespace Prism.Commands
         /// </summary>
         /// <param name="canExecuteExpression">The property expression. Example: ObservesCanExecute(() => PropertyName).</param>
         /// <returns>The current instance of DelegateCommand</returns>
-        public DelegateCommand<T> ObservesCanExecute(Expression<Func<bool>> canExecuteExpression)
+        public PrismDelegateCommand<T> ObservesCanExecute(Expression<Func<bool>> canExecuteExpression)
         {
             Expression<Func<T, bool>> expression = Expression.Lambda<Func<T, bool>>(canExecuteExpression.Body, Expression.Parameter(typeof(T), "o"));
             _canExecuteMethod = expression.Compile();

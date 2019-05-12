@@ -10,7 +10,7 @@ namespace ConsoleDemo
 {
     class Program
     {
-        class Vm: Bindable
+        class Vm: BindableBase
         {
             private int _Num;
             public int Num { get { return _Num; } set { SetProperty(ref _Num, value); } }

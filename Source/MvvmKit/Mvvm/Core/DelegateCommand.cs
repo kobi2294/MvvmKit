@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class DelegateCommand : Prism.Commands.DelegateCommand
+    public class DelegateCommand : Prism.Commands.PrismDelegateCommand
     {
         /// <summary>
         /// Creates a new instance of <see cref="DelegateCommand"/> with the <see cref="Action"/> to invoke on execution.

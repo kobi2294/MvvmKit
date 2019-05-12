@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class Bindable : BindableBase
+    public class BindableBase : PrismBindableBase
     {
         private Dictionary<string, PropertyChangeListener> _listeners;
       
@@ -52,7 +52,7 @@ namespace MvvmKit
             return _listeners.ContainsKey(propertyName);
         }
 
-        public Bindable()
+        public BindableBase()
         {
         }
 

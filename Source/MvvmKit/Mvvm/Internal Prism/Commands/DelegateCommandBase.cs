@@ -12,17 +12,17 @@ namespace Prism.Commands
     /// <summary>
     /// An <see cref="ICommand"/> whose delegates can be attached for <see cref="Execute"/> and <see cref="CanExecute"/>.
     /// </summary>
-    public abstract class DelegateCommandBase : ICommand
+    public abstract class PrismDelegateCommandBase : ICommand
     {
         private SynchronizationContext _synchronizationContext;
         private readonly HashSet<string> _observedPropertiesExpressions = new HashSet<string>();
 
         /// <summary>
-        /// Creates a new instance of a <see cref="DelegateCommandBase"/>, specifying both the execute action and the can execute function.
+        /// Creates a new instance of a <see cref="PrismDelegateCommandBase"/>, specifying both the execute action and the can execute function.
         /// </summary>
         /// <param name="executeMethod">The <see cref="Action"/> to execute when <see cref="ICommand.Execute"/> is invoked.</param>
         /// <param name="canExecuteMethod">The <see cref="Func{Object,Bool}"/> to invoked when <see cref="ICommand.CanExecute"/> is invoked.</param>
-        protected DelegateCommandBase()
+        protected PrismDelegateCommandBase()
         {
             _synchronizationContext = SynchronizationContext.Current;
         }
@@ -49,9 +49,9 @@ namespace Prism.Commands
         }
 
         /// <summary>
-        /// Raises <see cref="DelegateCommandBase.CanExecuteChanged"/> so every command invoker
+        /// Raises <see cref="PrismDelegateCommandBase.CanExecuteChanged"/> so every command invoker
         /// can requery to check if the command can execute.
-        /// <remarks>Note that this will trigger the execution of <see cref="DelegateCommandBase.InvokeCanExecute"/> once for each invoker.</remarks>
+        /// <remarks>Note that this will trigger the execution of <see cref="PrismDelegateCommandBase.InvokeCanExecute"/> once for each invoker.</remarks>
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate")]
         public void RaiseCanExecuteChanged()

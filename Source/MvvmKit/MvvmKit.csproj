@@ -76,7 +76,7 @@
     <Compile Include="Mvvm\Internal Prism\Commands\DelegateCommand{T}.cs" />
     <Compile Include="Mvvm\Internal Prism\Commands\PropertyObserver.cs" />
     <Compile Include="Mvvm\Internal Prism\Commands\PropertyObserverNode.cs" />
-    <Compile Include="Mvvm\Internal Prism\Mvvm\BindableBase.cs" />
+    <Compile Include="Mvvm\Internal Prism\Mvvm\PrismBindableBase.cs" />
     <Compile Include="Mvvm\Internal Prism\Mvvm\PropertySupport.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />

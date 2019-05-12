@@ -8,7 +8,7 @@ namespace Prism.Mvvm
     /// <summary>
     /// Implementation of <see cref="INotifyPropertyChanged"/> to simplify models.
     /// </summary>
-    public abstract class BindableBase : INotifyPropertyChanged
+    public abstract class PrismBindableBase : INotifyPropertyChanged
     {
         /// <summary>
         /// Occurs when a property value changes.

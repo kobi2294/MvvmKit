@@ -15,7 +15,7 @@ namespace MvvmKit
 
     namespace MvvmKit
     {
-        public class DelegateCommand<T> : Prism.Commands.DelegateCommand<T>
+        public class DelegateCommand<T> : Prism.Commands.PrismDelegateCommand<T>
         {
             /// <summary>
             /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
