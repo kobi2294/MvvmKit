@@ -88,6 +88,8 @@ namespace MvvmKit
                 throw new InvalidOperationException("Unity container cannot be null");
 
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<RegionsService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
 
             await ConfigureContainerOverride();
             await InitializeShellOverride();
