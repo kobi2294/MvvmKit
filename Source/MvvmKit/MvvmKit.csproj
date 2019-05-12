@@ -80,6 +80,11 @@
     <Compile Include="Mvvm\Internal Prism\Mvvm\PropertySupport.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
+    <Compile Include="Mvvm\Navigation\ComponentBase.cs" />
+    <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />
+    <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
+    <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
+    <Compile Include="Mvvm\Navigation\View Resolution\ViewTemplateSelector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
