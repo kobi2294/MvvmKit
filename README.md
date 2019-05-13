@@ -4,7 +4,7 @@
 By Kobi Hari (2019)
 
 ## A strongly opinionated Mvvm framework and Toolkit
-For documentation: [[home]]
+See **Wiki** for detailed documentation
 
 ## This repository is actually 2 products: 
 * A general purpose toolkit containing several useful .net packages
