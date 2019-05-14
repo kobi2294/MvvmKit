@@ -15,8 +15,9 @@ namespace ConsoleDemo.Samples.IoC
         public static void Run()
         {
             var container = new UnityContainer();
-            container.AddFactoryFor(type => new ServiceClass(type));
             container.AddFactoryFor(type => LogManager.GetLogger(type));
+
+            container.AddFactoryFor(type => new ServiceClass(type));
 
             var consumer = container.Resolve<ConsumerClass>();
             Console.WriteLine("My service consumer type: " + consumer.Service.ConsumerType);
