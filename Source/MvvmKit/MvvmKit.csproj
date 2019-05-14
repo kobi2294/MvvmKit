@@ -154,7 +154,9 @@
     <Compile Include="Tools\Indexers\IWriteableIndexer.cs" />
     <Compile Include="Tools\Indexers\ReadOnlyIndexer.cs" />
     <Compile Include="Tools\Indexers\WriteableIndexer.cs" />
+    <Compile Include="Tools\IoC\IoC.cs" />
     <Compile Include="Tools\IoC\IResolver.cs" />
+    <Compile Include="Tools\IoC\UnityFactoryExtension.cs" />
     <Compile Include="Tools\IoC\UnityResolver.cs" />
     <Compile Include="Tools\Weak\FastCaller.cs" />
     <Compile Include="Tools\Weak\IWeakAction.cs" />
