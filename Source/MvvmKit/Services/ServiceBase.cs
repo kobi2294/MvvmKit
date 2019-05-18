@@ -11,6 +11,30 @@ namespace MvvmKit
         private readonly AsyncReaderWriterLock _mutex;
         private readonly AsyncContextRunner _taskFactory;
         private readonly TaskScheduler _scheduler;
+        private Task _initTask = null;
+
+        protected virtual Task OnInit()
+        {
+            return Tasks.Empty;
+        }
+
+        private async Task _init()
+        {
+            await OnInit();
+        }
+
+        public Task Init()
+        {
+            return Run(() =>
+            {
+                if (_initTask == null)
+                {
+                    _initTask = _init();
+                }
+
+                return _initTask;
+            }, true);
+        }
 
         public ServiceBase(TaskScheduler taskScheduler = null)
         {

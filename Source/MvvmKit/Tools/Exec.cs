@@ -30,6 +30,23 @@ namespace MvvmKit
             }
         }
 
+
+
+        private static TaskScheduler _uiTaskScheduler = null;
+        public static TaskScheduler UiTaskScheduler
+        {
+            get
+            {
+                if (_uiTaskScheduler == null) InitUiTaskScheduler();
+                return _uiTaskScheduler;
+            }
+        }
+
+        internal static void InitUiTaskScheduler()
+        {
+            _uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+        }
+
         public static bool IsOnUiThread()
         {
             var dispatcher = Dispatcher.FromThread(Thread.CurrentThread);

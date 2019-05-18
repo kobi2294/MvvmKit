@@ -65,6 +65,8 @@ namespace MvvmKit
 
         #endregion
 
+        private HashSet<Type> _servicesToInit = new HashSet<Type>();
+
         public UnityContainer Container { get; private set; }
 
         public IResolver Resolver
@@ -75,6 +77,22 @@ namespace MvvmKit
             }
         }
 
+        public RegionsService RegionsService
+        {
+            get
+            {
+                return Container.Resolve<RegionsService>();
+            }
+        }
+
+        public RoutersService RoutersService
+        {
+            get
+            {
+                return Container.Resolve<RoutersService>();
+            }
+        }
+
         /// <summary>
         /// The method to call at the entry point of your application. It's signature is async void becuase it is meant to be called
         /// from static void Main() or from the void OnStarted override of the Application class.
@@ -82,17 +100,29 @@ namespace MvvmKit
         public async void Run()
         {
             _bootstrappers.Add(Application.Current, this);
+            Exec.InitUiTaskScheduler();
             Container = CreateContainerOverride();
 
             if (Container == null)
                 throw new InvalidOperationException("Unity container cannot be null");
 
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<RegionsService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<RegionsService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<RoutersService>(new ContainerControlledLifetimeManager());
 
             await ConfigureContainerOverride();
+
+            // init services
+            var services = _servicesToInit.Select(type => Container.Resolve(type) as ServiceBase)
+                                          .Select(service => service.Init());
+
+            await OnServicesInitializing();
+
             await InitializeShellOverride();
+
+            await Task.WhenAll(services);
+            await OnServicesInitialized();
         }
 
         public async Task ShutDown()
@@ -100,6 +130,18 @@ namespace MvvmKit
             await BeforeShutDownOverride();
             Application.Current.Shutdown();
         }
+
+        protected void RegisterService<ServiceType>(bool initService = true)
+            where ServiceType : ServiceBase
+        {
+            Container.RegisterType<ServiceType>(new ContainerControlledLifetimeManager());
+
+            if (initService)
+            {
+                _servicesToInit.Add(typeof(ServiceType));
+            }
+        }
+
 
         #region Overridables
 
@@ -112,6 +154,16 @@ namespace MvvmKit
         /// Use this function to configure container class resolution rules
         /// </summary>
         protected virtual Task ConfigureContainerOverride()
+        {
+            return Tasks.Empty;
+        }
+
+        protected virtual Task OnServicesInitializing()
+        {
+            return Tasks.Empty;
+        }
+
+        protected virtual Task OnServicesInitialized()
         {
             return Tasks.Empty;
         }
