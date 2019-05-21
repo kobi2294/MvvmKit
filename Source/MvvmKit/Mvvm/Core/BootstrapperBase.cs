@@ -106,6 +106,7 @@ namespace MvvmKit
             if (Container == null)
                 throw new InvalidOperationException("Unity container cannot be null");
 
+            Container.RegisterInstance(GetType(), this);
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
             Container.RegisterType<RegionsService>(new ContainerControlledLifetimeManager());

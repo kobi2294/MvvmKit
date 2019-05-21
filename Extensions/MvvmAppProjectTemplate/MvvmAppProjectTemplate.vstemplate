@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" xmlns:sdk="http://schemas.microsoft.com/developer/vstemplate-sdkextension/2010">
+  <TemplateData>
+    <Name>MvvmAppProjectTemplate</Name>
+    <Description>MvvmAppProjectTemplate</Description>
+    <Icon>MvvmAppProjectTemplate.ico</Icon>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>2.0</RequiredFrameworkVersion>
+    <SortOrder>1000</SortOrder>
+    <TemplateID>b4beb443-d95d-4d52-8726-3e5c51b0ddac</TemplateID>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>MvvmAppProjectTemplate</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <Project File="ProjectTemplate.csproj" ReplaceParameters="true">
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.config">App.config</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml">App.xaml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="App.xaml.cs">App.xaml.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" OpenInEditor="True" TargetFileName="Bootstrapper.cs">Bootstrapper.cs</ProjectItem>
+      <Folder Name="Components" TargetFolderName="Components">
+        <Folder Name="Shell" TargetFolderName="Shell">
+          <ProjectItem ReplaceParameters="true" TargetFileName="DtShell.xaml">DtShell.xaml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ShellView.xaml">ShellView.xaml</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ShellView.xaml.cs">ShellView.xaml.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ShellVm.cs">ShellVm.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Container" TargetFolderName="Container">
+        <ProjectItem ReplaceParameters="true" TargetFileName="GlobalRegions.cs">GlobalRegions.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="GlobalRouters.cs">GlobalRouters.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AssemblyInfo.cs">AssemblyInfo.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Resources.resx">Resources.resx</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Resources.Designer.cs">Resources.Designer.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Settings.settings">Settings.settings</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Settings.Designer.cs">Settings.Designer.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Services" TargetFolderName="Services" />
+    </Project>
+  </TemplateContent>
+</VSTemplate>

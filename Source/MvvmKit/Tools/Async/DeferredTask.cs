@@ -16,6 +16,7 @@ namespace MvvmKit
 
         public DeferredTask(T result)
         {
+            _tcs = new TaskCompletionSource<T>();
             Result = result;
         }
 
