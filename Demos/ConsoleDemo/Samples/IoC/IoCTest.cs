@@ -15,13 +15,23 @@ namespace ConsoleDemo.Samples.IoC
         public static void Run()
         {
             var container = new UnityContainer();
-            container.AddFactoryFor(type => LogManager.GetLogger(type));
 
-            container.AddFactoryFor(type => new ServiceClass(type));
+            container.RegisterType<string, string>();
 
-            var consumer = container.Resolve<ConsumerClass>();
-            Console.WriteLine("My service consumer type: " + consumer.Service.ConsumerType);
-            Console.WriteLine("My logger name: " + consumer.Logger.Logger.Name);
+            container.AddFactoryFor(type => LogManager.GetLogger(type ?? typeof(IoCTest)));
+            container.AddFactoryFor(type => new ServiceClass(type ?? typeof(IoCTest)));
+
+            var log = container.Resolve<ILog>();
+
+            var consumer1 = container.Resolve<ConsumerClass1>();
+            var consumer2 = container.Resolve<ConsumerClass2>();
+
+            Console.WriteLine("1:");
+            Console.WriteLine("My logger consumer type: " + consumer1.Service.ConsumerType.Name);
+            Console.WriteLine("My service consumer type: " + consumer1.Logger.Logger.Name);
+            Console.WriteLine("2:");
+            Console.WriteLine("My logger consumer type: " + consumer2.Service.ConsumerType.Name);
+            Console.WriteLine("My service consumer type: " + consumer2.Logger.Logger.Name);
         }
     }
 }

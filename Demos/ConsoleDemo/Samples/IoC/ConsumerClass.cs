@@ -8,17 +8,40 @@ using Unity;
 
 namespace ConsoleDemo.Samples.IoC
 {
-    public class ConsumerClass
+    public class ConsumerClass1
     {
         public ServiceClass Service { get; private set; }
 
         public ILog Logger { get; private set; }
 
-        [InjectionMethod]
-        public void Inject(ServiceClass service, ILog logger)
+        public ConsumerClass1(ILog logger)
         {
-            Service = service;
             Logger = logger;
         }
+
+        [InjectionMethod]
+        public void Inject(ServiceClass service)
+        {
+            Service = service;
+        }
     }
+
+    public class ConsumerClass2
+    {
+        public ServiceClass Service { get; private set; }
+
+        public ILog Logger { get; private set; }
+
+        public ConsumerClass2(ILog logger)
+        {
+            Logger = logger;
+        }
+
+        [InjectionMethod]
+        public void Inject(ServiceClass service)
+        {
+            Service = service;
+        }
+    }
+
 }

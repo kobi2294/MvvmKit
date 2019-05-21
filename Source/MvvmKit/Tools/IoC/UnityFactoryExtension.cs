@@ -4,10 +4,15 @@ using System.Linq;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
 using Unity.Builder;
 using Unity.Extension;
+using Unity.Injection;
+using Unity.Lifetime;
 using Unity.Policy;
+using Unity.Registration;
 using Unity.Resolution;
+using Unity.Strategies;
 
 namespace MvvmKit
 {
@@ -33,9 +38,7 @@ namespace MvvmKit
 
         public ResolveDelegate<BuilderContext> GetResolver(ref BuilderContext context)
         {
-            Type declaringType = context.DeclaringType;
-
-            return (ref BuilderContext c) => _fromDeclaringType(declaringType);
+            return (ref BuilderContext c) => _fromDeclaringType(c.DeclaringType);
         }
     }
 
