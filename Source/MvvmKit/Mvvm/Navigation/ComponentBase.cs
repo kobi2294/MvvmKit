@@ -11,21 +11,15 @@ namespace MvvmKit
     {
         protected IResolver Resolver { get; private set; }
 
-        protected RegionsService Regions { get; private set; }
-
-        protected RoutersService Routers { get; private set; }
-
         public object Parameter { get; private set; }
 
         #region Bindable Properties
 
-        private bool _IsActive;
-        public bool IsActive { get { return _IsActive; } private set { SetProperty(ref _IsActive, value); } }
-
+        private bool _IsNavigatedTo;
+        public bool IsNavigatedTo { get { return _IsNavigatedTo; } set { SetProperty(ref _IsNavigatedTo, value); } }
 
         private bool _IsInitialized;
         public bool IsInitialized { get { return _IsInitialized; } set { SetProperty(ref _IsInitialized, value); } }
-
 
         #endregion
 
@@ -36,24 +30,22 @@ namespace MvvmKit
             await OnInitialized(param);
         }
 
-        public async Task Activate()
+        public async Task NavigateTo()
         {
-            IsActive = true;
-            await OnActivated();
+            IsNavigatedTo = true;
+            await OnNavigatedTo();
         }
 
-        public async Task Deactivate()
+        public async Task Clear()
         {
-            await OnBeforeDectivated();
-            IsActive = false;
+            await OnClearing();
+            IsNavigatedTo = false;
         }
 
         [InjectionMethod]
-        public void Inject(IResolver resolver, RegionsService regions, RoutersService routers)
+        public void Inject(IResolver resolver)
         {
             Resolver = resolver;
-            Regions = regions;
-            Routers = routers;
         }
 
         protected virtual Task OnInitialized(object param)
@@ -61,12 +53,12 @@ namespace MvvmKit
             return Tasks.Empty;
         }
 
-        protected virtual Task OnActivated()
+        protected virtual Task OnNavigatedTo()
         {
             return Tasks.Empty;
         }
 
-        protected virtual Task OnBeforeDectivated()
+        protected virtual Task OnClearing()
         {
             return Tasks.Empty;
         }

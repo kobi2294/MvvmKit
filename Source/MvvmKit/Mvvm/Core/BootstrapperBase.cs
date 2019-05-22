@@ -77,22 +77,6 @@ namespace MvvmKit
             }
         }
 
-        public RegionsService RegionsService
-        {
-            get
-            {
-                return Container.Resolve<RegionsService>();
-            }
-        }
-
-        public RoutersService RoutersService
-        {
-            get
-            {
-                return Container.Resolve<RoutersService>();
-            }
-        }
-
         /// <summary>
         /// The method to call at the entry point of your application. It's signature is async void becuase it is meant to be called
         /// from static void Main() or from the void OnStarted override of the Application class.
@@ -108,8 +92,6 @@ namespace MvvmKit
 
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<RegionsService>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<RoutersService>(new ContainerControlledLifetimeManager());
 
             await ConfigureContainerOverride();
 
