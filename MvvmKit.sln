@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmAppSample", "Extensions\MvvmAppSample\MvvmAppSample.csproj", "{18B6C66D-6C8D-4B78-AE4D-51EA6411CCCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmAppProjectTemplate", "Extensions\MvvmAppProjectTemplate\MvvmAppProjectTemplate.csproj", "{0952AAD1-D901-4AB6-900D-E03030A12BB8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{18B6C66D-6C8D-4B78-AE4D-51EA6411CCCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18B6C66D-6C8D-4B78-AE4D-51EA6411CCCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18B6C66D-6C8D-4B78-AE4D-51EA6411CCCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0952AAD1-D901-4AB6-900D-E03030A12BB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0952AAD1-D901-4AB6-900D-E03030A12BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0952AAD1-D901-4AB6-900D-E03030A12BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0952AAD1-D901-4AB6-900D-E03030A12BB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{1A0CF5E1-FCA7-48C2-B227-FAF5D6EC59BC} = {144B7100-AAB6-4094-9912-0B99EED95EB0}
 		{FCF6FF87-A5FD-4FCA-881A-954BFD243B7B} = {DA873BBD-9C18-4401-8821-57DB17DF16FE}
 		{18B6C66D-6C8D-4B78-AE4D-51EA6411CCCC} = {B60BF0F6-17AF-44ED-A561-7A053183B188}
+		{0952AAD1-D901-4AB6-900D-E03030A12BB8} = {B60BF0F6-17AF-44ED-A561-7A053183B188}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3375F479-F225-49C7-92F5-F618857DD1C2}
