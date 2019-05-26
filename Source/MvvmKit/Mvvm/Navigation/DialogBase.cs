@@ -41,10 +41,10 @@ namespace MvvmKit
             _taskCompletionSource.SetException(exception);
         }
 
-        protected override Task OnBeforeDectivated()
+        protected override Task OnClearing()
         {
             if (!Task.IsCompleted) SetCanceled();
-            return base.OnBeforeDectivated();
+            return base.OnClearing();
         }
     }
 }

@@ -84,24 +84,14 @@
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
     <Compile Include="Mvvm\Navigation\ComponentBase.cs" />
+    <Compile Include="Mvvm\Navigation\Definition\Region.cs" />
+    <Compile Include="Mvvm\Navigation\Definition\RegionBehavior.cs" />
+    <Compile Include="Mvvm\Navigation\Definition\Route.cs" />
+    <Compile Include="Mvvm\Navigation\Definition\RouteParameterMode.cs" />
     <Compile Include="Mvvm\Navigation\DialogBase.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\NavigationEntry.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\OpenWindowRegionBehavior.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\Region.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionBehavior.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionHost.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionHostBehavior.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionManager.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionManagerFactory.cs" />
-    <Compile Include="Mvvm\Navigation\Regions\RegionsService.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\Route.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\Router.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RouterBuilder.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RouterEntry.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RouterManager.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RouterManagerFactory.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RoutersService.cs" />
-    <Compile Include="Mvvm\Navigation\Routing\RouteType.cs" />
+    <Compile Include="Mvvm\Navigation\Service\RegionService.cs" />
+    <Compile Include="Mvvm\Navigation\Entries\RegionEntry.cs" />
+    <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
@@ -198,6 +188,8 @@
   <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mvvm\Navigation\Behaviors\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
