@@ -13,15 +13,14 @@ namespace MvvmAppSample
         protected override async Task ConfigureContainerOverride()
         {
             await base.ConfigureContainerOverride();
-            RegionsService.RegisterStaticRegions(typeof(GlobalRegions));
-            RoutersService.RegisterStaticRouters(typeof(GlobalRouters));
+            await Navigation.RegisterStaticRegions(typeof(GlobalNav));
+
         }
 
         protected override async Task InitializeShellOverride()
         {
             await base.InitializeShellOverride();
-
-            await RegionsService[GlobalRegions.ShellWindow].NavigateTo<ShellVm>();
+            await Navigation.RouteTo(GlobalNav.ShellRoutes.Shell);
         }
     }
 }

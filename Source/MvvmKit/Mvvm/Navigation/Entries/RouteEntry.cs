@@ -81,6 +81,7 @@ namespace MvvmKit
 
         #endregion
 
+
         public override string ToString()
         {
             if (this == Empty) return "Empty Route Entry";

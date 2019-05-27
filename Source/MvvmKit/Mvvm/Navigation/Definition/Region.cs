@@ -14,6 +14,12 @@ namespace MvvmKit
 
         public HashSet<Route> Routes { get; } = new HashSet<Route>();
 
+        public IEnumerable<Route> AllRoutes => Routes.ToList();
+        public IEnumerable<Route> FixedRoutes => Routes.Where(x => x.ParameterMode == RouteParameterMode.Fixed);
+        public IEnumerable<Route> NoneRoutes => Routes.Where(x => x.ParameterMode == RouteParameterMode.None);
+        public IEnumerable<Route> VariantRoutes => Routes.Where(x => x.ParameterMode == RouteParameterMode.Variant);
+
+
         public Region WithName(string name)
         {
             Name = name;

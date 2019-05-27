@@ -69,13 +69,10 @@ namespace MvvmKit
 
         public UnityContainer Container { get; private set; }
 
-        public IResolver Resolver
-        {
-            get
-            {
-                return Container.Resolve<IResolver>();
-            }
-        }
+        public IResolver Resolver => Container.Resolve<IResolver>();
+
+        public NavigationService Navigation => Container.Resolve<NavigationService>();
+
 
         /// <summary>
         /// The method to call at the entry point of your application. It's signature is async void becuase it is meant to be called
@@ -93,6 +90,7 @@ namespace MvvmKit
             Container.RegisterInstance(GetType(), this);
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<NavigationService>(new ContainerControlledLifetimeManager());
 
             await ConfigureContainerOverride();
 

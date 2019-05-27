@@ -77,6 +77,27 @@ namespace MvvmKit
 
         #endregion
 
+        public bool IsMatchingRoute(Route route)
+        {
+            var isMatchingViewModelType = ViewModelType == route.ViewModelType;
+
+            if (!isMatchingViewModelType) return false;
+
+            if (route.ParameterMode == RouteParameterMode.Fixed) return Parameter == route.Parameter;
+
+            if (route.ParameterMode == RouteParameterMode.None) return Parameter == null;
+
+            return true;
+        }
+
+        public Route FindMatchingRoute(Region region)
+        {
+            var routesToSreach = region.FixedRoutes.Concat(region.NoneRoutes).Concat(region.VariantRoutes);
+            return routesToSreach.FirstOrDefault(r => IsMatchingRoute(r));
+        }
+
+
+
         public override string ToString()
         {
             if (this == Empty) return "Empty Region Entry";

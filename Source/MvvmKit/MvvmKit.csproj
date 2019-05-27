@@ -83,15 +83,21 @@
     <Compile Include="Mvvm\Internal Prism\Mvvm\PropertySupport.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
+    <Compile Include="Mvvm\Navigation\Behaviors\OpenWindowRegionBehavior.cs" />
     <Compile Include="Mvvm\Navigation\ComponentBase.cs" />
     <Compile Include="Mvvm\Navigation\Definition\Region.cs" />
     <Compile Include="Mvvm\Navigation\Definition\RegionBehavior.cs" />
     <Compile Include="Mvvm\Navigation\Definition\Route.cs" />
     <Compile Include="Mvvm\Navigation\Definition\RouteParameterMode.cs" />
     <Compile Include="Mvvm\Navigation\DialogBase.cs" />
+    <Compile Include="Mvvm\Navigation\Service\NavigationService.cs" />
+    <Compile Include="Mvvm\Navigation\Service\RegionHost.cs" />
+    <Compile Include="Mvvm\Navigation\Service\RegionHostBehavior.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionService.cs" />
     <Compile Include="Mvvm\Navigation\Entries\RegionEntry.cs" />
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
+    <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
+    <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
@@ -188,8 +194,6 @@
   <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Mvvm\Navigation\Behaviors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

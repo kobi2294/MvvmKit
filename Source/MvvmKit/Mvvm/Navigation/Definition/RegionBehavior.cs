@@ -8,44 +8,25 @@ namespace MvvmKit
 {
     public abstract class RegionBehavior
     {
-        internal Task BeforeNavigate()
+        internal Task BeforeNavigation(RegionService service)
         {
-            return OnBeforeNavigate();
+            return BeforeNavigationOverride(service);
         }
 
-        protected virtual Task OnBeforeNavigate()
+        protected virtual Task BeforeNavigationOverride(RegionService service)
         {
             return Tasks.Empty;
         }
 
-        internal Task AfterNavigate()
+        internal Task AfterNavigation(RegionService service)
         {
-            return AfterNavigate();
+            return AfterNavigationOverride(service);
         }
 
-        protected virtual Task OnAfterNavigate()
+        protected virtual Task AfterNavigationOverride(RegionService service)
         {
             return Tasks.Empty;
         }
 
-        internal Task BeforeClear()
-        {
-            return OnBeforeClear();
-        }
-
-        protected virtual Task OnBeforeClear()
-        {
-            return Tasks.Empty;
-        }
-
-        internal Task AfterClear()
-        {
-            return Tasks.Empty;
-        }
-
-        protected virtual Task OnAfterClear()
-        {
-            return Tasks.Empty;
-        }
     }
 }
