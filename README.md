@@ -3,8 +3,14 @@
 # MvvmKit
 By Kobi Hari (2019)
 
-## A strongly opinionated Mvvm framework and Toolkit
-See **Wiki** for detailed documentation
+## Release
+MvvmKit Is now available as:
+* Nuget Package - Containing the MvvmKit DLL with all the packages detailed here
+https://www.nuget.org/packages/MvvmKit/
+* Visual Studio Extension - Containing project and item templates and some helpful snippets
+https://marketplace.visualstudio.com/items?itemName=kobi2294.MvvmKit
+
+The documentation is right here, on **Wiki**
 
 ## This repository is actually 2 products: 
 * A general purpose toolkit containing several useful .net packages
