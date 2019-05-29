@@ -11,6 +11,8 @@ namespace MvvmKit
     {
         protected IResolver Resolver { get; private set; }
 
+        protected NavigationService Navigation { get; private set; }
+
         public object Parameter { get; private set; }
 
         #region Bindable Properties
@@ -43,9 +45,10 @@ namespace MvvmKit
         }
 
         [InjectionMethod]
-        public void Inject(IResolver resolver)
+        public void Inject(IResolver resolver, NavigationService navigation)
         {
             Resolver = resolver;
+            Navigation = navigation;
         }
 
         protected virtual Task OnInitialized(object param)

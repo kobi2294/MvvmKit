@@ -1,0 +1,24 @@
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
+  <Metadata>
+    <Identity Id="MvvmKitExtension.fca60f99-6a29-4936-a072-ba741fee533f" Version="1.6" Language="en-US" Publisher="Kobi Hari" />
+    <DisplayName>MvvmKitExtension</DisplayName>
+    <Description xml:space="preserve">An Extension for visual studio that contains templates and snippets that will help you develop an application using the MVVM KitAn Extension </Description>
+    <Icon>Icon.ico</Icon>
+    <PreviewImage>logo.png</PreviewImage>
+    <Tags>Mvvm, WPF, Unity, Async</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[16.0, 17.0)" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" Path="ProjectTemplates" />
+    <Asset Type="Microsoft.VisualStudio.ItemTemplate" Path="ItemTemplates" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" Path="snippets.pkgdef" />
+  </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+</PackageManifest>

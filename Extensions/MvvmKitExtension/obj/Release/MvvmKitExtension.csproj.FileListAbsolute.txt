@@ -1,0 +1,53 @@
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\ProjectTemplates\Mvvm\An MvvmKit Application.zip
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\ItemTemplates\MVVM\Component.zip
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\snippets.pkgdef
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\ItemTemplates\MVVM\MvvmKit Background Service.zip
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\ItemTemplates\MVVM\MvvmKit Ui Service.zip
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\Icon.ico
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\logo.png
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\MvvmKitExtension.vsix
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\extension.vsixmanifest
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\_EmptyResource.resources
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\MvvmKitExtension.csproj.GenerateResource.cache
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\MvvmKitExtension.csproj.CoreCompileInputs.cache
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\MvvmKitExtension.dll
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\MvvmKitExtension.pdb
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\extension.vsixmanifest
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\files.json
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\TemplateManifests\templateManifest0.noloc.vstman
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\TemplateManifests\templateManifest1.noloc.vstman
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\__PreviewImage.png
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\__TemplateIcon.ico
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\App.config
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\App.xaml
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\App.xaml.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Bootstrapper.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Components\Shell\DtShell.xaml
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Components\Shell\ShellView.xaml
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Components\Shell\ShellView.xaml.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Components\Shell\ShellVm.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Container\GlobalNav.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\MvvmKitAppSample.csproj
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\MyTemplate.vstemplate
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Properties\AssemblyInfo.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Properties\Resources.Designer.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Properties\Resources.resx
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Properties\Settings.Designer.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ProjectTemplates\Mvvm\An MvvmKit Application\Properties\Settings.settings
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\__TemplateIcon.ico
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\DtKobi.xaml
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\KobiView.xaml
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\KobiView.xaml.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\KobiVm.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\Component\MyTemplate.vstemplate
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Background Service\BackgroundService.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Background Service\__TemplateIcon.ico
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Background Service\__PreviewImage.png
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Background Service\MyTemplate.vstemplate
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Ui Service\UiService.cs
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Ui Service\__TemplateIcon.ico
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Ui Service\__PreviewImage.png
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\ItemTemplates\MVVM\MvvmKit Ui Service\MyTemplate.vstemplate
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\obj\Release\templateFiles.json
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\Snippets\Mvvm\vmprop.snippet
+D:\Projects\Mine\MvvmKit\Extensions\MvvmKitExtension\bin\Release\Snippets\Mvvm\vmpropa.snippet

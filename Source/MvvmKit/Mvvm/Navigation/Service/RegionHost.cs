@@ -37,6 +37,8 @@ namespace MvvmKit
 
             var navigation = BootstrapperBase.ResolveStatic<NavigationService>();
 
+            if (navigation == null) return;
+
             if (oldRegion != null)
             {
                 var service = await navigation.For(oldRegion);
@@ -81,6 +83,8 @@ namespace MvvmKit
             var newVal = e.NewValue as string;
 
             var navigation = BootstrapperBase.ResolveStatic<NavigationService>();
+            if (navigation == null) return;
+
             var service = await navigation.For(region);
             service?.ChangeHostContentProperty(cc, oldVal, newVal);
         }
@@ -110,6 +114,7 @@ namespace MvvmKit
             if (cc == null) return;
 
             var val = e.NewValue as RegionHostBehavior;
+            if (val == null) return;
             var allowedType = val.HostType;
 
             if (!allowedType.IsAssignableFrom(cc.GetType()))
