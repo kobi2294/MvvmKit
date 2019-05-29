@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
+	xmlns:root="clr-namespace:$safeprojectname$"
     xmlns:local="clr-namespace:$namespace$"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
