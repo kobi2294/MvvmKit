@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="MvvmKitExtension.fca60f99-6a29-4936-a072-ba741fee533f" Version="1.9" Language="en-US" Publisher="Kobi Hari" />
-        <DisplayName>MvvmKitExtension</DisplayName>
-        <Description xml:space="preserve">An Extension for visual studio that contains templates and snippets that will help you develop an application using the MVVM KitAn Extension </Description>
+        <Identity Id="MvvmKit Extension.fca60f99-6a29-4936-a072-ba741fee533f" Version="2.2" Language="en-US" Publisher="Kobi Hari" />
+        <DisplayName>MvvmKit Extension</DisplayName>
+        <Description xml:space="preserve">An Extension for visual studio that contains templates and snippets that will help you develop an application using the MVVM Kit</Description>
+        <MoreInfo>https://github.com/kobi2294/MvvmKit/wiki</MoreInfo>
+        <License>LICENSE</License>
+        <GettingStartedGuide>https://github.com/kobi2294/MvvmKit/wiki</GettingStartedGuide>
         <Icon>Icon.ico</Icon>
         <PreviewImage>logo.png</PreviewImage>
         <Tags>Mvvm, WPF, Unity, Async</Tags>
@@ -19,7 +22,7 @@
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\MVVM\Component.zip" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\MVVM\MvvmKit Ui Service.zip" />
         <Asset Type="Microsoft.VisualStudio.ItemTemplate" d:Source="File" Path="ItemTemplates" d:TargetPath="ItemTemplates\MVVM\MvvmKit Background Service.zip" />
-        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="snippets.pkgdef" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="File" Path="MvvmKit\MvvmKit.pkgdef" />
     </Assets>
     <Prerequisites>
         <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[16.0,17.0)" DisplayName="Visual Studio core editor" />
