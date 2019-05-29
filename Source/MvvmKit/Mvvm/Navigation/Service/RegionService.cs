@@ -94,9 +94,9 @@ namespace MvvmKit
         {
             return Run(() =>
             {
-                var route = _region.Routes.FirstOrDefault(r => r.Key == key);
+                var route = _region.Routes.FirstOrDefault(r => Equals(r.Key, key));
                 if (route == null)
-                    throw new InvalidOperationException("Region does not contain route with the provided key");
+                    throw new InvalidOperationException("Region does not contain route with the provided key: " + key);
                 return _routeTo(route, parameter);
             });
         }

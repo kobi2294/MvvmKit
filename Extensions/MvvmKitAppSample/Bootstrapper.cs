@@ -21,6 +21,8 @@ namespace MvvmKitAppSample
         {
             await base.InitializeShellOverride();
             await Navigation.RouteTo(GlobalNav.ShellRoutes.Shell);
+            await Navigation.RouteTo(GlobalNav.Main, GlobalNav.MainRoutes.One);
+            await Navigation.RouteTo(GlobalNav.Gain, GlobalNav.MainRoutes.Two);
         }
     }
 }

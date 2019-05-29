@@ -79,11 +79,11 @@ namespace MvvmKit
             if (isnull1 && isnull2) return true;
             if (isnull1 || isnull2) return false;
 
-            return (r1.ViewModelType == r2.ViewModelType)
-                && (r1.Key == r2.Key)
-                && (r1.Parameter == r2.Parameter)
-                && (r1.ParameterMode == r2.ParameterMode)
-                && (r1.ParameterType == r2.ParameterType);
+            return Equals(r1.ViewModelType, r2.ViewModelType)
+                && Equals(r1.Key, r2.Key)
+                && Equals(r1.Parameter, r2.Parameter)
+                && Equals(r1.ParameterMode, r2.ParameterMode)
+                && Equals(r1.ParameterType, r2.ParameterType);
         }
 
         public static bool operator !=(Route r1, Route r2)

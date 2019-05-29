@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
+             xmlns:root="clr-namespace:MvvmKitAppSample"
              xmlns:local="clr-namespace:MvvmKitAppSample.Components.Shell"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -16,7 +17,9 @@
             </ResourceDictionary.MergedDictionaries>
         </t:SelectiveResources>
     </UserControl.Resources>
-    <Grid>
-        <TextBlock Text="{Binding Title}"/>
-    </Grid>
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding Title}"/>
+        <ContentControl DockPanel.Dock="Top" Height="100" t:RegionHost.Region="{x:Static root:GlobalNav.Main}"></ContentControl>
+        <ContentControl DockPanel.Dock="Top" t:RegionHost.Region="{x:Static root:GlobalNav.Gain}"></ContentControl>
+    </DockPanel>
 </UserControl>

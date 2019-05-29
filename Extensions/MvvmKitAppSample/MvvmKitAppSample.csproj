@@ -59,6 +59,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\PageOne\PageOneView.xaml.cs">
+      <DependentUpon>PageOneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\PageOne\PageOneVm.cs" />
+    <Compile Include="Components\PageTwo\PageTwoView.xaml.cs">
+      <DependentUpon>PageTwoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\PageTwo\PageTwoVm.cs" />
     <Compile Include="Services\BackgroundService.cs" />
     <Compile Include="Services\UiService.cs" />
   </ItemGroup>
@@ -95,6 +103,22 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Components\PageOne\DtPageOne.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\PageOne\PageOneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\PageTwo\DtPageTwo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\PageTwo\PageTwoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Shell\DtShell.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,15 +129,18 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="MvvmKit">
-      <Version>1.0.0.12</Version>
-    </PackageReference>
     <PackageReference Include="Unity">
       <Version>5.10.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Basic\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\MvvmKit\MvvmKit.csproj">
+      <Project>{1a0cf5e1-fca7-48c2-b227-faf5d6ec59bc}</Project>
+      <Name>MvvmKit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
