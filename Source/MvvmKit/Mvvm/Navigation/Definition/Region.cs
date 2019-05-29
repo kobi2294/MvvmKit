@@ -35,6 +35,7 @@ namespace MvvmKit
         public Region Add(Route route)
         {
             Routes.Add(route);
+            route.Region = this;
             return this;
         }
 

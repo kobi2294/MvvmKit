@@ -20,7 +20,7 @@ namespace MvvmKit
 
         public RouteParameterMode ParameterMode { get; private set; }
 
-        public Region Region { get; private set; }
+        public Region Region { get; internal set; }
 
         private Route()
         {
