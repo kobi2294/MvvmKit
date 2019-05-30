@@ -8,7 +8,7 @@ using Unity;
 
 namespace MvvmKitAppSample.Services
 {
-    public class UiService: UiServiceBase
+    public class UiService : UiServiceBase, IUiService
     {
         protected override async Task OnInit()
         {

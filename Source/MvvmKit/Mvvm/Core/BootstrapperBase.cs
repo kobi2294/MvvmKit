@@ -123,6 +123,16 @@ namespace MvvmKit
             }
         }
 
+        protected void RegisterService<InterfaceType, ServiceType>(bool initService = true)
+            where ServiceType : ServiceBase, InterfaceType
+        {
+            Container.RegisterType<InterfaceType, ServiceType>(new ContainerControlledLifetimeManager());
+            if (initService)
+            {
+                _servicesToInit.Add(typeof(ServiceType));
+            }
+        }
+
 
         #region Overridables
 

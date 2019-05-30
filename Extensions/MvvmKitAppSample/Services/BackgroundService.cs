@@ -10,12 +10,19 @@ namespace MvvmKitAppSample.Services
 {
     public class BackgroundService: BackgroundServiceBase
     {
+
+        private readonly ServiceField<int> _MyNumber = 55;
+        public ServiceProperty<int> MyNumber { get => (_MyNumber, this); }
+
+
         private readonly ServiceField<int> _A = 42;
         public ServicePropertyReadonly<int> A { get => (_A, this); }
 
 
         private readonly ServiceField<bool> _PropName = true;
         public ServiceProperty<bool> PropName { get => (_PropName, this); }
+
+        public AsyncEvent<DateTime> OnMyBrithday { get; } = new AsyncEvent<DateTime>(DateTime.Now);
 
         public BackgroundService()
         {

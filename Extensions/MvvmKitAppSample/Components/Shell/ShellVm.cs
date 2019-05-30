@@ -53,7 +53,7 @@ namespace MvvmKitAppSample.Components.Shell
         #endregion
 
         private BackgroundService _service;
-
+        private IUiService _uiService;
 
         public ShellVm()
         {
@@ -64,6 +64,9 @@ namespace MvvmKitAppSample.Components.Shell
         protected override async Task OnInitialized(object param)
         {
             await base.OnInitialized(param);
+
+            var i = await _service.MyNumber.Get();
+            await _service.MyNumber.Set(43);
 
             await _service.PropName.Changed.Subscribe(this, val =>
             {
@@ -77,6 +80,12 @@ namespace MvvmKitAppSample.Components.Shell
                 return Tasks.Empty;
             });
 
+            await _service.OnMyBrithday.Subscribe(this, val =>
+            {
+                Debug.WriteLine("All is well" + val);
+                return Task.CompletedTask;
+            });
+
             await Navigation.RegisterRegion(MyRegion);
             await Navigation.NavigateTo<PageOneVm>(MyRegion);
         }
@@ -88,9 +97,10 @@ namespace MvvmKitAppSample.Components.Shell
         }
 
         [InjectionMethod]
-        public void Inject(BackgroundService service)
+        public void Inject(BackgroundService service, IUiService uis)
         {
             _service = service;
+            _uiService = uis;
         }
     }
 }

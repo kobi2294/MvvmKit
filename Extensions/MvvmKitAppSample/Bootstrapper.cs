@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MvvmKitAppSample.Services;
 
 namespace MvvmKitAppSample
 {
@@ -14,7 +15,7 @@ namespace MvvmKitAppSample
         {
             await base.ConfigureContainerOverride();
             await Navigation.RegisterStaticRegions(typeof(GlobalNav));
-
+            RegisterService<IUiService, UiService>();
         }
 
         protected override async Task InitializeShellOverride()
