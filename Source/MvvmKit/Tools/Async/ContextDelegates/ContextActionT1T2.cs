@@ -36,10 +36,10 @@ namespace MvvmKit
             : this(scheduler.ToContextRunner(), action.ToWeak(owner)) { }
 
         public ContextAction(WeakAction<T1, T2> wa)
-            : this(TaskScheduler.FromCurrentSynchronizationContext(), wa) { }
+            : this(Exec.RunningTaskScheduler, wa) { }
 
         public ContextAction(object owner, Action<T1, T2> a)
-            : this(TaskScheduler.FromCurrentSynchronizationContext(), a.ToWeak(owner)) { }
+            : this(Exec.RunningTaskScheduler, a.ToWeak(owner)) { }
 
         public Task Invoke(T1 arg1, T2 arg2)
         {

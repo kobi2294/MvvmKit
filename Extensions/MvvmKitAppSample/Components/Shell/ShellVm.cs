@@ -68,23 +68,23 @@ namespace MvvmKitAppSample.Components.Shell
             var i = await _service.MyNumber.Get();
             await _service.MyNumber.Set(43);
 
-            await _service.PropName.Changed.Subscribe(this, val =>
-            {
-                Debug.WriteLine("PropName was changed to " + val);
-                return Tasks.Empty;
-            });
+            //await _service.PropName.Changed.Subscribe(this, val =>
+            //{
+            //    Debug.WriteLine("PropName was changed to " + val);
+            //    return Tasks.Empty;
+            //});
 
-            await _service.A.Changed.Subscribe(this, val =>
-            {
-                Debug.WriteLine("service.A = " + val);
-                return Tasks.Empty;
-            });
+            //await _service.A.Changed.Subscribe(this, val =>
+            //{
+            //    Debug.WriteLine("service.A = " + val);
+            //    return Tasks.Empty;
+            //});
 
-            await _service.OnMyBrithday.Subscribe(this, val =>
-            {
-                Debug.WriteLine("All is well" + val);
-                return Task.CompletedTask;
-            });
+            //await _service.OnMyBrithday.Subscribe(this, val =>
+            //{
+            //    Debug.WriteLine("All is well" + val);
+            //    return Task.CompletedTask;
+            //});
 
             await Navigation.RegisterRegion(MyRegion);
             await Navigation.NavigateTo<PageOneVm>(MyRegion);

@@ -18,6 +18,11 @@ namespace MvvmKit
             return callback(LatestValue);
         }
 
+        public Task Subscribe(object onString)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task Unsubscribe(object owner, Func<T, Task> callback = null)
         {
             if (callback == null)

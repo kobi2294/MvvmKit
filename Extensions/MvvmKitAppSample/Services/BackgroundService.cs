@@ -1,8 +1,10 @@
 ﻿using MvvmKit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity;
 
@@ -20,9 +22,12 @@ namespace MvvmKitAppSample.Services
 
 
         private readonly ServiceField<bool> _PropName = true;
+
         public ServiceProperty<bool> PropName { get => (_PropName, this); }
 
         public AsyncEvent<DateTime> OnMyBrithday { get; } = new AsyncEvent<DateTime>(DateTime.Now);
+
+        private IUiService _uiService;
 
         public BackgroundService()
         {
@@ -34,16 +39,21 @@ namespace MvvmKitAppSample.Services
         }
 
         [InjectionMethod]
-        public void Inject()
+        public void Inject(IUiService uiService)
         {
             // store dependencies here
+            _uiService = uiService;
         }
 
         public Task Method()
         {
             return Run(async () =>
             {
+                Debug.WriteLine("I am in a ba service, thread = " + Thread.CurrentThread.ManagedThreadId);
+
                 await _A.Set(_A.Value + 1);
+
+                await _uiService.Method();
             }, true);
         }
     }

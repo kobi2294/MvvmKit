@@ -42,9 +42,14 @@ namespace MvvmKit
             }
         }
 
+        public static TaskScheduler RunningTaskScheduler =>
+            SynchronizationContext.Current == null
+                ? TaskScheduler.Default
+                : TaskScheduler.FromCurrentSynchronizationContext();
+
         internal static void InitUiTaskScheduler()
         {
-            _uiTaskScheduler = TaskScheduler.FromCurrentSynchronizationContext();
+            _uiTaskScheduler = Exec.RunningTaskScheduler;
         }
 
         public static bool IsOnUiThread()

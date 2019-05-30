@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Unity;
@@ -96,13 +97,17 @@ namespace MvvmKit
 
             // init services
             var services = _servicesToInit.Select(type => Container.Resolve(type) as ServiceBase)
-                                          .Select(service => service.Init());
+                                          .Select(service => service.Init())
+                                          .ToList();
+
+            var ctxt = SynchronizationContext.Current;
 
             await OnServicesInitializing();
 
             await InitializeShellOverride();
 
             await Task.WhenAll(services);
+
             await OnServicesInitialized();
         }
 
@@ -129,7 +134,7 @@ namespace MvvmKit
             Container.RegisterType<InterfaceType, ServiceType>(new ContainerControlledLifetimeManager());
             if (initService)
             {
-                _servicesToInit.Add(typeof(ServiceType));
+                _servicesToInit.Add(typeof(InterfaceType));
             }
         }
 

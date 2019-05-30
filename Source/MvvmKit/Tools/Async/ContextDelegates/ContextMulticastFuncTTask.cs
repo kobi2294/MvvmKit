@@ -94,7 +94,8 @@ namespace MvvmKit
 
         public ContextMulticastFuncTask<T> Add(object owner, Func<T, Task> a)
         {
-            return new ContextMulticastFuncTask<T>(_actions.Concat(a.InContext(owner)));
+            var x = _actions.Concat(a.InContext(owner));
+            return new ContextMulticastFuncTask<T>(x);
         }
 
         public static ContextMulticastFuncTask<T> operator +(ContextMulticastFuncTask<T> cma, (object owner, Func<T, Task> a) action)

@@ -24,7 +24,7 @@ namespace MvvmKit
         /// </summary>
         /// <param name="execute">The <see cref="Action"/> to invoke when <see cref="ICommand.Execute"/> is called.</param>
         /// <param name="canExecute">The <see cref="Func{TResult}"/> to invoke when <see cref="ICommand.CanExecute"/> is called</param>
-        DelegateCommand(Action execute, Func<bool> canExecute)
+        public DelegateCommand(Action execute, Func<bool> canExecute)
             : base(execute, canExecute)
         {
         }

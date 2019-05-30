@@ -38,10 +38,10 @@ namespace MvvmKit
             : this(scheduler.ToContextRunner(), action.ToWeak(owner)) { }
 
         public ContextFunc(WeakFunc<T, TResult> wa)
-            : this(TaskScheduler.FromCurrentSynchronizationContext(), wa) { }
+            : this(Exec.RunningTaskScheduler, wa) { }
 
         public ContextFunc(object owner, Func<T, TResult> a)
-            : this(TaskScheduler.FromCurrentSynchronizationContext(), a.ToWeak(owner)) { }
+            : this(Exec.RunningTaskScheduler, a.ToWeak(owner)) { }
 
         public Task<TResult> Invoke(T arg)
         {

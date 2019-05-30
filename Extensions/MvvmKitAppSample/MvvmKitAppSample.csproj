@@ -68,6 +68,10 @@
     </Compile>
     <Compile Include="Components\PageTwo\PageTwoVm.cs" />
     <Compile Include="Services\BackgroundService.cs" />
+    <Compile Include="Services\BgService1.cs" />
+    <Compile Include="Services\BgService2.cs" />
+    <Compile Include="Services\IBgService1.cs" />
+    <Compile Include="Services\IBgService2.cs" />
     <Compile Include="Services\IUiService.cs" />
     <Compile Include="Services\UiService.cs" />
   </ItemGroup>
