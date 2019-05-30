@@ -80,5 +80,10 @@ namespace MvvmKit
                 return await _taskFactory.Run(method);
             }
         }
+
+        public ServiceRunner GetRunner()
+        {
+            return new ServiceRunner(_mutex, _taskFactory);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace MvvmKit
         /// <param name="execute">Delegate to execute when Execute is called on the command. This can be null to just hook up a CanExecute delegate.</param>
         /// <param name="canExecute">Delegate to execute when CanExecute is called on the command. This can be null.</param>
         /// <exception cref="ArgumentNullException">When both <paramref name="execute"/> and <paramref name="canExecute"/> ar <see langword="null" />.</exception>
-        DelegateCommand(Action<T> execute, Func<T, bool> canExecute)
+        public DelegateCommand(Action<T> execute, Func<T, bool> canExecute)
             : base(execute, canExecute)
         {
         }

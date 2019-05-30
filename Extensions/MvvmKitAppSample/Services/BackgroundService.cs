@@ -10,11 +10,20 @@ namespace MvvmKitAppSample.Services
 {
     public class BackgroundService: BackgroundServiceBase
     {
+        private readonly ServiceField<int> _A = 42;
+        public ServicePropertyReadonly<int> A { get => (_A, this); }
+
+
+        private readonly ServiceField<bool> _PropName = true;
+        public ServiceProperty<bool> PropName { get => (_PropName, this); }
+
+        public BackgroundService()
+        {
+        }
+
         protected override async Task OnInit()
         {
             await base.OnInit();
-
-            // init logic here
         }
 
         [InjectionMethod]
@@ -25,10 +34,10 @@ namespace MvvmKitAppSample.Services
 
         public Task Method()
         {
-            return Run(() =>
+            return Run(async () =>
             {
-                // your logic here
-            });
+                await _A.Set(_A.Value + 1);
+            }, true);
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using MvvmKit;
 using MvvmKitAppSample.Components.PageOne;
+using MvvmKitAppSample.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +27,33 @@ namespace MvvmKitAppSample.Components.Shell
 
         #region Commands
 
+        #region ChangeA Command
+
+        private DelegateCommand _ChangeACommand;
+        public DelegateCommand ChangeACommand
+        {
+            get
+            {
+                if (_ChangeACommand == null) _ChangeACommand = new DelegateCommand(OnChangeACommand);
+                return _ChangeACommand;
+            }
+        }
+
+        public async void OnChangeACommand()
+        {
+            var val = await _service.PropName.Get();
+            Debug.WriteLine("The value of propname is " + val);
+            await _service.PropName.Set(!val);
+            await _service.Method();
+        }
+
+
         #endregion
+
+        #endregion
+
+        private BackgroundService _service;
+
 
         public ShellVm()
         {
@@ -37,14 +65,32 @@ namespace MvvmKitAppSample.Components.Shell
         {
             await base.OnInitialized(param);
 
+            await _service.PropName.Changed.Subscribe(this, val =>
+            {
+                Debug.WriteLine("PropName was changed to " + val);
+                return Tasks.Empty;
+            });
+
+            await _service.A.Changed.Subscribe(this, val =>
+            {
+                Debug.WriteLine("service.A = " + val);
+                return Tasks.Empty;
+            });
+
             await Navigation.RegisterRegion(MyRegion);
             await Navigation.NavigateTo<PageOneVm>(MyRegion);
         }
 
-        [InjectionMethod]
-        public void Inject()
+        protected override async Task OnClearing()
         {
+            await _service.PropName.Changed.Unsubscribe(this);
+            await base.OnClearing();
+        }
 
+        [InjectionMethod]
+        public void Inject(BackgroundService service)
+        {
+            _service = service;
         }
     }
 }

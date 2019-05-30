@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Service Readonly Property</Title>
+      <Description>Create a ServiceField and A readonly ServiceProperty that exposes it</Description>
+      <Shortcut>spropro</Shortcut>
+      <Author>Kobi Hari</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <ToolTip>Replace with the type of the property</ToolTip>
+          <Default>Prop</Default>
+        </Literal>
+        <Literal>
+          <ID>name</ID>
+          <ToolTip>Replace with the name of the property</ToolTip>
+          <Default>Prop</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp">
+        <![CDATA[
+        private readonly ServiceField<$type$> _$name$ = true;
+        public ServicePropertyReadonly<$type$> $name$ { get => (_$name$, this); }
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
