@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>View Model Typed Command</Title>
+      <Description>Create a Typed Command Property</Description>
+      <Shortcut>vmcmdt</Shortcut>
+      <Author>Kobi Hari</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>type</ID>
+          <ToolTip>Replace with the property type</ToolTip>
+          <Default>int</Default>
+        </Literal>
+        <Literal>
+          <ID>name</ID>
+          <ToolTip>Replace with the name of the property</ToolTip>
+          <Default>Prop</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp">
+        <![CDATA[
+        #region $name$ Command
+
+        private DelegateCommand<$type$> _$name$Command;
+        public DelegateCommand<$type$> $name$Command
+        {
+            get
+            {
+                if (_$name$Command == null) _$name$Command = new DelegateCommand<$type$>(On$name$Command);
+                return _$name$Command;
+            }
+        }
+
+        public void On$name$Command($type$ param)
+        {
+
+        }
+
+        #endregion
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

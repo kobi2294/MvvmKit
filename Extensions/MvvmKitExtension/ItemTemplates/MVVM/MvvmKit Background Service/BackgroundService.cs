@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity;
 
-namespace MvvmKitAppSample.Services
+namespace $rootnamespace$
 {
-    public class BackgroundService: BackgroundServiceBase
+    public class $safeitemname$: BackgroundServiceBase
     {
         protected override async Task OnInit()
         {

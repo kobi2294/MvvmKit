@@ -17,6 +17,10 @@ namespace MvvmKitAppSample.Components.Shell
 
         #endregion
 
+        #region Commands
+
+        #endregion
+
         public ShellVm()
         {
             Title = "Hello MvvmKit Runtime";

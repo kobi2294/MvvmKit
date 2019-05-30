@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>View Model Command</Title>
+      <Description>Create a Command Property</Description>
+      <Shortcut>vmcmd</Shortcut>
+      <Author>Kobi Hari</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>name</ID>
+          <ToolTip>Replace with the name of the property</ToolTip>
+          <Default>Prop</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp">
+        <![CDATA[
+        #region $name$ Command
+
+        private DelegateCommand _$name$Command;
+        public DelegateCommand $name$Command
+        {
+            get
+            {
+                if (_$name$Command == null) _$name$Command = new DelegateCommand(On$name$Command);
+                return _$name$Command;
+            }
+        }
+
+        public void On$name$Command()
+        {
+
+        }
+        ]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>
