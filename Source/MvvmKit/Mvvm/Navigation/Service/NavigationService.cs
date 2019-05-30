@@ -96,66 +96,47 @@ namespace MvvmKit
             }, true);
         }
 
-        public Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)
+        public async Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)
         {
-            return Run(() =>
-            {
-                var service = _serviceByRegion[region];
-                return service.NavigateTo(t, param);
-            });
+            var service = await For(region);
+            return await service.NavigateTo(t, param);
         }
 
-        public Task<TVM> NavigateTo<TVM>(Region region, object param = null)
+        public async Task<TVM> NavigateTo<TVM>(Region region, object param = null)
             where TVM: ComponentBase
         {
-            return Run(() =>
-            {
-                var service = _serviceByRegion[region];
-                return service.NavigateTo<TVM>(param);
-            });
+            var service = await For(region);
+            return await service.NavigateTo<TVM>(param);
         }
 
-        public Task Clear(Region region)
+        public async Task Clear(Region region)
         {
-            return Run(() =>
-            {
-                var service = _serviceByRegion[region];
-                return service.Clear();
-            });
+            var service = await For(region);
+            await service.Clear();
         }
 
-        public  Task<T> RunDialog<TVM, T>(Region region, object param = null)
+        public  async Task<T> RunDialog<TVM, T>(Region region, object param = null)
             where TVM: DialogBase<T>
         {
-            return Run(() =>
-            {
-                var service = _serviceByRegion[region];
-                return service.RunDialog<TVM, T>(param);
-            });
+            var service = await For(region);
+            return await service.RunDialog<TVM, T>(param);
         }
 
-        public  Task<ComponentBase> RouteTo(Route route, object param = null)
+        public  async Task<ComponentBase> RouteTo(Route route, object param = null)
         {
-            return Run(() =>
-            {
-                var service = _serviceByRoute[route];
-                return service.RouteTo(route, param);
-
-            });
+            var service = await For(route.Region);
+            return await service.RouteTo(route, param);
         }
 
-        public Task<ComponentBase> RouteTo(Region region, object key, object param = null)
+        public async Task<ComponentBase> RouteTo(Region region, object key, object param = null)
         {
-            return Run(() =>
-            {
-                var service = _serviceByRegion[region];
-                return service.RouteTo(key, param);
-            });
+            var service = await For(region);
+            return await service.RouteTo(key, param);
         }
 
-        public Task<ComponentBase> RouteTo(object key, object param = null)
+        public async Task<ComponentBase> RouteTo(object key, object param = null)
         {
-            return Run(() =>
+            var route = await Run(() =>
             {
                 var routes = _routeByKey[key];
                 if (routes.Count() > 1)
@@ -164,13 +145,11 @@ namespace MvvmKit
                 if (routes.Count() == 0)
                     throw new InvalidOperationException("There are no routes with the privided key");
 
-                var route = routes.Single();
-                var service = _serviceByRoute[route];
-                return service.RouteTo(route, param);
+                return routes.Single();
             });
-
+            var service = await For(route.Region);
+            return await service.RouteTo(route, param);
         }
-
 
     }
 }

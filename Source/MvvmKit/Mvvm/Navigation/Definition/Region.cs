@@ -34,8 +34,10 @@ namespace MvvmKit
 
         public Region Add(Route route)
         {
-            Routes.Add(route);
+            // critical to maintain the order here, because region is part of the hashcode of the route, 
+            // so all properties must be set before adding it to the hashset
             route.Region = this;
+            Routes.Add(route);
             return this;
         }
 

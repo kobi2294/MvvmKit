@@ -83,7 +83,9 @@ namespace MvvmKit
                 && Equals(r1.Key, r2.Key)
                 && Equals(r1.Parameter, r2.Parameter)
                 && Equals(r1.ParameterMode, r2.ParameterMode)
-                && Equals(r1.ParameterType, r2.ParameterType);
+                && Equals(r1.ParameterType, r2.ParameterType)
+                && Equals(r1.Region, r2.Region)
+                ;
         }
 
         public static bool operator !=(Route r1, Route r2)
@@ -99,7 +101,7 @@ namespace MvvmKit
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(ViewModelType, Key, Parameter, ParameterType, ParameterMode);
+            return ObjectExtensions.GenerateHashCode(ViewModelType, Key, Parameter, ParameterType, ParameterMode, Region);
         }
 
         public override string ToString()
