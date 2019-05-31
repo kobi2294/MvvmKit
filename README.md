@@ -3,6 +3,8 @@
 # MvvmKit
 By Kobi Hari (2019)
 
+[![NuGet Pre Release](https://img.shields.io/nuget/v/MvvmKit.svg)](https://www.nuget.org/packages/MvvmKit/)
+
 ## Release
 MvvmKit Is now available as:
 * Nuget Package - Containing the MvvmKit DLL with all the packages detailed here
