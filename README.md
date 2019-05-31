@@ -9,16 +9,11 @@ By Kobi Hari (2019)
 ![Nuget](https://img.shields.io/nuget/v/mvvmKit.svg?style=plastic)
 
 ## Getting Started
-* Install Visual Studio Extension for Templates and Snippets
-https://marketplace.visualstudio.com/items?itemName=kobi2294.MvvmKit
-
+* Install [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=kobi2294.MvvmKit) for Templates and Snippets
 or
+* Add [Nuget Packge](https://www.nuget.org/packages/MvvmKit/):
 
-* Add Nuget Packge:
-https://www.nuget.org/packages/MvvmKit/
-
-
-* The documentation is right here, on **Wiki**
+* The [Documentation](https://github.com/kobi2294/MvvmKit/wiki) is right here, on **Wiki**
 
 ## This repository is actually 2 products: 
 * A general purpose toolkit containing several useful .net packages
