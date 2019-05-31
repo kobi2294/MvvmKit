@@ -3,7 +3,8 @@
 # MvvmKit
 By Kobi Hari (2019)
 
-[![NuGet Pre Release](https://img.shields.io/nuget/v/MvvmKit.svg)](https://www.nuget.org/packages/MvvmKit/)
+![Nuget](https://img.shields.io/nuget/v/mvvmKit.svg?style=plastic)
+![GitHub release](https://img.shields.io/github/release-pre/kobi2294/mvvmKit.svg?style=plastic)
 
 ## Release
 MvvmKit Is now available as:
