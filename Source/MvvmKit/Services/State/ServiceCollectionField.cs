@@ -9,7 +9,7 @@ namespace MvvmKit
 {
     public class ServiceCollectionField<T>
     {
-        private ObservableCollection<T> _items;
+        private List<T> _items;
 
         public ServiceCollectionField(IEnumerable<T> values = null)
         {
@@ -36,11 +36,9 @@ namespace MvvmKit
 
         public int FindIndex(Predicate<T> predicate) => _items.FindIndex(predicate);
 
-        public void ForEach(Action<T> action) => _items.ForEach(action);
+        public List<T> GetRange(int index, int count) => _items.GetRange(index, count);
 
         public List<T> Items => _items.ToList();
-
-        public List<T> GetRange(int index, int count) => _items.GetRange(index, count);
 
         public int IndexOf(T item) => _items.IndexOf(item);
 

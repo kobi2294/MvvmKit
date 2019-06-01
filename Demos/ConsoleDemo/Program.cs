@@ -19,33 +19,12 @@ namespace ConsoleDemo
 {
     class Program
     {
-        class Vm: BindableBase
-        {
-            private int _Num;
-            public int Num { get { return _Num; } set { SetProperty(ref _Num, value); } }
-
-        }
-
 
         static void Main(string[] args)
         {
-            Samples.IoC.IoCTest.Run();
-            // before new development
+            Samples.Research.ObservableTest.Run();
 
-            var vm = new Vm();
-            var x = new object();
-
-            vm.Observe(() => vm.Num, (oldv, newv) => Console.WriteLine($"Value Changed from {oldv} to {newv}"));
-            vm.Observe(() => vm.Num, x, (oldv, newv) => Console.WriteLine($"XXXXX!!! Value Changed from {oldv} to {newv}"));
-
-            vm.Num = 20;
-            vm.Num = 50;
-
-            vm.Unobserve(() => vm.Num);
-            vm.Num = 80;
-
-            Console.ReadLine();
-            
+            Console.ReadLine();            
         }
     }
 }

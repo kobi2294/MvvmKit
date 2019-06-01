@@ -113,6 +113,19 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Services\BackgroundServiceBase.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChange.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeAdd.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeClear.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeMove.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeRemove.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeReplace.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\CollectionChanges.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChange.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeAdd.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeClear.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeMove.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeRemove.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeReplace.cs" />
     <Compile Include="Services\State\ServiceCollectionField.cs" />
     <Compile Include="Services\State\ServiceProperty.cs" />
     <Compile Include="Services\ServiceRunner.cs" />

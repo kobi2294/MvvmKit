@@ -59,6 +59,7 @@
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Samples\Bindable\Observe.cs" />
     <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
     <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
     <Compile Include="Samples\Disposables\OneTimeCalc.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Samples\IoC\IoCTest.cs" />
     <Compile Include="Samples\IoC\ServiceClass.cs" />
     <Compile Include="Samples\LazyDictionaryDemo.cs" />
+    <Compile Include="Samples\Research\ObservableTest.cs" />
     <Compile Include="Samples\Weaks\WeakDelegateDemo.cs" />
   </ItemGroup>
   <ItemGroup>
