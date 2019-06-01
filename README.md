@@ -3,14 +3,17 @@
 # MvvmKit
 By Kobi Hari (2019)
 
-## Release
-MvvmKit Is now available as:
-* Nuget Package - Containing the MvvmKit DLL with all the packages detailed here
-https://www.nuget.org/packages/MvvmKit/
-* Visual Studio Extension - Containing project and item templates and some helpful snippets
-https://marketplace.visualstudio.com/items?itemName=kobi2294.MvvmKit
+![GitHub release](https://img.shields.io/github/release-pre/kobi2294/mvvmKit.svg?style=plastic)
+![GitHub](https://img.shields.io/github/license/kobi2294/MvvmKit.svg?style=plastic)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/kobi2294/MvvmKit.svg?style=plastic)
+![Nuget](https://img.shields.io/nuget/v/mvvmKit.svg?style=plastic)
 
-The documentation is right here, on **Wiki**
+## Getting Started
+* Install [Visual Studio Extension](https://marketplace.visualstudio.com/items?itemName=kobi2294.MvvmKit) for Templates and Snippets
+or
+* Add [Nuget Packge](https://www.nuget.org/packages/MvvmKit/):
+
+* The [Documentation](https://github.com/kobi2294/MvvmKit/wiki) is right here, on **Wiki**
 
 ## This repository is actually 2 products: 
 * A general purpose toolkit containing several useful .net packages
