@@ -108,7 +108,7 @@
 
   <ItemGroup>
     <PackageReference Include="MvvmKit">
-      <Version>1.0.0.22</Version>
+      <Version>1.0.0.23</Version>
     </PackageReference>
     <PackageReference Include="Unity">
       <Version>5.10.3</Version>

@@ -11,7 +11,7 @@ namespace MvvmKit.CollectionChangeEvents
         ChangeType ChangeType { get; }
     }
 
-    public interface IChange<T>
+    public interface IChange<T>: IChange
     {
     }
 }

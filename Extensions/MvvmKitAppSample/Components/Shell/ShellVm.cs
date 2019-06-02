@@ -1,5 +1,6 @@
 ﻿using MvvmKit;
 using MvvmKitAppSample.Components.PageOne;
+using MvvmKitAppSample.Model;
 using MvvmKitAppSample.Services;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,7 @@ namespace MvvmKitAppSample.Components.Shell
 
         private BackgroundService _service;
         private IUiService _uiService;
+        private ItemsService _itemsService;
 
         public ShellVm()
         {
@@ -95,9 +97,20 @@ namespace MvvmKitAppSample.Components.Shell
             MyRegion = new Region();
         }
 
+        [InjectionMethod]
+        public void Inject(BackgroundService service, IUiService uis, ItemsService itemsService)
+        {
+            _service = service;
+            _uiService = uis;
+            _itemsService = itemsService;
+        }
+
+
         protected override async Task OnInitialized(object param)
         {
             await base.OnInitialized(param);
+
+            await _itemsService.TodoItems.Changed.Subscribe(this, OnItemsChanged);
 
             var i = await _service.MyNumber.Get();
             await _service.MyNumber.Set(43);
@@ -134,17 +147,16 @@ namespace MvvmKitAppSample.Components.Shell
             await Navigation.NavigateTo<PageOneVm>(MyRegion);
         }
 
+        private Task OnItemsChanged(CollectionChanges<TodoItem> arg)
+        {
+            return Task.CompletedTask;
+        }
+
         protected override async Task OnClearing()
         {
             await _service.PropName.Changed.Unsubscribe(this);
             await base.OnClearing();
         }
 
-        [InjectionMethod]
-        public void Inject(BackgroundService service, IUiService uis)
-        {
-            _service = service;
-            _uiService = uis;
-        }
     }
 }

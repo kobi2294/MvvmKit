@@ -29,7 +29,7 @@ namespace MvvmKit
                 _items = new List<T>();
             }
 
-            Changed = new AsyncEvent<CollectionChanges<T>>(Changes.Reset(values));
+            Changed = new AsyncEvent<CollectionChanges<T>>(Changes.Reset(_items));
         }
 
         public ServiceCollectionField(params T[] values)
@@ -153,6 +153,23 @@ namespace MvvmKit
             var item = _items[index];
             _items.RemoveAt(index);
             await Changed.Invoke(Changes.Remove(index, item));
+        }
+
+        public async Task RemoveWhere(Predicate<T> predicate)
+        {
+            var itemsToRemove = _items
+                .Select((v, i) => (index: i, value: v))
+                .Where(pair => predicate(pair.value))
+                .OrderByDescending(pair => pair.index)
+                .Select(pair => Changes.Remove(pair.index, pair.value))
+                .ToList();
+
+            foreach (var pair in itemsToRemove)
+            {
+                _items.RemoveAt(pair.Index);
+            }
+
+            await Changed.Invoke(itemsToRemove.Collect());
         }
 
         public async Task Reset(IEnumerable<T> values)
