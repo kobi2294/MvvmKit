@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public abstract class CollectionChangeAdd : ICollectionChangeAdd
+    public abstract class ItemAdded : Change, IItemAdded
     {
         public int Index { get; }
 
         public object Item { get; }
 
-        public CollectionChangeAdd(int index, object item)
+        public ItemAdded(int index, object item)
+            :base(ChangeType.Added)
         {
             Item = item;
             Index = index;
@@ -21,17 +22,17 @@ namespace MvvmKit
         #region Comparing
         public override bool Equals(object obj)
         {
-            if (!(obj is CollectionChangeAdd)) return false;
+            if (!(obj is ItemAdded)) return false;
 
-            return this == (CollectionChangeAdd)obj;
+            return this == (ItemAdded)obj;
         }
 
-        public bool Equals(CollectionChangeAdd other)
+        public bool Equals(ItemAdded other)
         {
             return this == other;
         }
 
-        public static bool operator ==(CollectionChangeAdd rs1, CollectionChangeAdd rs2)
+        public static bool operator ==(ItemAdded rs1, ItemAdded rs2)
         {
             var isnull1 = ReferenceEquals(rs1, null);
             var isnull2 = ReferenceEquals(rs2, null);
@@ -42,7 +43,7 @@ namespace MvvmKit
             return ((rs1.Index == rs2.Index) && (rs1.Item == rs2.Item));
         }
 
-        public static bool operator !=(CollectionChangeAdd rs1, CollectionChangeAdd rs2)
+        public static bool operator !=(ItemAdded rs1, ItemAdded rs2)
         {
             return !(rs1 == rs2);
         }
@@ -56,18 +57,23 @@ namespace MvvmKit
 
     }
 
-    public class CollectionChangeAdd<T> : CollectionChangeAdd, ICollectionChangeAdd<T>
+    public class ItemAdded<T> : ItemAdded, IItemAdded<T>
     {
         public new T Item => (T)base.Item;
 
-        public CollectionChangeAdd(int index, T item)
+        public ItemAdded(int index, T item)
             :base(index, item)
         {
         }
 
-        public static implicit operator CollectionChangeAdd<T>((int index, T item) value)
+        public static implicit operator ItemAdded<T>((int index, T item) value)
         {
-            return new CollectionChangeAdd<T>(value.index, value.item);
+            return new ItemAdded<T>(value.index, value.item);
+        }
+
+        public override string ToString()
+        {
+            return $"Added {Item} at {Index}";
         }
 
     }

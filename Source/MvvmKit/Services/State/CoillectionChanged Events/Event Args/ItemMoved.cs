@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public abstract class CollectionChangeMove : ICollectionChangeMove
+    public abstract class ItemMoved : Change, IItemMoved
     {
         public int FromIndex { get; }
 
@@ -14,7 +14,8 @@ namespace MvvmKit
 
         public object Item { get; }
 
-        public CollectionChangeMove(int fromIndex, int toIndex, object item)
+        public ItemMoved(int fromIndex, int toIndex, object item)
+            :base(ChangeType.Moved)
         {
             Item = item;
             FromIndex = fromIndex;
@@ -24,17 +25,17 @@ namespace MvvmKit
         #region Comparing
         public override bool Equals(object obj)
         {
-            if (!(obj is CollectionChangeMove)) return false;
+            if (!(obj is ItemMoved)) return false;
 
-            return this == (CollectionChangeMove)obj;
+            return this == (ItemMoved)obj;
         }
 
-        public bool Equals(CollectionChangeMove other)
+        public bool Equals(ItemMoved other)
         {
             return this == other;
         }
 
-        public static bool operator ==(CollectionChangeMove rs1, CollectionChangeMove rs2)
+        public static bool operator ==(ItemMoved rs1, ItemMoved rs2)
         {
             var isnull1 = ReferenceEquals(rs1, null);
             var isnull2 = ReferenceEquals(rs2, null);
@@ -45,7 +46,7 @@ namespace MvvmKit
             return ((rs1.FromIndex == rs2.FromIndex) && (rs1.ToIndex == rs2.ToIndex) && (rs1.Item == rs2.Item));
         }
 
-        public static bool operator !=(CollectionChangeMove rs1, CollectionChangeMove rs2)
+        public static bool operator !=(ItemMoved rs1, ItemMoved rs2)
         {
             return !(rs1 == rs2);
         }
@@ -59,18 +60,23 @@ namespace MvvmKit
 
     }
 
-    public class CollectionChangeMove<T> : CollectionChangeMove, ICollectionChangeMove<T>
+    public class ItemMoved<T> : ItemMoved, IItemMoved<T>
     {
         public new T Item => (T)base.Item;
 
-        public CollectionChangeMove(int fromIndex, int toIndex, T item)
+        public ItemMoved(int fromIndex, int toIndex, T item)
             : base(fromIndex, toIndex, item)
         {
         }
 
-        public static implicit operator CollectionChangeMove<T>((int fromIndex, int toIndex, T item) value)
+        public static implicit operator ItemMoved<T>((int fromIndex, int toIndex, T item) value)
         {
-            return new CollectionChangeMove<T>(value.fromIndex, value.toIndex, value.item);
+            return new ItemMoved<T>(value.fromIndex, value.toIndex, value.item);
+        }
+
+        public override string ToString()
+        {
+            return $"Moved {Item} from {FromIndex} to {ToIndex}";
         }
 
     }

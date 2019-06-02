@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public abstract class CollectionChangeRemove : ICollectionChangeRemove
+    public abstract class ItemRemoved : Change, IItemRemoved
     {
         public int Index { get; }
 
         public object Item { get; }
 
-        public CollectionChangeRemove(int index, object item)
+        public ItemRemoved(int index, object item)
+            :base(ChangeType.Removed)
         {
             Item = item;
             Index = index;
@@ -21,17 +22,17 @@ namespace MvvmKit
         #region Comparing
         public override bool Equals(object obj)
         {
-            if (!(obj is CollectionChangeRemove)) return false;
+            if (!(obj is ItemRemoved)) return false;
 
-            return this == (CollectionChangeRemove)obj;
+            return this == (ItemRemoved)obj;
         }
 
-        public bool Equals(CollectionChangeRemove other)
+        public bool Equals(ItemRemoved other)
         {
             return this == other;
         }
 
-        public static bool operator ==(CollectionChangeRemove rs1, CollectionChangeRemove rs2)
+        public static bool operator ==(ItemRemoved rs1, ItemRemoved rs2)
         {
             var isnull1 = ReferenceEquals(rs1, null);
             var isnull2 = ReferenceEquals(rs2, null);
@@ -42,7 +43,7 @@ namespace MvvmKit
             return ((rs1.Index == rs2.Index) && (rs1.Item == rs2.Item));
         }
 
-        public static bool operator !=(CollectionChangeRemove rs1, CollectionChangeRemove rs2)
+        public static bool operator !=(ItemRemoved rs1, ItemRemoved rs2)
         {
             return !(rs1 == rs2);
         }
@@ -56,19 +57,23 @@ namespace MvvmKit
 
     }
 
-    public class CollectionChangeRemove<T> : CollectionChangeRemove, ICollectionChangeRemove<T>
+    public class ItemRemoved<T> : ItemRemoved, IItemRemoved<T>
     {
         public new T Item => (T)base.Item;
 
-        public CollectionChangeRemove(int index, T item)
+        public ItemRemoved(int index, T item)
             : base(index, item)
         {
         }
 
-        public static implicit operator CollectionChangeRemove<T>((int index, T item) value)
+        public static implicit operator ItemRemoved<T>((int index, T item) value)
         {
-            return new CollectionChangeRemove<T>(value.index, value.item);
+            return new ItemRemoved<T>(value.index, value.item);
         }
 
+        public override string ToString()
+        {
+            return $"Removed {Item} from {Index}";
+        }
     }
 }

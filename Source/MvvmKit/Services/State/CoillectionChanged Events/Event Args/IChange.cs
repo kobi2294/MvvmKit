@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public interface ICollectionChange
+    public interface IChange
     {
+        ChangeType ChangeType { get; }
     }
 
-    public interface ICollectionChange<T>
+    public interface IChange<T>
     {
     }
 }

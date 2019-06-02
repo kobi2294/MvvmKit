@@ -14,7 +14,7 @@ namespace MvvmKit
             return source;
         }
 
-        public static int GenerateHashCode(params object[] items)
+        public static int GenerateHashCode(IEnumerable<object> items)
         {
             unchecked
             {
@@ -29,6 +29,11 @@ namespace MvvmKit
 
                 return res;
             }
+        }
+
+        public static int GenerateHashCode(params object[] items)
+        {
+            return GenerateHashCode(items.ToList());
         }
     }
 }

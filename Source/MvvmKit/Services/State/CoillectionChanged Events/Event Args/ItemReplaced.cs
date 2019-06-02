@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public abstract class CollectionChangeReplace : ICollectionChangeReplace
+    public abstract class ItemReplaced : Change, IItemReplaced
     {
         public int Index { get; }
 
@@ -14,7 +14,8 @@ namespace MvvmKit
 
         public object ToItem { get; }
 
-        public CollectionChangeReplace(int index, object fromItem, object toItem)
+        public ItemReplaced(int index, object fromItem, object toItem)
+            :base(ChangeType.Replaced)
         {
             FromItem = fromItem;
             ToItem = toItem;
@@ -24,17 +25,17 @@ namespace MvvmKit
         #region Comparing
         public override bool Equals(object obj)
         {
-            if (!(obj is CollectionChangeReplace)) return false;
+            if (!(obj is ItemReplaced)) return false;
 
-            return this == (CollectionChangeReplace)obj;
+            return this == (ItemReplaced)obj;
         }
 
-        public bool Equals(CollectionChangeReplace other)
+        public bool Equals(ItemReplaced other)
         {
             return this == other;
         }
 
-        public static bool operator ==(CollectionChangeReplace rs1, CollectionChangeReplace rs2)
+        public static bool operator ==(ItemReplaced rs1, ItemReplaced rs2)
         {
             var isnull1 = ReferenceEquals(rs1, null);
             var isnull2 = ReferenceEquals(rs2, null);
@@ -45,7 +46,7 @@ namespace MvvmKit
             return ((rs1.Index == rs2.Index) && (rs1.FromItem == rs2.FromItem) && (rs1.ToItem == rs2.ToItem));
         }
 
-        public static bool operator !=(CollectionChangeReplace rs1, CollectionChangeReplace rs2)
+        public static bool operator !=(ItemReplaced rs1, ItemReplaced rs2)
         {
             return !(rs1 == rs2);
         }
@@ -59,20 +60,25 @@ namespace MvvmKit
 
     }
 
-    public class CollectionChangeReplace<T> : CollectionChangeReplace, ICollectionChangeReplace<T>
+    public class ItemReplaced<T> : ItemReplaced, IItemReplaced<T>
     {
         public new T FromItem => (T)base.FromItem;
 
         public new T ToItem => (T)base.ToItem;
 
-        public CollectionChangeReplace(int index, T fromItem, T toItem)
+        public ItemReplaced(int index, T fromItem, T toItem)
             : base(index, fromItem, toItem)
         {
         }
 
-        public static implicit operator CollectionChangeReplace<T>((int index, T fromItem, T toItem) value)
+        public static implicit operator ItemReplaced<T>((int index, T fromItem, T toItem) value)
         {
-            return new CollectionChangeReplace<T>(value.index, value.fromItem, value.toItem);
+            return new ItemReplaced<T>(value.index, value.fromItem, value.toItem);
+        }
+
+        public override string ToString()
+        {
+            return $"Replaced at {Index} from {FromItem} to {ToItem}";
         }
 
     }

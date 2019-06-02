@@ -99,6 +99,7 @@
     <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\ViewTemplateSelector.cs" />
+    <Compile Include="Mvvm\State\ServiceCollectionAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -113,20 +114,27 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Services\BackgroundServiceBase.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChange.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeAdd.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeClear.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeMove.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeRemove.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\CollectionChangeReplace.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Changes.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\Change.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ChangeType.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IReset.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\Reset.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ItemAdded.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\Cleared.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ItemMoved.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ItemRemoved.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ItemReplaced.cs" />
     <Compile Include="Services\State\CoillectionChanged Events\CollectionChanges.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChange.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeAdd.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeClear.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeMove.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeRemove.cs" />
-    <Compile Include="Services\State\CoillectionChanged Events\ICollectionChangeReplace.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IChange.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemAdded.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\ICleared.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemMoved.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemRemoved.cs" />
+    <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemReplaced.cs" />
     <Compile Include="Services\State\ServiceCollectionField.cs" />
+    <Compile Include="Services\State\ServiceCollectionProperty.cs" />
+    <Compile Include="Services\State\ServiceCollectionPropertyBase.cs" />
+    <Compile Include="Services\State\ServiceCollectionPropertyReadonly.cs" />
     <Compile Include="Services\State\ServiceProperty.cs" />
     <Compile Include="Services\ServiceRunner.cs" />
     <Compile Include="Services\State\ServiceField.cs" />
@@ -174,6 +182,7 @@
     <Compile Include="Tools\Extensions\EnumExtensions.cs" />
     <Compile Include="Tools\Extensions\ExpressionExtensions.cs" />
     <Compile Include="Tools\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Tools\Extensions\TupleExtensions.cs" />
     <Compile Include="Tools\Indexers\Indexers.cs" />
     <Compile Include="Tools\Indexers\IReadOnlyIndexer.cs" />
     <Compile Include="Tools\Indexers\IWriteableIndexer.cs" />

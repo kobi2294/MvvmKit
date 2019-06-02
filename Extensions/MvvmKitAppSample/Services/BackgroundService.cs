@@ -12,6 +12,17 @@ namespace MvvmKitAppSample.Services
 {
     public class BackgroundService: BackgroundServiceBase
     {
+        private readonly ServiceCollectionField<int> _Numbers = (10, 20, 30);
+        public ServiceCollectionProperty<int> Numbers { get => (_Numbers, this); }
+
+        private readonly ServiceCollectionField<int> _ReadNumbers = (10, 20, 30);
+        public ServiceCollectionPropertyReadonly<int> ReadNumbers { get => (_Numbers, this); }
+
+
+        private readonly ServiceCollectionField<string> _MyNames = ("a", "b", "c", "d", "e", "f");
+        public ServiceCollectionProperty<string> MyNames { get => (_MyNames, this); }
+
+
 
         private readonly ServiceField<int> _MyNumber = 55;
         public ServiceProperty<int> MyNumber { get => (_MyNumber, this); }

@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public interface ICollectionChangeAdd : ICollectionChange
+    public interface IItemRemoved : IChange
     {
         int Index { get; }
 
         object Item { get; }
     }
 
-    public interface ICollectionChangeAdd<T>: ICollectionChangeAdd, ICollectionChange<T>
+    public interface IItemRemoved<T> : IItemRemoved, IChange<T>
     {
         new T Item { get; }
     }

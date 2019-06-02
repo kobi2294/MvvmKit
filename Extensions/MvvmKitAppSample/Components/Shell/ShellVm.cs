@@ -45,6 +45,40 @@ namespace MvvmKitAppSample.Components.Shell
             Debug.WriteLine("The value of propname is " + val);
             await _service.PropName.Set(!val);
             await _service.Method();
+
+            await _service.Numbers.Add(50);
+            await _service.Numbers.Add(30);
+            await _service.Numbers.Add(40);
+
+            var items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.Remove(30);
+            await _service.Numbers.RemoveAt(2);
+
+            items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.SetAt(2, 314);
+
+            items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.SetWhere(i => i > 45, 324);
+
+            items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.MoveAt(1, 3);
+            items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.MoveWhere(i => i > 45, 0);
+
+            items = await _service.Numbers.Items();
+            Debug.WriteLine($"Items are: {string.Join(", ", items)}");
+
+            await _service.Numbers.Clear();
         }
 
 
@@ -67,6 +101,16 @@ namespace MvvmKitAppSample.Components.Shell
 
             var i = await _service.MyNumber.Get();
             await _service.MyNumber.Set(43);
+
+            await _service.Numbers.Changed.Subscribe(this, changes =>
+            {
+                foreach (var item in changes)
+                {
+                    Debug.WriteLine(item);
+                }
+                return Tasks.Empty;
+            });
+
 
             //await _service.PropName.Changed.Subscribe(this, val =>
             //{

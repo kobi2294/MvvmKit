@@ -4,28 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public abstract class CollectionChangeClear : ICollectionChangeClear
+    public abstract class Cleared : Change, ICleared
     {
-        public CollectionChangeClear()
+        public Cleared()
+            :base(ChangeType.Cleared)
         {
         }
 
         #region Comparing
         public override bool Equals(object obj)
         {
-            if (!(obj is CollectionChangeClear)) return false;
+            if (!(obj is Cleared)) return false;
 
-            return this == (CollectionChangeClear)obj;
+            return this == (Cleared)obj;
         }
 
-        public bool Equals(CollectionChangeClear other)
+        public bool Equals(Cleared other)
         {
             return this == other;
         }
 
-        public static bool operator ==(CollectionChangeClear rs1, CollectionChangeClear rs2)
+        public static bool operator ==(Cleared rs1, Cleared rs2)
         {
             var isnull1 = ReferenceEquals(rs1, null);
             var isnull2 = ReferenceEquals(rs2, null);
@@ -36,7 +37,7 @@ namespace MvvmKit
             return true;
         }
 
-        public static bool operator !=(CollectionChangeClear rs1, CollectionChangeClear rs2)
+        public static bool operator !=(Cleared rs1, Cleared rs2)
         {
             return !(rs1 == rs2);
         }
@@ -50,11 +51,16 @@ namespace MvvmKit
 
     }
 
-    public class CollectionChangeClear<T> : CollectionChangeClear, ICollectionChangeClear<T>
+    public class Cleared<T> : Cleared, ICleared<T>
     {
-        public CollectionChangeClear()
+        public Cleared()
             : base()
         {
+        }
+
+        public override string ToString()
+        {
+            return "Cleared";
         }
     }
 }

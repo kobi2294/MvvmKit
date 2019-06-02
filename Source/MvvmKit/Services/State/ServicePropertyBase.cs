@@ -8,24 +8,24 @@ namespace MvvmKit
 {
     public abstract class ServicePropertyBase<T>
     {
-        internal ServiceField<T> State { get; }
+        internal ServiceField<T> Field { get; }
         internal ServiceRunner Runner { get; }
         internal ServiceBase Owner { get; }
 
-        internal ServicePropertyBase(ServiceField<T> state, ServiceBase owner)
+        internal ServicePropertyBase(ServiceField<T> field, ServiceBase owner)
         {
-            State = state;
+            Field = field;
             Owner = owner;
             Runner = owner.GetRunner();
         }
 
-        public AsyncEvent<T> Changed => State.Changed;
+        public AsyncEvent<T> Changed => Field.Changed;
 
         public Task<T> Get()
         {
             return Runner.Run(() =>
             {
-                return State.Value;
+                return Field.Value;
             });
         }
     }

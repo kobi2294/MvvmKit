@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MvvmKit
+namespace MvvmKit.CollectionChangeEvents
 {
-    public interface ICollectionChangeReplace : ICollectionChange
+    public interface IItemReplaced : IChange
     {
         int Index { get; }
 
@@ -15,7 +15,7 @@ namespace MvvmKit
         object ToItem { get; }
     }
 
-    public interface ICollectionChangeReplace<T> : ICollectionChangeReplace, ICollectionChange<T>
+    public interface IItemReplaced<T> : IItemReplaced, IChange<T>
     {
         new T FromItem { get; }
 

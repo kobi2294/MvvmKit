@@ -3,9 +3,9 @@
     xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
   <CodeSnippet Format="1.0.0">
     <Header>
-      <Title>Service Readonly Property</Title>
-      <Description>Create a ServiceField and A readonly ServiceProperty that exposes it</Description>
-      <Shortcut>spropro</Shortcut>
+      <Title>Service Readonly Collection Property</Title>
+      <Description>Create a ServiceCollectionField and ServiceCollectionPropertyReadonly that exposes it</Description>
+      <Shortcut>scolpropro</Shortcut>
       <Author>Kobi Hari</Author>
       <SnippetTypes>
         <SnippetType>Expansion</SnippetType>
@@ -26,8 +26,8 @@
       </Declarations>
       <Code Language="CSharp">
         <![CDATA[
-        private readonly ServiceField<$type$> _$name$ = $end$;
-        public ServicePropertyReadonly<$type$> $name$ { get => (_$name$, this); }
+        private readonly ServiceCollectionField<$type$> _$name$ = ($end$);
+        public ServiceCollectionPropertyReadonly<$type$> $name$ { get => (_$name$, this); }
         ]]>
       </Code>
     </Snippet>

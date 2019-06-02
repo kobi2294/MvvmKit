@@ -17,7 +17,7 @@ namespace MvvmKit
         {
             return Runner.Run(() =>
             {
-                return State.Set(value);
+                return Field.Set(value);
             }, true);
         }
 
