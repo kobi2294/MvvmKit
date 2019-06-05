@@ -34,7 +34,7 @@ namespace MvvmKitAppSample
 
 
         public static Region ModalDialog { get; } = new Region()
-            .Add(new OpenWindowRegionBehavior());
+            .Add(new ModalDialogWindowBehavior());
 
     }
 }

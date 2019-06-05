@@ -80,6 +80,7 @@
     <Compile Include="Mvvm\Internal Prism\Mvvm\PropertySupport.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListener.cs" />
     <Compile Include="Mvvm\ChangeListeners\PropertyChangeListenerT.cs" />
+    <Compile Include="Mvvm\Navigation\Behaviors\ModalDialogWindowBehavior.cs" />
     <Compile Include="Mvvm\Navigation\Behaviors\OpenWindowRegionBehavior.cs" />
     <Compile Include="Mvvm\Navigation\ComponentBase.cs" />
     <Compile Include="Mvvm\Navigation\Definition\Region.cs" />
