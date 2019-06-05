@@ -40,7 +40,7 @@ namespace MvvmKit
         {
             if (_serviceByRegion.ContainsKey(region))
             {
-                throw new InvalidOperationException("The region is already registered in this service");
+                throw new InvalidOperationException($"The region '{region}' is already registered in this service");
             }
 
             var service = _factory.CreateService(region, this);
@@ -51,6 +51,27 @@ namespace MvvmKit
                 _serviceByRoute.Add(route, service);
                 _routeByKey.Add(route.Key, route);
             }
+        }
+
+        private async Task _unregisterRegion(Region region)
+        {
+            if (!_serviceByRegion.ContainsKey(region))
+            {
+                throw new InvalidOperationException($"The region '{region}' is not registered in this service");
+            }
+
+            var service = _serviceByRegion[region];
+
+            // remove region and routes from registry
+            _serviceByRegion.Remove(region);
+            foreach (var route in region.Routes)
+            {
+                _serviceByRoute.Remove(route);
+                _routeByKey.Remove(route.Key, route);
+            }
+
+            // finalize region service
+            await service.OnUnregistering();
         }
 
         private void _registerStaticRegions(Type type)
@@ -90,10 +111,12 @@ namespace MvvmKit
 
         public Task RegisterStaticRegions(Type type)
         {
-            return Run(() =>
-            {
-                _registerStaticRegions(type);
-            }, true);
+            return Run(() => _registerStaticRegions(type), true);
+        }
+
+        public Task UnregisterRegion(Region region)
+        {
+            return Run(async () => await _unregisterRegion(region), true);
         }
 
         public async Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)

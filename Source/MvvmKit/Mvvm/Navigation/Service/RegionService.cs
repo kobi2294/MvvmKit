@@ -249,6 +249,7 @@ namespace MvvmKit
         // injectables
         private IResolver _resolver;
 
+        private bool _isDisposed;
 
 
         public RegionService(Region region, NavigationService owner, IResolver resolver)
@@ -267,6 +268,16 @@ namespace MvvmKit
             _hostBindable.ViewSelector = new ViewTemplateSelector { ViewResolver = _resolver.Resolve<IViewResolver>() };
         }
 
+        internal Task OnUnregistering()
+        {
+            return Run(async () =>
+            {
+                // clear the region before unregistering
+                await _navigateTo(RegionEntry.Empty);
+                _isDisposed = true;
+            });
+
+        }
 
         private Task _invokeOnAllBehaviors(Func<RegionBehavior, Func<RegionService, Task>> func)
         {
@@ -296,6 +307,9 @@ namespace MvvmKit
 
         private async Task<ComponentBase> _doActualNavigation(RegionEntry entry)
         {
+            if (_isDisposed)
+                throw new InvalidOperationException($"Cannot navigate, RegionService {_region} Was unregistered and disposed ");
+
             // Check if navigation is required at all
             if (entry == _currentRegionEntry) return _currentVm;
 
