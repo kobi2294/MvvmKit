@@ -10,7 +10,52 @@ namespace MvvmKit
     {
         private TaskCompletionSource<T> _taskCompletionSource;
 
-        internal bool AllowCancellation { get; set; }
+        public bool ReturnDefaultOnCancel { get; protected set; } = true;
+        public T ValueOnCancel { get; protected set; } = default(T);
+
+        #region Commands
+
+
+        #region Ok Command
+
+        private DelegateCommand<object> _OkCommand;
+        public DelegateCommand<object> OkCommand
+        {
+            get
+            {
+                if (_OkCommand == null) _OkCommand = new DelegateCommand<object>(OnOkCommand);
+                return _OkCommand;
+            }
+        }
+
+        public void OnOkCommand(object param)
+        {
+            var val = (T)param;
+            SetResult(val);
+        }
+
+        #endregion
+
+        #region Cancel Command
+
+        private DelegateCommand _CancelCommand;
+        public DelegateCommand CancelCommand
+        {
+            get
+            {
+                if (_CancelCommand == null) _CancelCommand = new DelegateCommand(OnCancelCommand);
+                return _CancelCommand;
+            }
+        }
+
+        public void OnCancelCommand()
+        {
+            SetCanceled();
+        }
+        #endregion
+
+        #endregion
+
 
         public Task<T> Task => _taskCompletionSource.Task;
 
@@ -26,13 +71,13 @@ namespace MvvmKit
 
         protected void SetCanceled()
         {
-            if (AllowCancellation)
+            if (ReturnDefaultOnCancel)
             {
-                _taskCompletionSource.SetCanceled();
+                _taskCompletionSource.SetResult(ValueOnCancel);
             }
             else
             {
-                _taskCompletionSource.SetResult(default(T));
+                _taskCompletionSource.SetCanceled();
             }
         }
 

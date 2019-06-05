@@ -1,0 +1,37 @@
+﻿<UserControl 
+    x:Class="MvvmKitAppSample.Components.NumberDialog.NumberDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
+    xmlns:local="clr-namespace:MvvmKitAppSample.Components.NumberDialog"
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="200"
+    d:DataContext="{StaticResource dt.NumberDialog.NumberDialogVm}"
+    Width="300" Height="200"
+    Background="LightGoldenrodYellow"
+    >
+    <UserControl.Resources>
+        <t:SelectiveResources>
+            <ResourceDictionary.MergedDictionaries>
+                <t:DesignTimeResource Source="DtNumberDialog.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="DarkGoldenrod"/>
+                <Setter Property="Foreground" Value="White"/>
+            </Style>
+                   
+        </t:SelectiveResources>
+    </UserControl.Resources>
+    <DockPanel>
+        <UniformGrid Rows="1" DockPanel.Dock="Bottom">
+            <Button Margin="4" Command="{Binding OkCommand}" CommandParameter="{Binding Value}">OK</Button>
+            <Button Margin="4" Command="{Binding CancelCommand}">Cancel</Button>
+        </UniformGrid>
+        <TextBlock DockPanel.Dock="Top" FontSize="16" HorizontalAlignment="Center" Margin="4">Please Select Value</TextBlock>
+        <Slider Foreground="DarkGoldenrod"            
+            DockPanel.Dock="Top" Minimum="0" Maximum="20" Value="{Binding Value}"/>
+        <TextBlock Text="{Binding Value}" HorizontalAlignment="Center" FontSize="80" Foreground="Navy"/>
+    </DockPanel>
+</UserControl>

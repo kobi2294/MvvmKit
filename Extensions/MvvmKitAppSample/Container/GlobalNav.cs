@@ -32,5 +32,9 @@ namespace MvvmKitAppSample
             .Add(Route.To<PageOneVm>(MainRoutes.One))
             .Add(Route.To<PageTwoVm>(MainRoutes.Two));
 
+
+        public static Region ModalDialog { get; } = new Region()
+            .Add(new OpenWindowRegionBehavior());
+
     }
 }

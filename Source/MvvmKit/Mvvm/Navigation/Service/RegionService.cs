@@ -47,12 +47,14 @@ namespace MvvmKit
             });
         }
 
+        private async Task _clear()
+        {
+            await _navigateTo(RegionEntry.Empty);
+        }
+
         public Task Clear()
         {
-            return Run(async () =>
-            {
-                await _navigateTo(RegionEntry.Empty);
-            });
+            return Run(async () => await _clear());
         }
 
         public Task<T> RunDialog<TVM, T>(object param = null)
@@ -64,7 +66,7 @@ namespace MvvmKit
                 var res = await vm.Task;
 
                 if (vm == _currentVm)
-                    await Clear();
+                    await _clear();
                 return res;
             });
         }
@@ -332,20 +334,22 @@ namespace MvvmKit
             {
                 vm = _resolver.Resolve(entry.ViewModelType) as ComponentBase;
                 await vm.Initialize(entry.Parameter);
+            }
 
-                // after every await - verify we still need to proceed - since there may be concurrent navigation
-                if (_currentRegionEntry != entry) return vm;
+            // after every await - verify we still need to proceed - since there may be concurrent navigation
+            if (_currentRegionEntry != entry) return vm;
 
-                _currentVm = vm;
-                await Navigated.Invoke(entry);
+            _currentVm = vm;
+            await Navigated.Invoke(entry);
+
+            if (vm != null)
                 await vm.NavigateTo();
 
-                // call behaviors after navigation
-                await Task.WhenAll(
-                    _invokeOnAllBehaviors(b => b.AfterNavigation), 
-                    _invokeOnAllHostBehaviors(b => b.AfterNavigation)
-                    );
-            }
+            // call behaviors after navigation
+            await Task.WhenAll(
+                _invokeOnAllBehaviors(b => b.AfterNavigation), 
+                _invokeOnAllHostBehaviors(b => b.AfterNavigation)
+                );
 
             return vm;
         }

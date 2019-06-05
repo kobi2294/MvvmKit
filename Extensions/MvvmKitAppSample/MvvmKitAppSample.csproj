@@ -59,6 +59,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\NumberDialog\NumberDialogView.xaml.cs">
+      <DependentUpon>NumberDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\NumberDialog\NumberDialogVm.cs" />
     <Compile Include="Components\PageOne\ItemVm.cs" />
     <Compile Include="Components\PageOne\PageOneView.xaml.cs">
       <DependentUpon>PageOneView.xaml</DependentUpon>
@@ -111,6 +115,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Components\NumberDialog\DtNumberDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\NumberDialog\NumberDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\PageOne\DtPageOne.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

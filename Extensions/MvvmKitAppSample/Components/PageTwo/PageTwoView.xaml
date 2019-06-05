@@ -17,7 +17,15 @@
             </ResourceDictionary.MergedDictionaries>
         </t:SelectiveResources>
     </UserControl.Resources>
-    <Grid Background="Orange">
-        <TextBlock Text="{Binding}"/>
-    </Grid>
+    <DockPanel Background="Orange">
+        <StackPanel HorizontalAlignment="Center" Margin="20">
+            <TextBlock HorizontalAlignment="Center">This is Page 2</TextBlock>
+            <TextBlock HorizontalAlignment="Center">the Value is:</TextBlock>
+            <TextBlock HorizontalAlignment="Center" FontSize="40" Text="{Binding LatestValue}"/>
+
+            <Button Background="Transparent" Foreground="DarkRed" BorderBrush="DarkRed"
+                    Command="{Binding GetNewValueCommand}"
+                    >Change...</Button>
+        </StackPanel>
+    </DockPanel>
 </UserControl>

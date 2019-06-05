@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:MvvmKitAppSample.Components.PageTwo"
     >
-    <local:PageTwoVm x:Key="dt.PageTwo.PageTwoVm">
+    <local:PageTwoVm x:Key="dt.PageTwo.PageTwoVm" LatestValue="19">
 
     </local:PageTwoVm>
 </ResourceDictionary>
