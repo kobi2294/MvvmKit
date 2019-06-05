@@ -3,7 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:MvvmKitAppSample.Components.PageOne"
     >
-    <local:PageOneVm x:Key="dt.PageOne.PageOneVm">
-
+    <local:PageOneVm x:Key="dt.PageOne.PageOneVm" SelectedItem="World">
+        <local:PageOneVm.Items>
+            <local:ItemVm Value="Hello"/>
+            <local:ItemVm Value="World"/>
+        </local:PageOneVm.Items>
     </local:PageOneVm>
 </ResourceDictionary>

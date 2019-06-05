@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -12,7 +13,7 @@ namespace MvvmKit
     public class BindableBase : PrismBindableBase
     {
         private Dictionary<string, PropertyChangeListener> _listeners;
-      
+
         private void _callListenersIfExist<T>(string propertyName, T oldval, T newval)
         {
             if (_listeners == null) return;

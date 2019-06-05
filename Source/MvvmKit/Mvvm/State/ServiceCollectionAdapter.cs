@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace MvvmKit
 {
     public class ServiceCollectionAdapter<T, TVM>
-        where TVM: BindableBase
     {
         private IResolver _resolver;
 

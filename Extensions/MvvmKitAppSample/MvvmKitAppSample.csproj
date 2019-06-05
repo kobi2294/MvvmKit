@@ -59,6 +59,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\PageOne\ItemVm.cs" />
     <Compile Include="Components\PageOne\PageOneView.xaml.cs">
       <DependentUpon>PageOneView.xaml</DependentUpon>
     </Compile>

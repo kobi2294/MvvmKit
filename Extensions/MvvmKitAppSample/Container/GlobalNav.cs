@@ -15,6 +15,7 @@ namespace MvvmKitAppSample
         public enum ShellRoutes { Shell };
 
         public static Region ShellWindow { get; } = new Region()
+            .WithName("Shell")
             .Add(Route.To<ShellVm>(ShellRoutes.Shell))
             .Add(new OpenWindowRegionBehavior());
 
@@ -22,10 +23,12 @@ namespace MvvmKitAppSample
         public enum MainRoutes { One, Two };
 
         public static Region Main { get; } = new Region()
+            .WithName("Main")
             .Add(Route.To<PageOneVm>(MainRoutes.One))
             .Add(Route.To<PageTwoVm>(MainRoutes.Two));
 
         public static Region Gain { get; } = new Region()
+            .WithName("Gain")
             .Add(Route.To<PageOneVm>(MainRoutes.One))
             .Add(Route.To<PageTwoVm>(MainRoutes.Two));
 

@@ -21,6 +21,7 @@
         <TextBlock DockPanel.Dock="Top" Text="{Binding Title}"/>
         <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding ChangeACommand}">Change Property</Button>
         <ContentControl DockPanel.Dock="Top" Height="100" t:RegionHost.Region="{x:Static root:GlobalNav.Main}"></ContentControl>
-        <ContentControl DockPanel.Dock="Top" t:RegionHost.Region="{x:Static root:GlobalNav.Gain}"></ContentControl>
+        <ContentControl DockPanel.Dock="Left" t:RegionHost.Region="{x:Static root:GlobalNav.Gain}"></ContentControl>
+        <ContentControl t:RegionHost.Region="{Binding MyRegion}"/>
     </DockPanel>
 </UserControl>

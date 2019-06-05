@@ -17,7 +17,30 @@
             </ResourceDictionary.MergedDictionaries>
         </t:SelectiveResources>
     </UserControl.Resources>
-    <Grid Background="Cyan">
-        <TextBlock Text="{Binding}"/>
-    </Grid>
+    <DockPanel Background="LightCyan">
+        <t:Navigator ItemsSource="{Binding Items}" DockPanel.Dock="Top" 
+                     SelectedValue="{Binding SelectedItem}"
+                     SelectedValuePath="Value"
+                     Command="{Binding SelectCommand}">
+            <t:Navigator.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ItemVm}">
+                    <TextBlock Text="{Binding Value}"/>
+                </DataTemplate>
+            </t:Navigator.ItemTemplate>
+        </t:Navigator>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <TextBox x:Name="txtbox" Width="100"/>
+            <Button Content="Add" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=txtbox, Path=Text}"/>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Items}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ItemVm}">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Command="{Binding RemoveCommand}">Remove</Button>
+                        <TextBlock Text="{Binding Value}"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
 </UserControl>
