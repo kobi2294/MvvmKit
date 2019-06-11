@@ -20,6 +20,11 @@ namespace MvvmKit
             yield return obj;
         }
 
+        public static IEnumerable<(int, T)> Enumerated<T>(this IEnumerable<T> source)
+        {
+            return source.Select((t, i) => (i, t)).ToArray();
+        }
+
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> source, params T[] items)
         {
             return source.Concat(items.AsEnumerable());
