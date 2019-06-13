@@ -164,6 +164,8 @@
     <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode.cs" />
     <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
     <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Tools\Exec.cs" />
     <Compile Include="Tools\Extensions\ComparerExtensions.cs" />
     <Compile Include="Tools\Extensions\DependencyObjectExtensions.cs" />
+    <Compile Include="Tools\Extensions\DictionaryExtensions.cs" />
     <Compile Include="Tools\Extensions\EditableLookupExtensions.cs" />
     <Compile Include="Tools\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Tools\Extensions\EnumExtensions.cs" />
@@ -185,6 +188,10 @@
     <Compile Include="Tools\Extensions\ObjectExtensions.cs" />
     <Compile Include="Tools\Extensions\PropertyPathExtensions.cs" />
     <Compile Include="Tools\Extensions\TupleExtensions.cs" />
+    <Compile Include="Tools\HeckelDiff\Counter.cs" />
+    <Compile Include="Tools\HeckelDiff\Diff.cs" />
+    <Compile Include="Tools\HeckelDiff\Entries.cs" />
+    <Compile Include="Tools\HeckelDiff\Operations.cs" />
     <Compile Include="Tools\Indexers\Indexers.cs" />
     <Compile Include="Tools\Indexers\IReadOnlyIndexer.cs" />
     <Compile Include="Tools\Indexers\IWriteableIndexer.cs" />

@@ -22,7 +22,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.Research.ObservableTest.Run();
+            Samples.AvlTrees.Main.Run();
 
             Console.ReadLine();            
         }
