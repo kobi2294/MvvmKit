@@ -12,15 +12,12 @@ namespace MvvmKit
 
         public T LatestValue { get; private set; }
 
+        private Func<Func<T, Task>, Task> _onSubscribe;
+
         public Task Subscribe(object owner, Func<T, Task> callback)
         {
             _handlers += (owner, callback);
-            return callback(LatestValue);
-        }
-
-        public Task Subscribe(object onString)
-        {
-            throw new NotImplementedException();
+            return _onSubscribe(callback);
         }
 
         public Task Unsubscribe(object owner, Func<T, Task> callback = null)
@@ -42,10 +39,22 @@ namespace MvvmKit
             return _handlers.Invoke(value);
         }
 
+        public AsyncEvent<T> OnSubscribe(Func<Func<T, Task>, Task> onSubscribe)
+        {
+            _onSubscribe = onSubscribe;
+            return this;
+        }
 
         public AsyncEvent(T initValue = default(T))
         {
             _handlers = new ContextMulticastFuncTask<T>();
+
+            // by default, on subscribe we notify with the latest value
+            _onSubscribe = async (cb) =>
+            {
+                await cb(LatestValue);
+            };
+
             LatestValue = initValue;
         }
 

@@ -29,7 +29,12 @@ namespace MvvmKit
                 _items = new List<T>();
             }
 
-            Changed = new AsyncEvent<CollectionChanges<T>>(Changes.Reset(_items));
+            Changed = new AsyncEvent<CollectionChanges<T>>(Changes.Reset(_items))
+                // instead of returning the latest change, on subscribe, we return a reset to the entire list
+                .OnSubscribe(async cb =>
+                {
+                    await cb.Invoke(Changes.Reset(_items));
+                });
         }
 
         public ServiceCollectionField(params T[] values)

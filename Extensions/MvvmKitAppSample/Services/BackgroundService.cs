@@ -19,7 +19,7 @@ namespace MvvmKitAppSample.Services
         public ServiceCollectionPropertyReadonly<int> ReadNumbers { get => (_Numbers, this); }
 
 
-        private readonly ServiceCollectionField<string> _MyNames = ("a", "b", "c", "d", "e", "f");
+        private readonly ServiceCollectionField<string> _MyNames = ("a");
         public ServiceCollectionProperty<string> MyNames { get => (_MyNames, this); }
 
 
@@ -47,6 +47,11 @@ namespace MvvmKitAppSample.Services
         protected override async Task OnInit()
         {
             await base.OnInit();
+            await _MyNames.Add("b");
+            await _MyNames.Add("c");
+            await _MyNames.Add("d");
+            await _MyNames.Add("e");
+            await _MyNames.Add("f");
         }
 
         [InjectionMethod]
