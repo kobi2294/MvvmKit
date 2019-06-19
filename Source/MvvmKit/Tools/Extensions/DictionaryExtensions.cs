@@ -19,5 +19,15 @@ namespace MvvmKit
             source.Add(key, res);
             return res;
         }
+
+        public static T GetOrDefault<K, T>(this Dictionary<K, T> source, K key)
+        {
+            if (source.TryGetValue(key, out T value))
+            {
+                return value;
+            }
+
+            return default(T);
+        }
     }
 }

@@ -1,0 +1,24 @@
+﻿<UserControl 
+    x:Class="MvvmKitAppSample.Components.RegionContainer.RegionContainerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
+    xmlns:local="clr-namespace:MvvmKitAppSample.Components.RegionContainer"
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="300"
+    d:DataContext="{StaticResource dt.RegionContainer.RegionContainerVm}"
+    >
+    <UserControl.Resources>
+        <t:SelectiveResources>
+            <ResourceDictionary.MergedDictionaries>
+                <t:DesignTimeResource Source="DtRegionContainer.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </t:SelectiveResources>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock Text="{Binding}" DockPanel.Dock="Top"/>
+        <ContentControl t:RegionHost.Region="{Binding MyRegion}"/>
+    </DockPanel>
+</UserControl>

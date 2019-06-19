@@ -12,7 +12,6 @@ namespace MvvmKitAppSample.Components.NumberDialog
     {
         #region Properties
 
-
         private int _Value;
         public int Value { get { return _Value; } set { SetProperty(ref _Value, value); } }
 

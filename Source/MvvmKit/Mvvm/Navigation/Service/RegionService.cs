@@ -307,6 +307,10 @@ namespace MvvmKit
             return res;
         }
 
+        // this is the main logic of the service - the actual navigation.
+        // It performs deactivation of current VM and activation of new vms
+        // It also calls the behaviors, and keeps track of navigation entries.
+        // lastly, it invokes the invalidation of the current route
         private async Task<ComponentBase> _doActualNavigation(RegionEntry entry)
         {
             if (_isDisposed)

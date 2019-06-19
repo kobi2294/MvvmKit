@@ -72,6 +72,10 @@
       <DependentUpon>PageTwoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\PageTwo\PageTwoVm.cs" />
+    <Compile Include="Components\RegionContainer\RegionContainerView.xaml.cs">
+      <DependentUpon>RegionContainerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\RegionContainer\RegionContainerVm.cs" />
     <Compile Include="Model\TodoItem.cs" />
     <Compile Include="Services\BackgroundService.cs" />
     <Compile Include="Services\BgService1.cs" />
@@ -136,6 +140,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\PageTwo\PageTwoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\RegionContainer\DtRegionContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\RegionContainer\RegionContainerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

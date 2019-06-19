@@ -13,6 +13,8 @@ namespace MvvmKit
 
         protected NavigationService Navigation { get; private set; }
 
+        protected Region Region { get; private set; }
+
         public object Parameter { get; private set; }
 
         #region Bindable Properties

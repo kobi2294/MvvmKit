@@ -1,5 +1,6 @@
 ﻿using MvvmKit;
 using MvvmKitAppSample.Components.PageOne;
+using MvvmKitAppSample.Components.RegionContainer;
 using MvvmKitAppSample.Model;
 using MvvmKitAppSample.Services;
 using System;
@@ -46,6 +47,8 @@ namespace MvvmKitAppSample.Components.Shell
             await _service.PropName.Set(!val);
             await _service.Method();
 
+            await _service.Numbers.Reset(Enumerable.Range(1, 3).Select(i => i * 10));
+
             await _service.Numbers.Add(50);
             await _service.Numbers.Add(30);
             await _service.Numbers.Add(40);
@@ -83,6 +86,34 @@ namespace MvvmKitAppSample.Components.Shell
 
 
         #endregion
+
+
+        #region TogglePage Command
+
+        private DelegateCommand _TogglePageCommand;
+        public DelegateCommand TogglePageCommand
+        {
+            get
+            {
+                if (_TogglePageCommand == null) _TogglePageCommand = new DelegateCommand(OnTogglePageCommand);
+                return _TogglePageCommand;
+            }
+        }
+
+        public async void OnTogglePageCommand()
+        {
+            var vm = await Navigation.CurrentViewModelAt(MyRegion);
+            if (vm is PageOneVm)
+            {
+                await Navigation.NavigateTo<RegionContainerVm>(MyRegion);
+            } else
+            {
+                await Navigation.NavigateTo<PageOneVm>(MyRegion);
+            }
+        }
+        #endregion
+
+
 
         #endregion
 

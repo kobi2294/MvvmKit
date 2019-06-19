@@ -14,6 +14,15 @@ namespace MvvmKit
         private Dictionary<Route, RegionService> _serviceByRoute { get; } = new Dictionary<Route, RegionService>();
         private EditableLookup<object, Route> _routeByKey { get; } = new EditableLookup<object, Route>();
 
+        private RegionService _serviceFor(Region region)
+        {
+            return _serviceByRegion.GetOrDefault(region);
+        }
+
+        private RegionService _serviceFor(Route route)
+        {
+            return _serviceByRoute.GetOrDefault(route);
+        }
 
         public NavigationService(RegionServiceFactory factory)
         {
@@ -24,7 +33,7 @@ namespace MvvmKit
         {
             return Run(() =>
             {
-                return _serviceByRegion[region];
+                return _serviceFor(region);
             });
         }
 
@@ -32,7 +41,7 @@ namespace MvvmKit
         {
             return Run(() =>
             {
-                return _serviceByRoute[route];
+                return _serviceFor(route);
             });
         }
 
@@ -100,6 +109,7 @@ namespace MvvmKit
                 _registerRegion(region);
             }
         }
+
 
         public Task RegisterRegion(Region region)
         {
@@ -172,6 +182,33 @@ namespace MvvmKit
             });
             var service = await For(route.Region);
             return await service.RouteTo(route, param);
+        }
+
+        public Task<ComponentBase> CurrentViewModelAt(Region region)
+        {
+            return Run(() =>
+            {
+                var service = _serviceByRegion[region];
+                return service.CurrentViewModel;
+            });
+        }
+
+        public Task<RegionEntry> CurrentRegionEntryAt(Region region)
+        {
+            return Run(() =>
+            {
+                var service = _serviceByRegion[region];
+                return service.CurrentRegionEntry;
+            });
+        }
+
+        public Task<RouteEntry> CurrentRouteEntry(Region region)
+        {
+            return Run(() =>
+            {
+                var service = _serviceByRegion[region];
+                return service.CurrentRouteEntry;
+            });
         }
 
     }

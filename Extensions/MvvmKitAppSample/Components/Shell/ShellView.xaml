@@ -20,6 +20,8 @@
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" Text="{Binding Title}"/>
         <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding ChangeACommand}">Change Property</Button>
+        <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding TogglePageCommand}">Toggle View Model</Button>
+        
         <ContentControl DockPanel.Dock="Top" Height="100" t:RegionHost.Region="{x:Static root:GlobalNav.Main}"></ContentControl>
         <ContentControl DockPanel.Dock="Left" t:RegionHost.Region="{x:Static root:GlobalNav.Gain}"></ContentControl>
         <ContentControl t:RegionHost.Region="{Binding MyRegion}"/>
