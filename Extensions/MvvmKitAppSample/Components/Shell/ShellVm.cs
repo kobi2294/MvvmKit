@@ -87,7 +87,6 @@ namespace MvvmKitAppSample.Components.Shell
 
         #endregion
 
-
         #region TogglePage Command
 
         private DelegateCommand _TogglePageCommand;
@@ -113,26 +112,48 @@ namespace MvvmKitAppSample.Components.Shell
         }
         #endregion
 
+        #region MyRegion Command
 
+        private DelegateCommand _MyRegionCommand;
+        public DelegateCommand MyRegionCommand
+        {
+            get
+            {
+                if (_MyRegionCommand == null) _MyRegionCommand = new DelegateCommand(OnMyRegionCommand);
+                return _MyRegionCommand;
+            }
+        }
+
+        public async void OnMyRegionCommand()
+        {
+            await _dialogs.Message("My region is: " + Region.Name);
+        }
+        #endregion
 
         #endregion
 
         private BackgroundService _service;
         private IUiService _uiService;
         private ItemsService _itemsService;
+        private DialogsService _dialogs;
 
         public ShellVm()
         {
             Title = "Hello MvvmKit Runtime";
-            MyRegion = new Region();
+            MyRegion = new Region().WithName("Inside Shell");
         }
 
         [InjectionMethod]
-        public void Inject(BackgroundService service, IUiService uis, ItemsService itemsService)
+        public void Inject(
+            BackgroundService service, 
+            IUiService uis, 
+            ItemsService itemsService, 
+            DialogsService dialogs)
         {
             _service = service;
             _uiService = uis;
             _itemsService = itemsService;
+            _dialogs = dialogs;
         }
 
 

@@ -22,6 +22,7 @@ namespace MvvmKitAppSample
             RegisterService<BackgroundService>();
             RegisterService<IBgService2, BgService2>();
             RegisterService<IBgService1, BgService1>();
+            RegisterService<DialogsService>();
         }
 
         protected override async Task InitializeShellOverride()

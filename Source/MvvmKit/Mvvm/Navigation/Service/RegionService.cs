@@ -71,6 +71,20 @@ namespace MvvmKit
             });
         }
 
+        public Task RunDialog<TVM>(object param = null)
+            where TVM : DialogBase
+        {
+            return Run(async () =>
+            {
+                var vm = await _navigateTo<TVM>(param);
+                await vm.Task;
+
+                if (vm == _currentVm)
+                    await _clear();
+            });
+        }
+
+
         private async Task<ComponentBase> _routeTo(Route route, object param = null)
         {
             if (!_region.Routes.Contains(route))
@@ -347,7 +361,7 @@ namespace MvvmKit
             await Navigated.Invoke(entry);
 
             if (vm != null)
-                await vm.NavigateTo();
+                await vm.NavigateTo(_region);
 
             // call behaviors after navigation
             await Task.WhenAll(

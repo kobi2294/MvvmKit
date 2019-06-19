@@ -155,7 +155,14 @@ namespace MvvmKit
             return await service.RunDialog<TVM, T>(param);
         }
 
-        public  async Task<ComponentBase> RouteTo(Route route, object param = null)
+        public async Task RunDialog<TVM>(Region region, object param = null)
+            where TVM : DialogBase
+        {
+            var service = await For(region);
+            await service.RunDialog<TVM>(param);
+        }
+
+        public async Task<ComponentBase> RouteTo(Route route, object param = null)
         {
             var service = await For(route.Region);
             return await service.RouteTo(route, param);

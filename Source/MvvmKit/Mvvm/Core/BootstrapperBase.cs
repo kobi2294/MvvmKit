@@ -91,7 +91,7 @@ namespace MvvmKit
             Container.RegisterInstance(GetType(), this);
             Container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IViewResolver, DefaultViewResolver>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<NavigationService>(new ContainerControlledLifetimeManager());
+            RegisterService<NavigationService>();
 
             await ConfigureContainerOverride();
 

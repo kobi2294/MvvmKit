@@ -26,10 +26,6 @@ namespace MvvmKitAppSample.Components.PageOne
 
         #region Commands
 
-
-        #region Add Command
-
-
         #region Select Command
 
         private DelegateCommand<ItemVm> _SelectCommand;
@@ -49,6 +45,7 @@ namespace MvvmKitAppSample.Components.PageOne
 
         #endregion
 
+        #region Add Command
 
         private DelegateCommand<string> _AddCommand;
         public DelegateCommand<string> AddCommand
@@ -68,9 +65,30 @@ namespace MvvmKitAppSample.Components.PageOne
         #endregion
 
 
+        #region MyRegion Command
+
+        private DelegateCommand _MyRegionCommand;
+        public DelegateCommand MyRegionCommand
+        {
+            get
+            {
+                if (_MyRegionCommand == null) _MyRegionCommand = new DelegateCommand(OnMyRegionCommand);
+                return _MyRegionCommand;
+            }
+        }
+
+        public async void OnMyRegionCommand()
+        {
+            await _dialogs.Message("My region is " + Region.Name);
+        }
+        #endregion
+
+
+
         #endregion
 
         private BackgroundService _service;
+        private DialogsService _dialogs;
         private ServiceCollectionAdapter<string, ItemVm> _adapter;
 
         public PageOneVm()
@@ -79,9 +97,10 @@ namespace MvvmKitAppSample.Components.PageOne
         }
 
         [InjectionMethod]
-        public void Inject(BackgroundService service)
+        public void Inject(BackgroundService service, DialogsService dialogs)
         {
             _service = service;
+            _dialogs = dialogs;
         }
 
         public async Task OnChildRemove(ItemVm vm)

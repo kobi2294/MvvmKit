@@ -13,7 +13,7 @@ namespace MvvmKit
 
         protected NavigationService Navigation { get; private set; }
 
-        protected Region Region { get; private set; }
+        public Region Region { get; private set; }
 
         public object Parameter { get; private set; }
 
@@ -34,6 +34,12 @@ namespace MvvmKit
             await OnInitialized(param);
         }
 
+        internal async Task NavigateTo(Region region)
+        {
+            Region = region;
+            await NavigateTo();
+        }
+
         public async Task NavigateTo()
         {
             IsNavigatedTo = true;
@@ -44,6 +50,7 @@ namespace MvvmKit
         {
             await OnClearing();
             IsNavigatedTo = false;
+            Region = null;
         }
 
         [InjectionMethod]

@@ -18,6 +18,10 @@
         </t:SelectiveResources>
     </UserControl.Resources>
     <DockPanel Background="LightCyan">
+        <Button Content="My Region is..." Command="{Binding MyRegionCommand}"
+                DockPanel.Dock="Top" Margin="10" Padding="6"
+                />
+
         <t:Navigator ItemsSource="{Binding Items}" DockPanel.Dock="Top" 
                      SelectedValue="{Binding SelectedItem}"
                      SelectedValuePath="Value"

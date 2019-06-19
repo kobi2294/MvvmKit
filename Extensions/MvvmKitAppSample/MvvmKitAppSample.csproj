@@ -59,6 +59,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\MessageBox\MessageBoxView.xaml.cs">
+      <DependentUpon>MessageBoxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\MessageBox\MessageBoxVm.cs" />
     <Compile Include="Components\NumberDialog\NumberDialogView.xaml.cs">
       <DependentUpon>NumberDialogView.xaml</DependentUpon>
     </Compile>
@@ -80,6 +84,7 @@
     <Compile Include="Services\BackgroundService.cs" />
     <Compile Include="Services\BgService1.cs" />
     <Compile Include="Services\BgService2.cs" />
+    <Compile Include="Services\DialogsService.cs" />
     <Compile Include="Services\IBgService1.cs" />
     <Compile Include="Services\IBgService2.cs" />
     <Compile Include="Services\ItemsService.cs" />
@@ -119,6 +124,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Components\MessageBox\DtMessageBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\MessageBox\MessageBoxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\NumberDialog\DtNumberDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
