@@ -7,7 +7,7 @@
              xmlns:root="clr-namespace:MvvmKitAppSample"
              xmlns:local="clr-namespace:MvvmKitAppSample.Components.Shell"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="800" d:DesignWidth="800"
              d:DataContext="{StaticResource dt.Shell.ShellVm}"
              >
     <UserControl.Resources>
@@ -18,13 +18,29 @@
         </t:SelectiveResources>
     </UserControl.Resources>
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top" Text="{Binding Title}"/>
-        <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding ChangeACommand}">Change Property</Button>
-        <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding TogglePageCommand}">Toggle View Model</Button>
-        <Button DockPanel.Dock="Top" Margin="10" Padding="10" Command="{Binding MyRegionCommand}">I am hosted in...</Button>
+        <TextBlock DockPanel.Dock="Top" Text="{Binding Title}" FontSize="16" Margin="4"/>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Background="LightGreen">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="10"/>
+                    <Setter Property="Padding" Value="10"/>
+                    <Setter Property="Background" Value="Green"/>
+                    <Setter Property="Foreground" Value="LightGreen"/>
+                    <Setter Property="FontSize" Value="20"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button Command="{Binding ChangeACommand}">Change Property</Button>
+            <Button Command="{Binding TogglePageCommand}">Toggle View Model</Button>
+            <Button Command="{Binding MyRegionCommand}">I am hosted in...</Button>
+        </StackPanel>
 
-        <ContentControl DockPanel.Dock="Top" Height="100" t:RegionHost.Region="{x:Static root:GlobalNav.Main}"></ContentControl>
+        <Border DockPanel.Dock="Top" Height="250" BorderBrush="Pink" BorderThickness="8" Margin="4">
+            <ContentControl DockPanel.Dock="Top" Height="250" t:RegionHost.Region="{x:Static root:GlobalNav.Main}"/>
+        </Border>
         <ContentControl DockPanel.Dock="Left" t:RegionHost.Region="{x:Static root:GlobalNav.Gain}"></ContentControl>
-        <ContentControl t:RegionHost.Region="{Binding MyRegion}"/>
+
+        <Border BorderBrush="Pink" BorderThickness="8" Margin="4">
+            <ContentControl t:RegionHost.Region="{Binding MyRegion}"/>
+        </Border>
     </DockPanel>
 </UserControl>

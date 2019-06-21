@@ -96,6 +96,9 @@
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
+    <Compile Include="Mvvm\Navigation\State\ComponentState.cs" />
+    <Compile Include="Mvvm\Navigation\State\StateRestorer.cs" />
+    <Compile Include="Mvvm\Navigation\State\StateSaver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
@@ -169,6 +172,7 @@
     <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
     <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
+    <Compile Include="Tools\DelegateFactory\DelegateFactory.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
     <Compile Include="Tools\Disposables\BaseDisposableWithData.cs" />
     <Compile Include="Tools\Disposables\Disposables.Callback.cs" />

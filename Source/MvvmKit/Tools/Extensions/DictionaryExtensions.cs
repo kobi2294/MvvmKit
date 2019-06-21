@@ -29,5 +29,12 @@ namespace MvvmKit
 
             return default(T);
         }
+
+        public static T GetAndRemove<K, T>(this Dictionary<K, T> source, K key)
+        {
+            var res = source[key];
+            source.Remove(key);
+            return res;
+        }
     }
 }

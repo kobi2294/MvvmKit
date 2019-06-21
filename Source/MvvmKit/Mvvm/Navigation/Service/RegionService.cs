@@ -240,6 +240,7 @@ namespace MvvmKit
         private RouteEntry _currentRouteEntry;
         private RegionServiceBindable _hostBindable;
         private NavigationService _owner;
+        private Dictionary<RegionEntry, ComponentState> _savedStates;
 
         public IEnumerable<ContentControl> Hosts => _hosts.ToArray();
         public RegionEntry CurrentRegionEntry => _currentRegionEntry;
@@ -273,6 +274,8 @@ namespace MvvmKit
             _hosts = new HashSet<ContentControl>();
             _currentRegionEntry = RegionEntry.Empty;
             _currentRouteEntry = RouteEntry.Empty;
+            _savedStates = new Dictionary<RegionEntry, ComponentState>();
+
             _owner = owner;
             _region = region;
             _hostBindable = new RegionServiceBindable
@@ -324,7 +327,6 @@ namespace MvvmKit
         // this is the main logic of the service - the actual navigation.
         // It performs deactivation of current VM and activation of new vms
         // It also calls the behaviors, and keeps track of navigation entries.
-        // lastly, it invokes the invalidation of the current route
         private async Task<ComponentBase> _doActualNavigation(RegionEntry entry)
         {
             if (_isDisposed)
@@ -333,6 +335,7 @@ namespace MvvmKit
             // Check if navigation is required at all
             if (entry == _currentRegionEntry) return _currentVm;
 
+            var oldEntry = _currentRegionEntry;
             _currentRegionEntry = entry;
 
             // call behaviors before navigation both on region and on hosts
@@ -341,8 +344,15 @@ namespace MvvmKit
                 _invokeOnAllHostBehaviors(b => b.BeforeNavigation));
 
             // clear current view model.
-            if ((_currentVm != null) && (_currentVm.IsNavigatedTo))
+            if ((_currentVm != null) && (_currentVm.Region == _region))
+            {
+                using (var saver = new StateSaver(_currentVm))
+                {
+                    await _currentVm.SaveState(saver);
+                    _savedStates.Add(oldEntry, saver.GetState());
+                }
                 await _currentVm.Clear();
+            }
 
             // after every await - verify we still need to proceed - since there may be concurrent navigation
             if (_currentRegionEntry != entry) return null;
@@ -351,7 +361,23 @@ namespace MvvmKit
             if (entry != RegionEntry.Empty)
             {
                 vm = _resolver.Resolve(entry.ViewModelType) as ComponentBase;
-                await vm.Initialize(entry.Parameter);
+
+                await vm.Initialize(_region, entry.Parameter);
+
+                var isRestore = (_savedStates.ContainsKey(entry));
+                if (isRestore)
+                {
+                    var state = _savedStates.GetAndRemove(entry);
+                    using (var restorer = new StateRestorer(vm, state))
+                    {
+                        restorer.RunSetters();
+                        await vm.RestoreState(restorer);
+                        state.Clear();
+                    }
+                } else
+                {
+                    await vm.NewState();
+                }
             }
 
             // after every await - verify we still need to proceed - since there may be concurrent navigation
@@ -361,7 +387,7 @@ namespace MvvmKit
             await Navigated.Invoke(entry);
 
             if (vm != null)
-                await vm.NavigateTo(_region);
+                await vm.NavigateTo();
 
             // call behaviors after navigation
             await Task.WhenAll(

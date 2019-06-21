@@ -22,6 +22,9 @@ namespace MvvmKitAppSample.Components.PageOne
         public string SelectedItem { get { return _SelectedItem; } set { SetProperty(ref _SelectedItem, value); } }
 
 
+        private string _PreservedData;
+        public string PreservedData { get { return _PreservedData; } set { SetProperty(ref _PreservedData, value); } }
+
         #endregion
 
         #region Commands
@@ -115,7 +118,19 @@ namespace MvvmKitAppSample.Components.PageOne
                 .From(_service.MyNames)
                 .To(Items)
                 .ModifyWith(async (m, vm) => await vm.ReadModel(m, this))
-                .Start();            
+                .Start();    
+        }
+
+        protected async override Task OnNewState()
+        {
+            await base.OnNewState();
+            PreservedData = Guid.NewGuid().ToString();
+        }
+
+        protected async override Task OnSaveState(StateSaver state)
+        {
+            await base.OnSaveState(state);
+            state.Save(() => PreservedData);
         }
 
         protected override async Task OnClearing()

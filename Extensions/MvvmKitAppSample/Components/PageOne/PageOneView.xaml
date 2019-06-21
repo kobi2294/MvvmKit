@@ -18,6 +18,10 @@
         </t:SelectiveResources>
     </UserControl.Resources>
     <DockPanel Background="LightCyan">
+        <Border Background="Navy" DockPanel.Dock="Top">
+            <TextBlock Text="{Binding PreservedData, StringFormat=Key: \{0\}}" Foreground="White" Margin="10"                       
+                       />
+        </Border>
         <Button Content="My Region is..." Command="{Binding MyRegionCommand}"
                 DockPanel.Dock="Top" Margin="10" Padding="6"
                 />

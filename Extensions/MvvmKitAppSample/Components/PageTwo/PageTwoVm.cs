@@ -20,7 +20,6 @@ namespace MvvmKitAppSample.Components.PageTwo
 
         #region Commands
 
-
         #region GetNewValue Command
 
         private DelegateCommand _GetNewValueCommand;
@@ -43,13 +42,37 @@ namespace MvvmKitAppSample.Components.PageTwo
 
         #endregion  
 
+        int _myNum;
+
         public PageTwoVm()
         {
+            var rand = new Random();
+            _myNum = rand.Next(100);
         }
 
         [InjectionMethod]
         public void Inject()
         {
+        }
+
+        protected override Task OnNewState()
+        {
+            LatestValue = 0;
+            return Task.CompletedTask;
+        }
+
+        protected async override Task OnSaveState(StateSaver state)
+        {
+            await base.OnSaveState(state);
+            state.Save(() => LatestValue);
+            state.Save(() => _myNum);
+            state.Set("Kobi", 42);
+        }
+
+        protected async override Task OnRestoreState(StateRestorer state)
+        {
+            await base.OnRestoreState(state);
+            var kobi = state.Get<int>("Kobi");
         }
 
     }

@@ -1,4 +1,6 @@
 ﻿using MvvmKit;
+using MvvmKitAppSample.Components.PageOne;
+using MvvmKitAppSample.Components.PageTwo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +19,46 @@ namespace MvvmKitAppSample.Components.RegionContainer
 
         #endregion
 
+        #region Commands
+
+        #region PageOne Command
+
+        private DelegateCommand _PageOneCommand;
+        public DelegateCommand PageOneCommand
+        {
+            get
+            {
+                if (_PageOneCommand == null) _PageOneCommand = new DelegateCommand(OnPageOneCommand);
+                return _PageOneCommand;
+            }
+        }
+
+        public async void OnPageOneCommand()
+        {
+            await Navigation.NavigateTo<PageOneVm>(MyRegion);
+        }
+        #endregion
+
+        #region PageTwo Command
+
+        private DelegateCommand _PageTwoCommand;
+        public DelegateCommand PageTwoCommand
+        {
+            get
+            {
+                if (_PageTwoCommand == null) _PageTwoCommand = new DelegateCommand(OnPageTwoCommand);
+                return _PageTwoCommand;
+            }
+        }
+
+        public async void OnPageTwoCommand()
+        {
+            await Navigation.NavigateTo<PageTwoVm>(MyRegion);
+        }
+        #endregion
+
+        #endregion
+
         public RegionContainerVm()
         {
         }
@@ -29,7 +71,8 @@ namespace MvvmKitAppSample.Components.RegionContainer
         protected async override Task OnInitialized(object param)
         {
             await base.OnInitialized(param);
-            MyRegion = new Region().WithName("My Region");
+
+            MyRegion = new Region().WithName("Inside Region Container");
             await Navigation.RegisterRegion(MyRegion);
         }
 

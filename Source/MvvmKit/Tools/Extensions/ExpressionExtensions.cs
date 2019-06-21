@@ -12,9 +12,9 @@ namespace MvvmKit
     {
         public static PropertyInfo GetProperty<T>(this Expression<Func<T>> source)
         {
-            MemberExpression body = source.Body as MemberExpression;
+            MemberExpression member = source.GetMemberExpression();
 
-            PropertyInfo res = (body == null) ? null : body.Member as PropertyInfo;
+            PropertyInfo res = (member == null) ? null : member.Member as PropertyInfo;
 
             if (res == null)
             {
@@ -26,7 +26,7 @@ namespace MvvmKit
 
         public static PropertyInfo GetProperty<T1, T2>(this Expression<Func<T1, T2>> source)
         {
-            MemberExpression body = source.Body as MemberExpression;
+            MemberExpression body = source.GetMemberExpression();
 
             PropertyInfo res = (body == null) ? null : body.Member as PropertyInfo;
 
@@ -50,6 +50,48 @@ namespace MvvmKit
             }
 
             return res;
+        }
+
+        public static MemberExpression GetMemberExpression<T1, T2>(this Expression<Func<T1, T2>> expression)
+        {
+            MemberExpression memberExpression = null;
+            if (expression.Body.NodeType == ExpressionType.Convert)
+            {
+                var body = (UnaryExpression)expression.Body;
+                memberExpression = body.Operand as MemberExpression;
+            }
+            else if (expression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                memberExpression = expression.Body as MemberExpression;
+            }
+
+            if (memberExpression == null)
+            {
+                throw new ArgumentException("Not a member access", "expression");
+            }
+
+            return memberExpression;
+        }
+
+        public static MemberExpression GetMemberExpression<T>(this Expression<Func<T>> expression)
+        {
+            MemberExpression memberExpression = null;
+            if (expression.Body.NodeType == ExpressionType.Convert)
+            {
+                var body = (UnaryExpression)expression.Body;
+                memberExpression = body.Operand as MemberExpression;
+            }
+            else if (expression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                memberExpression = expression.Body as MemberExpression;
+            }
+
+            if (memberExpression == null)
+            {
+                throw new ArgumentException("Not a member access", "expression");
+            }
+
+            return memberExpression;
         }
 
 

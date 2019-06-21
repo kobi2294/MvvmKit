@@ -17,39 +17,36 @@ namespace MvvmKit
 
         public object Parameter { get; private set; }
 
-        #region Bindable Properties
-
-        private bool _IsNavigatedTo;
-        public bool IsNavigatedTo { get { return _IsNavigatedTo; } set { SetProperty(ref _IsNavigatedTo, value); } }
-
-        private bool _IsInitialized;
-        public bool IsInitialized { get { return _IsInitialized; } set { SetProperty(ref _IsInitialized, value); } }
-
-        #endregion
-
-        public async Task Initialize(object param)
+        internal async Task Initialize(Region region, object param)
         {
             Parameter = param;
-            IsInitialized = true;
+            Region = region;
             await OnInitialized(param);
         }
 
-        internal async Task NavigateTo(Region region)
+        internal async Task NewState()
         {
-            Region = region;
-            await NavigateTo();
+            await OnNewState();
         }
 
-        public async Task NavigateTo()
+        internal async Task RestoreState(StateRestorer state)
         {
-            IsNavigatedTo = true;
+            await OnRestoreState(state);
+        }
+
+        internal async Task NavigateTo()
+        {
             await OnNavigatedTo();
         }
 
-        public async Task Clear()
+        internal async Task SaveState(StateSaver state)
+        {
+            await OnSaveState(state);
+        }
+
+        internal async Task Clear()
         {
             await OnClearing();
-            IsNavigatedTo = false;
             Region = null;
         }
 
@@ -60,12 +57,28 @@ namespace MvvmKit
             Navigation = navigation;
         }
 
+
         protected virtual Task OnInitialized(object param)
         {
             return Tasks.Empty;
         }
 
+        protected virtual Task OnNewState()
+        {
+            return Tasks.Empty;
+        }
+
+        protected virtual Task OnRestoreState(StateRestorer state)
+        {
+            return Tasks.Empty;
+        }
+
         protected virtual Task OnNavigatedTo()
+        {
+            return Tasks.Empty;
+        }
+
+        protected virtual Task OnSaveState(StateSaver state)
         {
             return Tasks.Empty;
         }

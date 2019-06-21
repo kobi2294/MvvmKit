@@ -22,6 +22,12 @@ namespace MvvmKit
         {
         }
 
+        public void DisposeIfNeeded()
+        {
+            if (!IsDisposed)
+                Dispose();
+        }
+
         public void Dispose()
         {
             Validate();
