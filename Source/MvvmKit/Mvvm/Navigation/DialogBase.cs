@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MvvmKit
@@ -14,7 +11,7 @@ namespace MvvmKit
         #region Ok Command
 
         private DelegateCommand _OkCommand;
-        public DelegateCommand OkCommand
+        public virtual DelegateCommand OkCommand
         {
             get
             {
@@ -33,7 +30,7 @@ namespace MvvmKit
         #region Cancel Command
 
         private DelegateCommand _CancelCommand;
-        public DelegateCommand CancelCommand
+        public virtual DelegateCommand CancelCommand
         {
             get
             {
@@ -98,7 +95,7 @@ namespace MvvmKit
         #region Ok Command
 
         private DelegateCommand<object> _OkCommand;
-        public DelegateCommand<object> OkCommand
+        public virtual DelegateCommand<object> OkCommand
         {
             get
             {
@@ -120,7 +117,7 @@ namespace MvvmKit
         #region Cancel Command
 
         private DelegateCommand _CancelCommand;
-        public DelegateCommand CancelCommand
+        public virtual DelegateCommand CancelCommand
         {
             get
             {
