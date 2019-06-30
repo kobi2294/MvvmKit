@@ -128,10 +128,10 @@ namespace MvvmKitAppSample.Components.PageOne
             PreservedData = Guid.NewGuid().ToString();
         }
 
-        protected async override Task OnSaveState(StateSaver state)
+        protected async override Task OnSaveState(StateWriter writer)
         {
-            await base.OnSaveState(state);
-            state.Save(() => PreservedData);
+            await base.OnSaveState(writer);
+            writer.WriteMember(() => PreservedData);
         }
 
         protected override Task OnDestroyState(StateReader state)

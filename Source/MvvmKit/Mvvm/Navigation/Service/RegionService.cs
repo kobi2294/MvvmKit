@@ -117,13 +117,13 @@ namespace MvvmKit
             });
         }
 
-        private Task _runDestroyHandler(ComponentState state)
+        private async Task _runOnDestroy(StateStore state)
         {
-            using (var reader = new StateReader(state))
+            await state.Read(async reader =>
             {
-                var callback = state.GetDestroyEntry();
-                return callback.Invoke(reader);
-            }
+                var func = reader.GetAnnotation<Func<StateReader, Task>>("destroy");
+                await func(reader);
+            });
         }
 
         private async Task _destroyEntryStateWhere(Func<RegionEntry, bool> entryPicker)
@@ -131,7 +131,7 @@ namespace MvvmKit
             var entries = _savedStates.Keys.Where(entryPicker).ToArray();
             var states = entries.Select(e => _savedStates.GetAndRemove(e)).ToArray();
 
-            var destroyTasks = states.Select(s => _runDestroyHandler(s));
+            var destroyTasks = states.Select(s => _runOnDestroy(s));
             await Task.WhenAll(destroyTasks);
         }
 
@@ -263,7 +263,7 @@ namespace MvvmKit
         private RouteEntry _currentRouteEntry;
         private RegionServiceBindable _hostBindable;
         private NavigationService _owner;
-        private Dictionary<RegionEntry, ComponentState> _savedStates;
+        private Dictionary<RegionEntry, StateStore> _savedStates;
 
         public IEnumerable<ContentControl> Hosts => _hosts.ToArray();
         public RegionEntry CurrentRegionEntry => _currentRegionEntry;
@@ -297,7 +297,7 @@ namespace MvvmKit
             _hosts = new HashSet<ContentControl>();
             _currentRegionEntry = RegionEntry.Empty;
             _currentRouteEntry = RouteEntry.Empty;
-            _savedStates = new Dictionary<RegionEntry, ComponentState>();
+            _savedStates = new Dictionary<RegionEntry, StateStore>();
 
             _owner = owner;
             _region = region;
@@ -373,11 +373,13 @@ namespace MvvmKit
             // clear current view model.
             if ((_currentVm != null) && (_currentVm.Region == _region))
             {
-                using (var saver = new StateSaver(_currentVm))
+                var state = await StateStore.Write(_currentVm, async writer =>
                 {
-                    await _currentVm.SaveState(saver);
-                    _savedStates.Add(oldEntry, saver.GetState());
-                }
+                    writer.WriteAnnotation<Func<StateReader, Task>>("destroy", _currentVm.OnDestroyState);
+                    await _currentVm.SaveState(writer);
+                });
+                _savedStates.Add(oldEntry, state);
+
                 await _currentVm.Clear();
             }
 

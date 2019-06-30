@@ -7,22 +7,21 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StateSaver: BaseDisposable
+    public class StateWriter: BaseDisposable
     {
-        private ComponentBase _owner;
-        private ComponentState _state;
+        private object _owner;
+        private StateStore _state;
         private string _typeName;
 
 
-        public StateSaver(ComponentBase owner)
+        public StateWriter(object owner, StateStore state)
         {
             _owner = owner;
             _typeName = _owner.GetType().FullName;
-            _state = new ComponentState();
-            _state.SetDestroyEntry(_owner.OnDestroyState);
+            _state = state;
         }
 
-        public void Save<T>(Expression<Func<T>> member)
+        public void WriteMember<T>(Expression<Func<T>> member)
         {
             Validate();
             var me = member.GetMemberExpression();            
@@ -31,18 +30,13 @@ namespace MvvmKit
             var setter = m.ToSetter<object, object>();
 
             var value = getter(_owner);
-            _state.AddSetter(setter, m, value);
+            _state.AddMember(m, setter, value);
         }
 
-        public void Set<T>(string key, T value)
+        public void WriteAnnotation<T>(string key, T value)
         {
             Validate();
-            _state.AddValue(key, value);
-        }
-
-        internal ComponentState GetState()
-        {
-            return _state;
+            _state.AddAnnotation(key, value);
         }
 
         protected override void OnDisposed()

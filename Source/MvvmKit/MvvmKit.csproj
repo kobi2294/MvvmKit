@@ -104,10 +104,10 @@
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
-    <Compile Include="Mvvm\Navigation\State\ComponentState.cs" />
-    <Compile Include="Mvvm\Navigation\State\StateReader.cs" />
-    <Compile Include="Mvvm\Navigation\State\StateRestorer.cs" />
-    <Compile Include="Mvvm\Navigation\State\StateSaver.cs" />
+    <Compile Include="Tools\StateStore\StateStore.cs" />
+    <Compile Include="Tools\StateStore\StateReader.cs" />
+    <Compile Include="Tools\StateStore\StateRestorer.cs" />
+    <Compile Include="Tools\StateStore\StateWriter.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DefaultViewResolver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\IViewResolver.cs" />
@@ -246,6 +246,8 @@
   <ItemGroup>
     <Resource Include="Icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Mvvm\Navigation\State\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

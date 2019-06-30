@@ -10,35 +10,35 @@ namespace MvvmKit
 {
     public class StateReader: BaseDisposable
     {
-        private ComponentState _state;
+        private StateStore _state;
 
-        internal StateReader(ComponentState state)
+        internal StateReader(StateStore state)
         {
             _state = state;
         }
 
-        public T Get<T>(Expression<Func<T>> member)
+        public T GetMember<T>(Expression<Func<T>> member)
         {
             Validate();
             var me = member.GetMemberExpression();
             var m = me.Member;
-            var value = (T)_state.GetMemberValue(m);
+            var value = _state.Member<T>(m).value;
             return value;            
         }
 
-        public T Get<T>(string key)
+        public T GetAnnotation<T>(string key)
         {
             Validate();
-            var value = (T)_state.GetValue(key);
+            var value = (T)_state.Annotation<T>(key);
             return value;
         }
 
         public IEnumerable<(string key, object value)> Dump()
         {
-            var members = _state.GetMemberValues().Select(x => (x.key.Name, x.value));
-            var values = _state.GetValues();
+            var members = _state.Members().Select(x => (x.member.Name, x.value));
+            var annotations = _state.Annotations();
 
-            return members.Concat(values);
+            return members.Concat(annotations);
         }
 
         public void DumpToDebug(string title)

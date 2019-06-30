@@ -61,18 +61,18 @@ namespace MvvmKitAppSample.Components.PageTwo
             return Task.CompletedTask;
         }
 
-        protected async override Task OnSaveState(StateSaver state)
+        protected async override Task OnSaveState(StateWriter state)
         {
             await base.OnSaveState(state);
-            state.Save(() => LatestValue);
-            state.Save(() => _myNum);
-            state.Set("Kobi", 42);
+            state.WriteMember(() => LatestValue);
+            state.WriteMember(() => _myNum);
+            state.WriteAnnotation("Kobi", 42);
         }
 
         protected async override Task OnRestoreState(StateRestorer state)
         {
             await base.OnRestoreState(state);
-            var kobi = state.Get<int>("Kobi");
+            var kobi = state.Annotation<int>("Kobi");
         }
 
         protected override Task OnDestroyState(StateReader state)

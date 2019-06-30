@@ -9,35 +9,36 @@ namespace MvvmKit
 {
     public class StateRestorer: BaseDisposable
     {
-        private ComponentBase _owner;
-        private ComponentState _state;
+        private object _target;
+        private StateStore _state;
 
-        public StateRestorer(ComponentBase owner, ComponentState state)
+        public StateRestorer(object target, StateStore state)
         {
-            _owner = owner;
+            _target = target;
             _state = state;
         }
 
         public void RunSetters()
         {
-            foreach (var pair in _state.GetSetters())
+            Validate();
+            foreach (var record in _state.Members())
             {
-                var setter = pair.setter;
-                var value = pair.value;
-                setter(_owner, value);
+                var setter = record.setter;
+                var value = record.value;
+                setter.Invoke(_target, value);
             }
         }
 
-        public T Get<T>(string key)
+        public T Annotation<T>(string key)
         {
             Validate();
-            return (T)_state.GetValue(key);
+            return _state.Annotation<T>(key);
         }
 
         protected override void OnDisposed()
         {
             base.OnDisposed();
-            _owner = null;
+            _target = null;
             _state = null;
         }
     }

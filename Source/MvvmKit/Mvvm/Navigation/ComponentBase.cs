@@ -39,7 +39,7 @@ namespace MvvmKit
             await OnNavigatedTo();
         }
 
-        internal async Task SaveState(StateSaver state)
+        internal async Task SaveState(StateWriter state)
         {
             await OnSaveState(state);
         }
@@ -78,7 +78,7 @@ namespace MvvmKit
             return Tasks.Empty;
         }
 
-        protected virtual Task OnSaveState(StateSaver state)
+        protected virtual Task OnSaveState(StateWriter state)
         {
             return Tasks.Empty;
         }
