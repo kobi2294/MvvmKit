@@ -41,7 +41,13 @@ namespace MvvmKit
                 RegionHost.SetRegion(w, service.Region);
 
                 // simply calling ShowDialog will block the method, so e need to trick it...
-                w.Dispatcher.BeginInvoke(new Action(() => w.ShowDialog()));
+                w.Dispatcher.BeginInvoke(new Action(() => {
+                    // make sure window was not closed since dispatching
+                    if (_myWindows.Contains(w))
+                    {
+                        w.ShowDialog();
+                    }
+                }));
             }
 
             return Tasks.Empty;
