@@ -3,6 +3,7 @@ using MvvmKitAppSample.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -131,6 +132,12 @@ namespace MvvmKitAppSample.Components.PageOne
         {
             await base.OnSaveState(state);
             state.Save(() => PreservedData);
+        }
+
+        protected override Task OnDestroyState(StateReader state)
+        {
+            state.DumpToDebug("Page One State Dump");
+            return Tasks.Empty;
         }
 
         protected override async Task OnClearing()

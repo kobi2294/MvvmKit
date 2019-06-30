@@ -191,6 +191,12 @@ namespace MvvmKit
             return await service.RouteTo(route, param);
         }
 
+        public async Task DestroyEntryStateWhere(Region region, Func<RegionEntry, bool> entryPicker)
+        {
+            var service = await For(region);
+            await service.DestroyEntryStateWhere(entryPicker);
+        }
+
         public Task<ComponentBase> CurrentViewModelAt(Region region)
         {
             return Run(() =>

@@ -75,5 +75,11 @@ namespace MvvmKitAppSample.Components.PageTwo
             var kobi = state.Get<int>("Kobi");
         }
 
+        protected override Task OnDestroyState(StateReader state)
+        {
+            state.DumpToDebug("Page 2 Dump");
+            return Tasks.Empty;
+        }
+
     }
 }

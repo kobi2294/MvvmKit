@@ -117,6 +117,29 @@ namespace MvvmKit
             });
         }
 
+        private Task _runDestroyHandler(ComponentState state)
+        {
+            using (var reader = new StateReader(state))
+            {
+                var callback = state.GetDestroyEntry();
+                return callback.Invoke(reader);
+            }
+        }
+
+        private async Task _destroyEntryStateWhere(Func<RegionEntry, bool> entryPicker)
+        {
+            var entries = _savedStates.Keys.Where(entryPicker).ToArray();
+            var states = entries.Select(e => _savedStates.GetAndRemove(e)).ToArray();
+
+            var destroyTasks = states.Select(s => _runDestroyHandler(s));
+            await Task.WhenAll(destroyTasks);
+        }
+
+        public Task DestroyEntryStateWhere(Func<RegionEntry, bool> entryPicker)
+        {
+            return Run(() => _destroyEntryStateWhere(entryPicker), true);
+        }
+
         #endregion
 
         #region Internal Host Management
@@ -293,6 +316,10 @@ namespace MvvmKit
             {
                 // clear the region before unregistering
                 await _navigateTo(RegionEntry.Empty);
+
+                // destroy all saved states
+                await _destroyEntryStateWhere(r => true);
+
                 _isDisposed = true;
             });
 

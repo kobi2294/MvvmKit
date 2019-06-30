@@ -183,7 +183,10 @@ namespace MvvmKit
             await Changed.Invoke(Changes.Reset(values));
         }
 
-        public async Task Transform(IEnumerable<T> values) { }
+        public Task Transform(IEnumerable<T> values)
+        {
+            throw new NotImplementedException();
+        }
 
 
         public ServiceCollectionPropertyReadonly<T> PropertyGet(ServiceBase service)

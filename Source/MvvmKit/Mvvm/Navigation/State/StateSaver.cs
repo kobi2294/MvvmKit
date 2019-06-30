@@ -19,6 +19,7 @@ namespace MvvmKit
             _owner = owner;
             _typeName = _owner.GetType().FullName;
             _state = new ComponentState();
+            _state.SetDestroyEntry(_owner.OnDestroyState);
         }
 
         public void Save<T>(Expression<Func<T>> member)
@@ -30,7 +31,7 @@ namespace MvvmKit
             var setter = m.ToSetter<object, object>();
 
             var value = getter(_owner);
-            _state.AddSetter(setter, value);
+            _state.AddSetter(setter, m, value);
         }
 
         public void Set<T>(string key, T value)

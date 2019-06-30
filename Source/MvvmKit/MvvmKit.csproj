@@ -105,6 +105,7 @@
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
     <Compile Include="Mvvm\Navigation\State\ComponentState.cs" />
+    <Compile Include="Mvvm\Navigation\State\StateReader.cs" />
     <Compile Include="Mvvm\Navigation\State\StateRestorer.cs" />
     <Compile Include="Mvvm\Navigation\State\StateSaver.cs" />
     <Compile Include="Mvvm\Navigation\View Resolution\DataTemplateWrapper.cs" />

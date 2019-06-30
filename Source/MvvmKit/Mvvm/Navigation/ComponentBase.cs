@@ -88,5 +88,10 @@ namespace MvvmKit
             return Tasks.Empty;
         }
 
+        protected internal virtual Task OnDestroyState(StateReader state)
+        {
+            return Tasks.Empty;
+        }
+
     }
 }
