@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,8 @@ namespace MvvmKit.CollectionChangeEvents
 
         public object Item { get; }
 
-        public ItemRemoved(int index, object item)
-            :base(ChangeType.Removed)
+        public ItemRemoved(int index, object item, IEnumerable currentItems)
+            :base(ChangeType.Removed, currentItems)
         {
             Item = item;
             Index = index;
@@ -40,7 +41,9 @@ namespace MvvmKit.CollectionChangeEvents
             if (isnull1 && isnull2) return true;
             if (isnull1 || isnull2) return false;
 
-            return ((rs1.Index == rs2.Index) && (rs1.Item == rs2.Item));
+            return (rs1.Index == rs2.Index)
+                && (rs1.Item == rs2.Item)
+                && rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
         }
 
         public static bool operator !=(ItemRemoved rs1, ItemRemoved rs2)
@@ -50,7 +53,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(Item, Index);
+            return ObjectExtensions.GenerateHashCode(Item, Index, ObjectExtensions.GenerateHashCode(CurrentItems));
         }
 
         #endregion
@@ -61,14 +64,18 @@ namespace MvvmKit.CollectionChangeEvents
     {
         public new T Item => (T)base.Item;
 
-        public ItemRemoved(int index, T item)
-            : base(index, item)
+        private IReadOnlyList<T> _currentItems;
+        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
+
+        public ItemRemoved(int index, T item, IEnumerable<T> currentItems)
+            : base(index, item, currentItems)
         {
+            _currentItems = GetCurrentItems<T>();
         }
 
-        public static implicit operator ItemRemoved<T>((int index, T item) value)
+        public static implicit operator ItemRemoved<T>((int index, T item, IEnumerable<T> currentItems) value)
         {
-            return new ItemRemoved<T>(value.index, value.item);
+            return new ItemRemoved<T>(value.index, value.item, value.currentItems);
         }
 
         public override string ToString()

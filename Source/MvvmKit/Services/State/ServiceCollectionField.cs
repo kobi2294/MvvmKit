@@ -64,7 +64,7 @@ namespace MvvmKit
         {
             var oldItem = _items[index];
             _items[index] = item;
-            await Changed.Invoke(Changes.Replace(index, oldItem, item));
+            await Changed.Invoke(Changes.Replace(index, oldItem, item, _items));
         }
 
         public async Task SetWhere(Predicate<T> predicate, T item)
@@ -80,7 +80,7 @@ namespace MvvmKit
         public async Task Add(T value)
         {
             _items.Add(value);
-            await Changed.Invoke(Changes.Add(_items.Count - 1, value));
+            await Changed.Invoke(Changes.Add(_items.Count - 1, value, _items));
         }
 
         public async Task AddRange(IEnumerable<T> values)
@@ -88,7 +88,7 @@ namespace MvvmKit
             var start = _items.Count;
             _items.AddRange(values);
 
-            var changes = values.Select((v, i) => Changes.Add(start + i, v));
+            var changes = values.Select((v, i) => Changes.Add(start + i, v, _items));
             await Changed.Invoke(changes.Collect());
         }
 
@@ -101,7 +101,7 @@ namespace MvvmKit
         public async Task Insert(int index, T item)
         {
             _items.Insert(index, item);
-            await Changed.Invoke(Changes.Add(index, item));
+            await Changed.Invoke(Changes.Add(index, item, _items));
         }
 
         public async Task<T> Pop()
@@ -110,7 +110,7 @@ namespace MvvmKit
             var item = _items[index];
             _items.RemoveAt(index);
 
-            await Changed.Invoke(Changes.Remove(index, item));
+            await Changed.Invoke(Changes.Remove(index, item, _items));
             return item;
         }
 
@@ -119,7 +119,7 @@ namespace MvvmKit
             var start = index;
             _items.InsertRange(index, values);
 
-            var changes = values.Select((v, i) => Changes.Add(start + i, v));
+            var changes = values.Select((v, i) => Changes.Add(start + i, v, _items));
             await Changed.Invoke(changes.Collect());
 
         }
@@ -129,7 +129,7 @@ namespace MvvmKit
             T item = _items[oldIndex];
             _items.RemoveAt(oldIndex);
             _items.Insert(newIndex, item);
-            await Changed.Invoke(Changes.Move(oldIndex, newIndex, item));
+            await Changed.Invoke(Changes.Move(oldIndex, newIndex, item, _items));
         }
 
         public async Task MoveItem(T item, int newIndex)
@@ -156,7 +156,7 @@ namespace MvvmKit
             if (index > -1)
             {
                 _items.RemoveAt(index);
-                await Changed.Invoke(Changes.Remove(index, item));
+                await Changed.Invoke(Changes.Remove(index, item, _items));
             }
         }
 
@@ -164,7 +164,7 @@ namespace MvvmKit
         {
             var item = _items[index];
             _items.RemoveAt(index);
-            await Changed.Invoke(Changes.Remove(index, item));
+            await Changed.Invoke(Changes.Remove(index, item, _items));
         }
 
         public async Task RemoveWhere(Predicate<T> predicate)
@@ -173,7 +173,7 @@ namespace MvvmKit
                 .Select((v, i) => (index: i, value: v))
                 .Where(pair => predicate(pair.value))
                 .OrderByDescending(pair => pair.index)
-                .Select(pair => Changes.Remove(pair.index, pair.value))
+                .Select(pair => Changes.Remove(pair.index, pair.value, _items))
                 .ToList();
 
             foreach (var pair in itemsToRemove)

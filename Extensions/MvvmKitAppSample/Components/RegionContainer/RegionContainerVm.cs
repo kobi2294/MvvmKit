@@ -100,9 +100,10 @@ namespace MvvmKitAppSample.Components.RegionContainer
             await Navigation.RegisterRegion(MyRegion);
 
             _history = await Navigation.HistoryOf(MyRegion);
-            await _history.Changed.Subscribe(this, async args =>
+            await _history.Changed.Subscribe(this, args =>
             {
-                CanBack = (await _history.Count()) > 0;
+                CanBack = args.Last().CurrentItems.Any();
+                return Tasks.Empty;
             });
         }
 

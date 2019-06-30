@@ -80,27 +80,27 @@ namespace MvvmKit
             {
                 switch (change)
                 {
-                    case ItemAdded<T> c:
+                    case IItemAdded<T> c:
                         await _addAt(c.Item, c.Index);
                         break;
-                    case ItemRemoved<T> c:
+                    case IItemRemoved<T> c:
                         Target.RemoveAt(c.Index);
                         break;
-                    case Cleared<T> c:
+                    case ICleared<T> c:
                         Target.Clear();
                         break;
-                    case Reset<T> c:
+                    case IReset<T> c:
                         Target.Clear();
-                        foreach (var item in c.Items)
+                        foreach (var item in c.CurrentItems)
                         {
                             await _addAt(item);
                         }
                         break;
-                    case ItemReplaced<T> c:
+                    case IItemReplaced<T> c:
                         var vm = Target[c.Index];
                         await _readModel(c.ToItem, vm);
                         break;
-                    case ItemMoved<T> c:
+                    case IItemMoved<T> c:
                         Target.Move(c.FromIndex, c.ToIndex);
                         break;
                     default:

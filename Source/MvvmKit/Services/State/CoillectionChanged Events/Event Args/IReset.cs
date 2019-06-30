@@ -8,11 +8,9 @@ namespace MvvmKit.CollectionChangeEvents
 {
     public interface IReset : IChange
     {
-        IEnumerable<object> Items { get; }
     }
 
     public interface IReset<T>: IReset, IChange<T>
     {
-        new IEnumerable<T> Items { get; }
     }
 }

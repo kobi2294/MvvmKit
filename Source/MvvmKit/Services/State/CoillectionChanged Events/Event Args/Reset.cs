@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,9 @@ namespace MvvmKit.CollectionChangeEvents
 {
     public abstract class Reset : Change, IReset
     {
-        public IEnumerable<object> Items { get; }
-
-        public Reset(IEnumerable<object> items)
-            :base(ChangeType.Reset)
+        public Reset(IEnumerable currentItems)
+            :base(ChangeType.Reset, currentItems)
         {
-            Items = items;
         }
 
         #region Comparing
@@ -37,10 +35,7 @@ namespace MvvmKit.CollectionChangeEvents
             if (isnull1 && isnull2) return true;
             if (isnull1 || isnull2) return false;
 
-            return (rs1.Items.Count() == rs2.Items.Count())
-                && rs1.Items
-                .Zip(rs2.Items, (a, b) => new { A = a, B = b })
-                .All(pair => pair.A == pair.B);
+            return rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
         }
 
         public static bool operator !=(Reset rs1, Reset rs2)
@@ -50,7 +45,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(Items);
+            return ObjectExtensions.GenerateHashCode(CurrentItems);
         }
 
         #endregion
@@ -59,16 +54,19 @@ namespace MvvmKit.CollectionChangeEvents
 
     public class Reset<T> : Reset, IReset<T>
     {
-        public new IEnumerable<T> Items => base.Items.Cast<T>();
+        private IReadOnlyList<T> _currentItems;
+        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
 
         public Reset(IEnumerable<T> items)
-            :base(items.Cast<object>())
+            :base(items)
         {
+            _currentItems = GetCurrentItems<T>();
         }
+
 
         public override string ToString()
         {
-            var items = string.Join(", ", Items);
+            var items = string.Join(", ", CurrentItems);
             return $"Reset to: {items}";
         }
     }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +35,12 @@ namespace MvvmKit
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
         {
             return new HashSet<T>(source);
+        }
+
+        public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> source)
+        {
+            var builder = new ReadOnlyCollectionBuilder<T>(source);
+            return builder.ToReadOnlyCollection();
         }
 
         public static IList CreateGenericList(this Type itemType)

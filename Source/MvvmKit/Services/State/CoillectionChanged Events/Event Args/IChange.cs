@@ -9,9 +9,12 @@ namespace MvvmKit.CollectionChangeEvents
     public interface IChange
     {
         ChangeType ChangeType { get; }
+
+        IReadOnlyList<object> CurrentItems { get; }
     }
 
     public interface IChange<T>: IChange
     {
+        new IReadOnlyList<T> CurrentItems { get; }
     }
 }

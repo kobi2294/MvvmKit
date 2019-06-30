@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,8 +15,8 @@ namespace MvvmKit.CollectionChangeEvents
 
         public object Item { get; }
 
-        public ItemMoved(int fromIndex, int toIndex, object item)
-            :base(ChangeType.Moved)
+        public ItemMoved(int fromIndex, int toIndex, object item, IEnumerable currentItems)
+            :base(ChangeType.Moved, currentItems)
         {
             Item = item;
             FromIndex = fromIndex;
@@ -43,7 +44,10 @@ namespace MvvmKit.CollectionChangeEvents
             if (isnull1 && isnull2) return true;
             if (isnull1 || isnull2) return false;
 
-            return ((rs1.FromIndex == rs2.FromIndex) && (rs1.ToIndex == rs2.ToIndex) && (rs1.Item == rs2.Item));
+            return (rs1.FromIndex == rs2.FromIndex)
+                && (rs1.ToIndex == rs2.ToIndex)
+                && (rs1.Item == rs2.Item)
+                && rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
         }
 
         public static bool operator !=(ItemMoved rs1, ItemMoved rs2)
@@ -53,7 +57,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(Item, FromIndex, ToIndex);
+            return ObjectExtensions.GenerateHashCode(Item, FromIndex, ToIndex, ObjectExtensions.GenerateHashCode(CurrentItems));
         }
 
         #endregion
@@ -64,14 +68,18 @@ namespace MvvmKit.CollectionChangeEvents
     {
         public new T Item => (T)base.Item;
 
-        public ItemMoved(int fromIndex, int toIndex, T item)
-            : base(fromIndex, toIndex, item)
+        private IReadOnlyList<T> _currentItems;
+        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
+
+        public ItemMoved(int fromIndex, int toIndex, T item, IEnumerable<T> currentItems)
+            : base(fromIndex, toIndex, item, currentItems)
         {
+            _currentItems = GetCurrentItems<T>();
         }
 
-        public static implicit operator ItemMoved<T>((int fromIndex, int toIndex, T item) value)
+        public static implicit operator ItemMoved<T>((int fromIndex, int toIndex, T item, IEnumerable<T> currentItems) value)
         {
-            return new ItemMoved<T>(value.fromIndex, value.toIndex, value.item);
+            return new ItemMoved<T>(value.fromIndex, value.toIndex, value.item, value.currentItems);
         }
 
         public override string ToString()
