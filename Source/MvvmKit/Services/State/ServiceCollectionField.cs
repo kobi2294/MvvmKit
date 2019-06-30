@@ -104,6 +104,16 @@ namespace MvvmKit
             await Changed.Invoke(Changes.Add(index, item));
         }
 
+        public async Task<T> Pop()
+        {
+            var index = _items.Count - 1;
+            var item = _items[index];
+            _items.RemoveAt(index);
+
+            await Changed.Invoke(Changes.Remove(index, item));
+            return item;
+        }
+
         public async Task InsertRange(int index, IEnumerable<T> values)
         {
             var start = index;

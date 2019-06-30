@@ -62,7 +62,9 @@ namespace MvvmKit
 
         private async Task _invalidate(RegionService service)
         {
-            if (service.CurrentRegionEntry == RegionEntry.Empty)
+            var entry = await service.CurrentRegionEntry.Get();
+
+            if (entry == RegionEntry.Empty)
             {
                 await _ensureWindowCloses(service);
             } else

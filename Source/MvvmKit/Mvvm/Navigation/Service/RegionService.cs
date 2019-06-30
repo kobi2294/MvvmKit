@@ -29,13 +29,17 @@ namespace MvvmKit
             return vm as TVM;
         }
 
-
         public Task<ComponentBase> NavigateTo(Type t, object param = null)
         {
             return Run(() =>
             {
                 return _navigateTo(t, param);
             });
+        }
+
+        public Task<ComponentBase> NavigateBack()
+        {
+            return Run(_navigateBack);
         }
 
         public Task<TVM> NavigateTo<TVM>(object param = null)
@@ -65,7 +69,7 @@ namespace MvvmKit
                 var vm = await _navigateTo<TVM>(param);
                 var res = await vm.Task;
 
-                if (vm == _currentVm)
+                if (vm == _CurrentViewModel.Value)
                     await _clear();
                 return res;
             });
@@ -79,11 +83,10 @@ namespace MvvmKit
                 var vm = await _navigateTo<TVM>(param);
                 await vm.Task;
 
-                if (vm == _currentVm)
+                if (vm == _CurrentViewModel.Value)
                     await _clear();
             });
         }
-
 
         private async Task<ComponentBase> _routeTo(Route route, object param = null)
         {
@@ -234,54 +237,47 @@ namespace MvvmKit
 
         private async Task _invalidateCurrentRouteEntry()
         {
-            var route = _currentRegionEntry.FindMatchingRoute(_region);
+            var route = _CurrentRegionEntry.Value.FindMatchingRoute(_region);
             var routeEntry = RouteEntry.Empty;
             if (route != null)
             {
-                routeEntry = RouteEntry.Create(route, _currentRegionEntry.Parameter);
+                routeEntry = RouteEntry.Create(route, _CurrentRegionEntry.Value.Parameter);
             }
 
-            if (routeEntry != _currentRouteEntry)
+            if (routeEntry != _CurrentRouteEntry.Value)
             {
-                _currentRouteEntry = routeEntry;
-                await Routed.Invoke(routeEntry);
+                await _CurrentRouteEntry.Set(routeEntry);
             }
         }
 
         #endregion
 
-        #region Events
-
-        public AsyncEvent<RegionEntry> Navigated { get; } = new AsyncEvent<RegionEntry>();
-        public AsyncEvent<RouteEntry> Routed { get; } = new AsyncEvent<RouteEntry>();
-
-        #endregion
-
         // mutating state
+
+        private readonly ServiceCollectionField<RegionEntry> _History = new ServiceCollectionField<RegionEntry>();
+        public ServiceCollectionPropertyReadonly<RegionEntry> History { get => (_History, this); }
+
+        private readonly ServiceField<RegionEntry> _CurrentRegionEntry = RegionEntry.Empty;
+        public ServicePropertyReadonly<RegionEntry> CurrentRegionEntry { get => (_CurrentRegionEntry, this); }
+
+
+        private readonly ServiceField<RouteEntry> _CurrentRouteEntry = RouteEntry.Empty;
+        public ServicePropertyReadonly<RouteEntry> CurrentRouteEntry { get => (_CurrentRouteEntry, this); }
+
+        private readonly ServiceField<ComponentBase> _CurrentViewModel = new ServiceField<ComponentBase>(null);
+        public ServicePropertyReadonly<ComponentBase> CurrentViewModel { get => (_CurrentViewModel, this); }
+
+
         private HashSet<ContentControl> _hosts;
-        private RegionEntry _currentRegionEntry;
-        private RouteEntry _currentRouteEntry;
         private RegionServiceBindable _hostBindable;
         private NavigationService _owner;
         private Dictionary<RegionEntry, StateStore> _savedStates;
 
         public IEnumerable<ContentControl> Hosts => _hosts.ToArray();
-        public RegionEntry CurrentRegionEntry => _currentRegionEntry;
-
-        public RouteEntry CurrentRouteEntry => _currentRouteEntry;
 
         public NavigationService Owner => _owner;
 
         public Region Region => _region;
-
-        public ComponentBase CurrentViewModel => _currentVm;
-
-
-        private ComponentBase _currentVm
-        {
-            get => _hostBindable.ViewModel;
-            set => _hostBindable.ViewModel = value;
-        }
 
         // imutable constants
         private Region _region;
@@ -295,10 +291,7 @@ namespace MvvmKit
         public RegionService(Region region, NavigationService owner, IResolver resolver)
         {
             _hosts = new HashSet<ContentControl>();
-            _currentRegionEntry = RegionEntry.Empty;
-            _currentRouteEntry = RouteEntry.Empty;
             _savedStates = new Dictionary<RegionEntry, StateStore>();
-
             _owner = owner;
             _region = region;
             _hostBindable = new RegionServiceBindable
@@ -351,19 +344,33 @@ namespace MvvmKit
             return res;
         }
 
+        private async Task<ComponentBase> _navigateBack()
+        {
+            var entry = await _History.Pop();
+            var res = await _doActualNavigation(entry, true);
+
+            // invalidate the current routing calculation, and raise the Routed event if needed
+            await _invalidateCurrentRouteEntry();
+
+            return res;
+        }
+
         // this is the main logic of the service - the actual navigation.
         // It performs deactivation of current VM and activation of new vms
         // It also calls the behaviors, and keeps track of navigation entries.
-        private async Task<ComponentBase> _doActualNavigation(RegionEntry entry)
+        private async Task<ComponentBase> _doActualNavigation(RegionEntry entry, bool isBack = false)
         {
             if (_isDisposed)
                 throw new InvalidOperationException($"Cannot navigate, RegionService {_region} Was unregistered and disposed ");
 
             // Check if navigation is required at all
-            if (entry == _currentRegionEntry) return _currentVm;
+            if (entry == _CurrentRegionEntry.Value) return _CurrentViewModel.Value;
 
-            var oldEntry = _currentRegionEntry;
-            _currentRegionEntry = entry;
+            var oldEntry = _CurrentRegionEntry.Value;
+            await _CurrentRegionEntry.Set(entry);
+
+            if (!isBack)
+                await _History.Add(oldEntry);
 
             // call behaviors before navigation both on region and on hosts
             await Task.WhenAll(
@@ -371,27 +378,27 @@ namespace MvvmKit
                 _invokeOnAllHostBehaviors(b => b.BeforeNavigation));
 
             // clear current view model.
-            if ((_currentVm != null) && (_currentVm.Region == _region))
+            if ((_CurrentViewModel.Value != null) && (_CurrentViewModel.Value.RegionService == this))
             {
-                var state = await StateStore.Write(_currentVm, async writer =>
+                var state = await StateStore.Write(_CurrentViewModel.Value, async writer =>
                 {
-                    writer.WriteAnnotation<Func<StateReader, Task>>("destroy", _currentVm.OnDestroyState);
-                    await _currentVm.SaveState(writer);
+                    writer.WriteAnnotation<Func<StateReader, Task>>("destroy", _CurrentViewModel.Value.OnDestroyState);
+                    await _CurrentViewModel.Value.SaveState(writer);
                 });
                 _savedStates.Add(oldEntry, state);
 
-                await _currentVm.Clear();
+                await _CurrentViewModel.Value.Clear();
             }
 
             // after every await - verify we still need to proceed - since there may be concurrent navigation
-            if (_currentRegionEntry != entry) return null;
+            if (_CurrentRegionEntry.Value != entry) return null;
 
             ComponentBase vm = null;
             if (entry != RegionEntry.Empty)
             {
                 vm = _resolver.Resolve(entry.ViewModelType) as ComponentBase;
 
-                await vm.Initialize(_region, entry.Parameter);
+                await vm.Initialize(this, entry.Parameter);
 
                 var isRestore = (_savedStates.ContainsKey(entry));
                 if (isRestore)
@@ -410,10 +417,10 @@ namespace MvvmKit
             }
 
             // after every await - verify we still need to proceed - since there may be concurrent navigation
-            if (_currentRegionEntry != entry) return vm;
+            if (_CurrentRegionEntry.Value != entry) return vm;
 
-            _currentVm = vm;
-            await Navigated.Invoke(entry);
+            _hostBindable.ViewModel = vm;
+            await _CurrentViewModel.Set(vm);
 
             if (vm != null)
                 await vm.NavigateTo();

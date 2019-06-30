@@ -27,7 +27,7 @@ namespace MvvmKit
             DependencyProperty.RegisterAttached("Region", typeof(Region), typeof(RegionHost),
                 new PropertyMetadata(null, OnRegionChanged));
 
-        private static async void OnRegionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnRegionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var cc = d as ContentControl;
             if (cc == null) return;
@@ -41,13 +41,13 @@ namespace MvvmKit
 
             if (oldRegion != null)
             {
-                var service = await navigation.For(oldRegion);
+                var service = navigation[oldRegion];
                 service?.RemoveHost(cc);
             }
 
             if (newRegion != null)
             {
-                var service = await navigation.For(newRegion);
+                var service = navigation[newRegion];
                 service?.AddHost(cc);
             }
         }
@@ -71,7 +71,7 @@ namespace MvvmKit
             DependencyProperty.RegisterAttached("ContentProperty", typeof(string), typeof(RegionHost),
                 new PropertyMetadata("Content", OnContentPropertyChanged));
 
-        private static async void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var cc = d as ContentControl;
             if (cc == null) return;
@@ -85,7 +85,7 @@ namespace MvvmKit
             var navigation = BootstrapperBase.ResolveStatic<NavigationService>();
             if (navigation == null) return;
 
-            var service = await navigation.For(region);
+            var service = navigation[region];
             service?.ChangeHostContentProperty(cc, oldVal, newVal);
         }
 

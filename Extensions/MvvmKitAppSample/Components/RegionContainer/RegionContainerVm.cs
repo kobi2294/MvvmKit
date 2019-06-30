@@ -17,6 +17,9 @@ namespace MvvmKitAppSample.Components.RegionContainer
         private Region _MyRegion;
         public Region MyRegion { get { return _MyRegion; } set { SetProperty(ref _MyRegion, value); } }
 
+        private bool _CanBack;
+        public bool CanBack { get { return _CanBack; } set { SetProperty(ref _CanBack, value); } }
+
         #endregion
 
         #region Commands
@@ -57,7 +60,28 @@ namespace MvvmKitAppSample.Components.RegionContainer
         }
         #endregion
 
+        #region Back Command
+
+        private DelegateCommand _BackCommand;
+        public DelegateCommand BackCommand
+        {
+            get
+            {
+                if (_BackCommand == null) _BackCommand = new DelegateCommand(OnBackCommand, () => CanBack)
+                        .ObservesProperty(() => CanBack);
+                return _BackCommand;
+            }
+        }
+
+        public async void OnBackCommand()
+        {
+            await Navigation.NavigateBack(MyRegion);
+        }
         #endregion
+
+        #endregion
+
+        private ServiceCollectionPropertyReadonly<RegionEntry> _history;
 
         public RegionContainerVm()
         {
@@ -74,11 +98,18 @@ namespace MvvmKitAppSample.Components.RegionContainer
 
             MyRegion = new Region().WithName("Inside Region Container");
             await Navigation.RegisterRegion(MyRegion);
+
+            _history = await Navigation.HistoryOf(MyRegion);
+            await _history.Changed.Subscribe(this, async args =>
+            {
+                CanBack = (await _history.Count()) > 0;
+            });
         }
 
         protected async override Task OnClearing()
         {
             await base.OnClearing();
+            await _history.Changed.Unsubscribe(this);
             await Navigation.UnregisterRegion(MyRegion);
         }
 

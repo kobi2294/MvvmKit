@@ -101,7 +101,7 @@ namespace MvvmKitAppSample.Components.Shell
 
         public async void OnTogglePageCommand()
         {
-            var vm = await Navigation.CurrentViewModelAt(MyRegion);
+            var vm = await (await Navigation.CurrentViewModelAt(MyRegion)).Get();
             if (vm is PageOneVm)
             {
                 await Navigation.NavigateTo<RegionContainerVm>(MyRegion);
@@ -126,7 +126,7 @@ namespace MvvmKitAppSample.Components.Shell
 
         public async void OnMyRegionCommand()
         {
-            await _dialogs.Message("My region is: " + Region.Name);
+            await _dialogs.Message("My region is: " + RegionService.Region.Name);
         }
         #endregion
 

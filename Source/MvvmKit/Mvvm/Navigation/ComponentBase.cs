@@ -13,14 +13,14 @@ namespace MvvmKit
 
         protected NavigationService Navigation { get; private set; }
 
-        public Region Region { get; private set; }
+        public RegionService RegionService { get; private set; }
 
         public object Parameter { get; private set; }
 
-        internal async Task Initialize(Region region, object param)
+        internal async Task Initialize(RegionService regionService, object param)
         {
             Parameter = param;
-            Region = region;
+            RegionService = regionService;
             await OnInitialized(param);
         }
 
@@ -47,7 +47,7 @@ namespace MvvmKit
         internal async Task Clear()
         {
             await OnClearing();
-            Region = null;
+            RegionService = null;
         }
 
         [InjectionMethod]

@@ -29,20 +29,20 @@ namespace MvvmKit
             _factory = factory;
         }
 
-        public Task<RegionService> For(Region region)
+        public RegionService this[Region region]
         {
-            return Run(() =>
+            get
             {
                 return _serviceFor(region);
-            });
+            }
         }
 
-        public Task<RegionService> For(Route route)
+        public RegionService this[Route route]
         {
-            return Run(() =>
+            get
             {
                 return _serviceFor(route);
-            });
+            }
         }
 
         private void _registerRegion(Region region)
@@ -131,46 +131,52 @@ namespace MvvmKit
 
         public async Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             return await service.NavigateTo(t, param);
         }
 
         public async Task<TVM> NavigateTo<TVM>(Region region, object param = null)
             where TVM: ComponentBase
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             return await service.NavigateTo<TVM>(param);
+        }
+
+        public async Task<ComponentBase> NavigateBack(Region region)
+        {
+            var service = _serviceFor(region);
+            return await service.NavigateBack();
         }
 
         public async Task Clear(Region region)
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             await service.Clear();
         }
 
         public  async Task<T> RunDialog<TVM, T>(Region region, object param = null)
             where TVM: DialogBase<T>
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             return await service.RunDialog<TVM, T>(param);
         }
 
         public async Task RunDialog<TVM>(Region region, object param = null)
             where TVM : DialogBase
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             await service.RunDialog<TVM>(param);
         }
 
         public async Task<ComponentBase> RouteTo(Route route, object param = null)
         {
-            var service = await For(route.Region);
+            var service = _serviceFor(route);
             return await service.RouteTo(route, param);
         }
 
         public async Task<ComponentBase> RouteTo(Region region, object key, object param = null)
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             return await service.RouteTo(key, param);
         }
 
@@ -187,17 +193,17 @@ namespace MvvmKit
 
                 return routes.Single();
             });
-            var service = await For(route.Region);
+            var service = _serviceFor(route.Region);
             return await service.RouteTo(route, param);
         }
 
         public async Task DestroyEntryStateWhere(Region region, Func<RegionEntry, bool> entryPicker)
         {
-            var service = await For(region);
+            var service = _serviceFor(region);
             await service.DestroyEntryStateWhere(entryPicker);
         }
 
-        public Task<ComponentBase> CurrentViewModelAt(Region region)
+        public Task<ServicePropertyReadonly<ComponentBase>> CurrentViewModelAt(Region region)
         {
             return Run(() =>
             {
@@ -206,7 +212,7 @@ namespace MvvmKit
             });
         }
 
-        public Task<RegionEntry> CurrentRegionEntryAt(Region region)
+        public Task<ServicePropertyReadonly<RegionEntry>> CurrentRegionEntryAt(Region region)
         {
             return Run(() =>
             {
@@ -215,7 +221,7 @@ namespace MvvmKit
             });
         }
 
-        public Task<RouteEntry> CurrentRouteEntry(Region region)
+        public Task<ServicePropertyReadonly<RouteEntry>> CurrentRouteEntry(Region region)
         {
             return Run(() =>
             {
@@ -224,5 +230,13 @@ namespace MvvmKit
             });
         }
 
+        public Task<ServiceCollectionPropertyReadonly<RegionEntry>> HistoryOf(Region region)
+        {
+            return Run(() =>
+            {
+                var service = _serviceByRegion[region];
+                return service.History;
+            });
+        }
     }
 }

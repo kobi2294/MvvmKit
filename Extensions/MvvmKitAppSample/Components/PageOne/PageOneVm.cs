@@ -83,7 +83,7 @@ namespace MvvmKitAppSample.Components.PageOne
 
         public async void OnMyRegionCommand()
         {
-            await _dialogs.Message("My region is " + Region.Name);
+            await _dialogs.Message("My region is " + RegionService.Region.Name);
         }
         #endregion
 
