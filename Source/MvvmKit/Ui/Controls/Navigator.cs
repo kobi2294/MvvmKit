@@ -41,6 +41,20 @@ namespace MvvmKit
 
         #endregion
 
+        #region DoubleClickCommand Property
+
+        public ICommand DoubleClickCommand
+        {
+            get { return (ICommand)GetValue(DoubleClickCommandProperty); }
+            set { SetValue(DoubleClickCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for DoubleClickCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DoubleClickCommandProperty =
+            DependencyProperty.Register("DoubleClickCommand", typeof(ICommand), typeof(Navigator), new PropertyMetadata(null));
+
+        #endregion
+
         #region Duration Property
 
         public Duration Duration
@@ -160,6 +174,15 @@ namespace MvvmKit
             if (Command != null)
             {
                 Command.Execute(data);
+            }
+        }
+
+        internal void ContainerDoubleClicked(NavigatorItem itemContainer)
+        {
+            var data = ItemContainerGenerator.ItemFromContainer(itemContainer);
+            if (DoubleClickCommand != null)
+            {
+                DoubleClickCommand.Execute(data);
             }
         }
 

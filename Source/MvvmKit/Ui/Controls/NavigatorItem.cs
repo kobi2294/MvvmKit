@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace MvvmKit
 {
@@ -96,6 +97,12 @@ namespace MvvmKit
         {
             base.OnClick();
             Owner?.ContainerClicked(this);
+        }
+
+        protected override void OnMouseDoubleClick(MouseButtonEventArgs e)
+        {
+            base.OnMouseDoubleClick(e);
+            Owner?.ContainerDoubleClicked(this);
         }
 
     }
