@@ -143,6 +143,29 @@ namespace MvvmKit
             return Run(() => _destroyEntryStateWhere(entryPicker), true);
         }
 
+        private async Task _moveEntryStateWhere(Func<RegionEntry, bool> entryPicker, RegionService target)
+        {
+            var entries = _savedStates.Keys.Where(entryPicker).ToArray();
+            var states = entries.ToDictionary(entry => entry, entry => _savedStates.GetAndRemove(entry));
+            await target._importEntryStates(states);
+        }
+
+        private Task _importEntryStates(Dictionary<RegionEntry, StateStore> states)
+        {
+            return Run(() =>
+            {
+                foreach (var pair in states)
+                {
+                    _savedStates[pair.Key] = pair.Value;
+                }
+            });
+        }
+
+        public Task MoveEntryStateWhere(Func<RegionEntry, bool> entryPicker, RegionService target)
+        {
+            return Run(() => _moveEntryStateWhere(entryPicker, target));
+        }
+
         #endregion
 
         #region Internal Host Management
