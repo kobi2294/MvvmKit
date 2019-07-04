@@ -22,7 +22,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.AvlTrees.Main.Run();
+            Samples.HeckelDiff.Start.Run();
 
             Console.ReadLine();            
         }
