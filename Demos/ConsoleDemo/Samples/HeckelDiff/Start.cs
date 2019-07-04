@@ -13,8 +13,8 @@ namespace ConsoleDemo.Samples.HeckelDiff
 
         public static void Run()
         {
-            var o = new List<int> { 1, 2, 3, 4, 5, 6 };
-            var n = new List<int> { 4, 3, 6, 1, 5, 2 }; 
+            var o = new List<int> { 1, 2, 3, 7, 5, 9 };
+            var n = new List<int> { 7, 2, 5, 9, 3, 1}; 
 
             var ops = Heckel.Diff(o, n);
 
