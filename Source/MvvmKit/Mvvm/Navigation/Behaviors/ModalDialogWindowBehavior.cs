@@ -17,6 +17,9 @@ namespace MvvmKit
 
         public Style WindowStyle { get; private set; }
 
+        public SizeToContent SizeToContent { get; private set; } = SizeToContent.WidthAndHeight;
+        public WindowStartupLocation WindowStartupLocation { get; private set; } = WindowStartupLocation.CenterOwner;
+
         public ModalDialogWindowBehavior()
         {
         }
@@ -30,12 +33,25 @@ namespace MvvmKit
             return this;
         }
 
+        public ModalDialogWindowBehavior WithSizeToContent(SizeToContent size)
+        {
+            SizeToContent = size;
+            return this;
+        }
+
+        public ModalDialogWindowBehavior WithStartupLocation(WindowStartupLocation location)
+        {
+            WindowStartupLocation = location;
+            return this;
+        }
+
         private Task _ensureWindowOpen(RegionService service)
         {
             if (!service.Hosts.OfType<Window>().Any())
             {
                 var w = new Window();
-                w.SizeToContent = SizeToContent.WidthAndHeight;
+                w.SizeToContent = SizeToContent;
+                w.WindowStartupLocation = WindowStartupLocation;
                 _myWindows.Add(w);
                 w.Style = WindowStyle;
                 RegionHost.SetRegion(w, service.Region);

@@ -78,9 +78,6 @@ namespace MvvmKit
                 _serviceByRoute.Remove(route);
                 _routeByKey.Remove(route.Key, route);
             }
-
-            // finalize region service
-            await service.OnUnregistering();
         }
 
         private void _registerStaticRegions(Type type)
@@ -124,9 +121,15 @@ namespace MvvmKit
             return Run(() => _registerStaticRegions(type));
         }
 
-        public Task UnregisterRegion(Region region)
+        public async Task UnregisterRegion(Region region)
         {
-            return Run(async () => await _unregisterRegion(region));
+            var service = _serviceByRegion[region];
+
+            await Run(async () => await _unregisterRegion(region), true);
+
+            // finalize region service - we do it outside the "Run" zone to avoid deadlocks
+            await service.OnUnregistering();
+
         }
 
         public async Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)
