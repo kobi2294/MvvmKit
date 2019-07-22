@@ -11,15 +11,19 @@ namespace MvvmKit
     {
         #region Static repository
 
-        private static Dictionary<TaskScheduler, AsyncContextRunner> _knownFactories = new Dictionary<TaskScheduler, AsyncContextRunner>();
+        private static object _mutex = new object();
+        private static Dictionary<TaskScheduler, AsyncContextRunner> _knownRunners = new Dictionary<TaskScheduler, AsyncContextRunner>();
 
         public static AsyncContextRunner For(TaskScheduler scheduler)
         {
-            if (!_knownFactories.ContainsKey(scheduler))
+            lock(_mutex)
             {
-                _knownFactories.Add(scheduler, new AsyncContextRunner(scheduler));
+                if (!_knownRunners.ContainsKey(scheduler))
+                {
+                    _knownRunners.Add(scheduler, new AsyncContextRunner(scheduler));
+                }
+                return _knownRunners[scheduler];
             }
-            return _knownFactories[scheduler];
         }
 
         #endregion
@@ -36,22 +40,51 @@ namespace MvvmKit
 
         public Task Run(Func<Task> func)
         {
-            return _factory.StartNew(func).Unwrap();
+            if (Exec.RunningTaskScheduler == Scheduler)
+            {
+                return func();
+            } else
+            {
+                return _factory.StartNew(func).Unwrap();
+            }
         }
 
         public Task<T> Run<T>(Func<Task<T>> func)
         {
-            return _factory.StartNew(func).Unwrap();
+            if (Exec.RunningTaskScheduler == Scheduler)
+            {
+                return func();
+            }
+            else
+            {
+                return _factory.StartNew(func).Unwrap();
+            }
         }
 
         public Task Run(Action action)
         {
-            return _factory.StartNew(action);
+            if (Exec.RunningTaskScheduler == Scheduler)
+            {
+                action();
+                return Task.CompletedTask;
+            }
+            else
+            {
+                return _factory.StartNew(action);
+            }
         }
 
         public Task<T> Run<T>(Func<T> func)
         {
-            return _factory.StartNew(func);
+            if (Exec.RunningTaskScheduler == Scheduler)
+            {
+                var res = func();
+                return Task.FromResult(res);
+            }
+            else
+            {
+                return _factory.StartNew(func);
+            }
         }
 
     }

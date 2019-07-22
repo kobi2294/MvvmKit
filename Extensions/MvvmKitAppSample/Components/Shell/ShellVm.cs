@@ -28,6 +28,27 @@ namespace MvvmKitAppSample.Components.Shell
 
         #region Commands
 
+
+        #region TestThreads Command
+
+        private DelegateCommand _TestThreadsCommand;
+        public DelegateCommand TestThreadsCommand
+        {
+            get
+            {
+                if (_TestThreadsCommand == null) _TestThreadsCommand = new DelegateCommand(OnTestThreadsCommand);
+                return _TestThreadsCommand;
+            }
+        }
+
+        public async void OnTestThreadsCommand()
+        {
+            await _service.Method3();
+        }
+        #endregion
+
+
+
         #region ChangeA Command
 
         private DelegateCommand _ChangeACommand;

@@ -25,13 +25,24 @@ namespace MvvmKitAppSample.Services
             // store dependencies here
         }
 
-        public Task Method()
+        public async Task Method()
         {
-            return Run(() =>
+            await Run(() =>
             {
                 Debug.WriteLine("I am in UI Service, Thread = " + Thread.CurrentThread.ManagedThreadId);
                 // your logic here
             });
         }
+
+        public Task Method2()
+        {
+            return Run(async () =>
+            {
+                Debug.WriteLine("I am in a ui service, method 2, thread = " + Thread.CurrentThread.ManagedThreadId);
+                await Method();
+                Debug.WriteLine("I am in a ui service, method 2, thread = " + Thread.CurrentThread.ManagedThreadId);
+            });
+        }
+
     }
 }

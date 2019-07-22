@@ -5,5 +5,7 @@ namespace MvvmKitAppSample.Services
     public interface IUiService
     {
         Task Method();
+
+        Task Method2();
     }
 }

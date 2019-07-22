@@ -149,7 +149,6 @@
     <Compile Include="Services\State\ServiceCollectionPropertyBase.cs" />
     <Compile Include="Services\State\ServiceCollectionPropertyReadonly.cs" />
     <Compile Include="Services\State\ServiceProperty.cs" />
-    <Compile Include="Services\ServiceRunner.cs" />
     <Compile Include="Services\State\ServiceField.cs" />
     <Compile Include="Services\State\ServicePropertyBase.cs" />
     <Compile Include="Services\State\ServicePropertyReadonly.cs" />

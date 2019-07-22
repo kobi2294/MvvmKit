@@ -116,17 +116,17 @@ namespace MvvmKit
             return Run(() =>
             {
                 _registerRegion(region);
-            }, true);
+            });
         }
 
         public Task RegisterStaticRegions(Type type)
         {
-            return Run(() => _registerStaticRegions(type), true);
+            return Run(() => _registerStaticRegions(type));
         }
 
         public Task UnregisterRegion(Region region)
         {
-            return Run(async () => await _unregisterRegion(region), true);
+            return Run(async () => await _unregisterRegion(region));
         }
 
         public async Task<ComponentBase> NavigateTo(Region region, Type t, object param = null)

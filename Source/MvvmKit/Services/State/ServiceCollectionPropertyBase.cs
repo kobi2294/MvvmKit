@@ -9,7 +9,7 @@ namespace MvvmKit
     public abstract class ServiceCollectionPropertyBase<T>
     {
         internal ServiceCollectionField<T> Field { get; }
-        internal ServiceRunner Runner { get; }
+        internal ServiceBase.Runner Runner { get; }
         internal ServiceBase Owner { get; }
 
         internal ServiceCollectionPropertyBase(ServiceCollectionField<T> field, ServiceBase owner)
