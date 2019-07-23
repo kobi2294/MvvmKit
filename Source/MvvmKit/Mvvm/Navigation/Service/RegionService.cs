@@ -140,7 +140,7 @@ namespace MvvmKit
 
         public Task DestroyEntryStateWhere(Func<RegionEntry, bool> entryPicker)
         {
-            return Run(() => _destroyEntryStateWhere(entryPicker), true);
+            return Run(() => _destroyEntryStateWhere(entryPicker));
         }
 
         private async Task _moveEntryStateWhere(Func<RegionEntry, bool> entryPicker, RegionService target)

@@ -29,6 +29,7 @@
                     <Setter Property="FontSize" Value="20"/>
                 </Style>
             </StackPanel.Resources>
+            <Button Command="{Binding TestThreadsCommand}">Test Threads</Button>
             <Button Command="{Binding ChangeACommand}">Change Property</Button>
             <Button Command="{Binding TogglePageCommand}">Toggle View Model</Button>
             <Button Command="{Binding MyRegionCommand}">I am hosted in...</Button>

@@ -113,19 +113,19 @@ namespace MvvmKit
             return Run(() =>
             {
                 _registerRegion(region);
-            }, true);
+            });
         }
 
         public Task RegisterStaticRegions(Type type)
         {
-            return Run(() => _registerStaticRegions(type), true);
+            return Run(() => _registerStaticRegions(type));
         }
 
         public async Task UnregisterRegion(Region region)
         {
             var service = _serviceByRegion[region];
 
-            await Run(async () => await _unregisterRegion(region), true);
+            await Run(async () => await _unregisterRegion(region));
 
             // finalize region service - we do it outside the "Run" zone to avoid deadlocks
             await service.OnUnregistering();

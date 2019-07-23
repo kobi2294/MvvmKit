@@ -25,17 +25,17 @@ namespace MvvmKit
 
         public Task Add(T value)
         {
-            return Runner.Run(() => Field.Add(value), true);
+            return Runner.Run(() => Field.Add(value));
         }
 
         public Task AddRange(IEnumerable<T> values)
         {
-            return Runner.Run(() => Field.AddRange(values), true);
+            return Runner.Run(() => Field.AddRange(values));
         }
 
         public Task Clear()
         {
-            return Runner.Run(() => Field.Clear(), true);
+            return Runner.Run(() => Field.Clear());
         }
 
         public Task Insert(int index, T item)

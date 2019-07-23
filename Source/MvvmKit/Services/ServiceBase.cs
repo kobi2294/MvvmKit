@@ -8,8 +8,7 @@ namespace MvvmKit
 {
     public class ServiceBase
     {
-        private readonly AsyncReaderWriterLock _mutex;
-        private readonly AsyncContextRunner _taskFactory;
+        private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
         private Task _initTask = null;
 
@@ -23,67 +22,85 @@ namespace MvvmKit
             await OnInit();
         }
 
+        private Task _ensureInit()
+        {
+            if (_initTask == null)
+            {
+                _initTask = _init();
+            }
+
+            return _initTask;
+        }
+
         public Task Init()
         {
-            return Run(() =>
-            {
-                if (_initTask == null)
-                {
-                    _initTask = _init();
-                }
-
-                return _initTask;
-            }, true);
+            return Run(_ensureInit);
         }
 
         public ServiceBase(TaskScheduler taskScheduler = null)
         {
-            _mutex = new AsyncReaderWriterLock();
             _scheduler = taskScheduler ?? TaskScheduler.Default;
-            _taskFactory = _scheduler.ToContextRunner();
+            _runner = _scheduler.ToContextRunner();
         }
 
-        private Task<IDisposable> _lock(bool coordinated)
+        protected Task Run(Action method)
         {
-            if (coordinated) return _mutex.WriterLock();
-            else return _mutex.ReaderLock();
-        }
-
-        protected async Task Run(Action method, bool coordinated = false)
-        {
-            using (await _lock(coordinated))
+            return _runner.Run(async () =>
             {
-                await _taskFactory.Run(method);
-            }
+                await _ensureInit();
+                method();
+            });
         }
 
-        protected async Task<T> Run<T>(Func<T> method, bool coordinated = false)
+        protected Task<T> Run<T>(Func<T> func)
         {
-            using (await _lock(coordinated))
+            return _runner.Run(async () =>
             {
-                return await _taskFactory.Run(method);
-            }
+                await _ensureInit();
+                return func();
+            });
         }
 
-        protected async Task Run(Func<Task> method, bool coordinated = false)
+        protected Task Run(Func<Task> method)
         {
-            using (await _lock(coordinated))
+            return _runner.Run(async () =>
             {
-                await _taskFactory.Run(method);
-            }
+                await _ensureInit();
+                await method();
+            });
         }
 
-        protected async Task<T> Run<T>(Func<Task<T>> method, bool coordinated = false)
+        protected Task<T> Run<T>(Func<Task<T>> func)
         {
-            using (await _lock(coordinated))
+            return _runner.Run(async () =>
             {
-                return await _taskFactory.Run(method);
-            }
+                await _ensureInit();
+                return await func();
+            });
         }
 
-        public ServiceRunner GetRunner()
+        public class Runner
         {
-            return new ServiceRunner(_mutex, _taskFactory);
+            private ServiceBase _owner;
+
+            internal Runner(ServiceBase owner)
+            {
+                _owner = owner;
+            }
+
+            public Task Run(Action method) => _owner.Run(method);
+
+            public Task<T> Run<T>(Func<T> func) => _owner.Run(func);
+
+            public Task Run(Func<Task> method) => _owner.Run(method);
+
+            public Task<T> Run<T>(Func<Task<T>> func) => _owner.Run(func);
+        }
+
+
+        public Runner GetRunner()
+        {
+            return new Runner(this);
         }
     }
 }

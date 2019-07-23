@@ -100,8 +100,6 @@ namespace MvvmKit
                                           .Select(service => service.Init())
                                           .ToList();
 
-            var ctxt = SynchronizationContext.Current;
-
             await OnServicesInitializing();
 
             await InitializeShellOverride();

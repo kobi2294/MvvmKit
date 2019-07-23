@@ -18,7 +18,7 @@ namespace MvvmKit
             return Runner.Run(() =>
             {
                 return Field.Set(value);
-            }, true);
+            });
         }
 
         public static implicit operator ServiceProperty<T>((ServiceField<T> field, ServiceBase service) data)
