@@ -4,6 +4,8 @@ using MvvmKit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,9 +24,9 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.HeckelDiff.Start.Run();
+            Samples.AsyncLocal.AsyncLocalDemo.Run().Wait();
 
-            Console.ReadLine();            
+            Console.ReadLine();
         }
     }
 }
