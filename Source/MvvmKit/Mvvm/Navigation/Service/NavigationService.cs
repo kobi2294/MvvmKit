@@ -125,7 +125,7 @@ namespace MvvmKit
         {
             var service = _serviceByRegion[region];
 
-            await Run(async () => await _unregisterRegion(region), true);
+            await Run(async () => await _unregisterRegion(region));
 
             // finalize region service - we do it outside the "Run" zone to avoid deadlocks
             await service.OnUnregistering();
