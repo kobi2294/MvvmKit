@@ -10,7 +10,7 @@ namespace MvvmKit.CollectionChangeEvents
     public abstract class Cleared : Change, ICleared
     {
         public Cleared()
-            :base(ChangeType.Cleared, Enumerable.Empty<object>())
+            :base(ChangeType.Cleared)
         {
         }
 
@@ -54,13 +54,9 @@ namespace MvvmKit.CollectionChangeEvents
 
     public class Cleared<T> : Cleared, ICleared<T>
     {
-        private IReadOnlyList<T> _currentItems;
-        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
-
         public Cleared()
             : base()
         {
-            _currentItems = GetCurrentItems<T>();
         }
 
 

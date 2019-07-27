@@ -15,8 +15,8 @@ namespace MvvmKit.CollectionChangeEvents
 
         public object Item { get; }
 
-        public ItemMoved(int fromIndex, int toIndex, object item, IEnumerable currentItems)
-            :base(ChangeType.Moved, currentItems)
+        public ItemMoved(int fromIndex, int toIndex, object item)
+            :base(ChangeType.Moved)
         {
             Item = item;
             FromIndex = fromIndex;
@@ -46,8 +46,7 @@ namespace MvvmKit.CollectionChangeEvents
 
             return (rs1.FromIndex == rs2.FromIndex)
                 && (rs1.ToIndex == rs2.ToIndex)
-                && (rs1.Item == rs2.Item)
-                && rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
+                && (rs1.Item == rs2.Item);
         }
 
         public static bool operator !=(ItemMoved rs1, ItemMoved rs2)
@@ -57,7 +56,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(Item, FromIndex, ToIndex, ObjectExtensions.GenerateHashCode(CurrentItems));
+            return ObjectExtensions.GenerateHashCode(Item, FromIndex, ToIndex);
         }
 
         #endregion
@@ -68,18 +67,14 @@ namespace MvvmKit.CollectionChangeEvents
     {
         public new T Item => (T)base.Item;
 
-        private IReadOnlyList<T> _currentItems;
-        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
-
-        public ItemMoved(int fromIndex, int toIndex, T item, IEnumerable<T> currentItems)
-            : base(fromIndex, toIndex, item, currentItems)
+        public ItemMoved(int fromIndex, int toIndex, T item)
+            : base(fromIndex, toIndex, item)
         {
-            _currentItems = GetCurrentItems<T>();
         }
 
-        public static implicit operator ItemMoved<T>((int fromIndex, int toIndex, T item, IEnumerable<T> currentItems) value)
+        public static implicit operator ItemMoved<T>((int fromIndex, int toIndex, T item) value)
         {
-            return new ItemMoved<T>(value.fromIndex, value.toIndex, value.item, value.currentItems);
+            return new ItemMoved<T>(value.fromIndex, value.toIndex, value.item);
         }
 
         public override string ToString()

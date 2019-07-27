@@ -102,7 +102,8 @@ namespace MvvmKitAppSample.Components.RegionContainer
             _history = await Navigation.HistoryOf(MyRegion);
             await _history.Changed.Subscribe(this, args =>
             {
-                CanBack = args.Last().CurrentItems.Any();
+                throw new NotImplementedException();
+//                CanBack = args.Last().CurrentItems.Any();
                 return Tasks.Empty;
             });
         }

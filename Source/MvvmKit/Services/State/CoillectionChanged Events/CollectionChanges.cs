@@ -11,6 +11,8 @@ namespace MvvmKit
     public class CollectionChanges<T> : IEnumerable<IChange<T>>
     {
         private List<IChange<T>> _changes;
+        private IReadOnlyList<T> _oldValue;
+        private IReadOnlyList<T> _newValue;
 
         public CollectionChanges(IEnumerable<IChange<T>> changes)
         {

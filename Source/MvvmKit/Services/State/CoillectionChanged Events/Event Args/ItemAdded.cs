@@ -13,8 +13,8 @@ namespace MvvmKit.CollectionChangeEvents
 
         public object Item { get; }
 
-        public ItemAdded(int index, object item, IEnumerable currentItems)
-            :base(ChangeType.Added, currentItems)
+        public ItemAdded(int index, object item)
+            :base(ChangeType.Added)
         {
             Item = item;
             Index = index;
@@ -42,8 +42,7 @@ namespace MvvmKit.CollectionChangeEvents
             if (isnull1 || isnull2) return false;
 
             return (rs1.Index == rs2.Index)
-                && (rs1.Item == rs2.Item)
-                && rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
+                && (rs1.Item == rs2.Item);
         }
 
         public static bool operator !=(ItemAdded rs1, ItemAdded rs2)
@@ -53,7 +52,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(Item, Index, ObjectExtensions.GenerateHashCode(CurrentItems));
+            return ObjectExtensions.GenerateHashCode(Item, Index);
         }
 
         #endregion
@@ -64,18 +63,14 @@ namespace MvvmKit.CollectionChangeEvents
     {
         public new T Item => (T)base.Item;
 
-        private IReadOnlyList<T> _currentItems;
-        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
-
-        public ItemAdded(int index, T item, IEnumerable<T> currentItems)
-            :base(index, item, currentItems)
+        public ItemAdded(int index, T item)
+            :base(index, item)
         {
-            _currentItems = GetCurrentItems<T>();
         }
 
-        public static implicit operator ItemAdded<T>((int index, T item, IEnumerable<T> currentItems) value)
+        public static implicit operator ItemAdded<T>((int index, T item) value)
         {
-            return new ItemAdded<T>(value.index, value.item, value.currentItems);
+            return new ItemAdded<T>(value.index, value.item);
         }
 
         public override string ToString()

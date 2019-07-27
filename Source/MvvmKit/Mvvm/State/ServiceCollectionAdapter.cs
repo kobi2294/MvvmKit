@@ -91,7 +91,7 @@ namespace MvvmKit
                         break;
                     case IReset<T> c:
                         Target.Clear();
-                        foreach (var item in c.CurrentItems)
+                        foreach (var item in c.Items)
                         {
                             await _addAt(item);
                         }

@@ -12,17 +12,9 @@ namespace MvvmKit.CollectionChangeEvents
     {
         public ChangeType ChangeType { get; }
 
-        public IReadOnlyList<object> CurrentItems { get; }
-
-        protected IReadOnlyList<T> GetCurrentItems<T>()
-        {
-            return CurrentItems.Cast<T>().ToReadOnly();
-        }
-
-        public Change(ChangeType changeType, IEnumerable items)
+        public Change(ChangeType changeType)
         {
             ChangeType = changeType;
-            CurrentItems = items.Cast<object>().ToReadOnly();
         }
     }
 }

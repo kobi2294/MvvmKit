@@ -9,24 +9,24 @@ namespace MvvmKit.CollectionChangeEvents
 {
     public static class Changes
     {
-        public static ItemAdded<T> Add<T>(int index, T item, IEnumerable<T> currentItems)
+        public static ItemAdded<T> Add<T>(int index, T item)
         {
-            return new ItemAdded<T>(index, item, currentItems);
+            return new ItemAdded<T>(index, item);
         }
 
-        public static ItemRemoved<T> Remove<T>(int index, T item, IEnumerable<T> currentItems)
+        public static ItemRemoved<T> Remove<T>(int index, T item)
         {
-            return new ItemRemoved<T>(index, item, currentItems);
+            return new ItemRemoved<T>(index, item);
         }
 
-        public static ItemMoved<T> Move<T>(int fromIndex, int toIndex, T item, IEnumerable<T> currentItems)
+        public static ItemMoved<T> Move<T>(int fromIndex, int toIndex, T item)
         {
-            return new ItemMoved<T>(fromIndex, toIndex, item, currentItems);
+            return new ItemMoved<T>(fromIndex, toIndex, item);
         }
 
-        public static ItemReplaced<T> Replace<T>(int index, T fromItem, T toItem, IEnumerable<T> currentItems)
+        public static ItemReplaced<T> Replace<T>(int index, T fromItem, T toItem)
         {
-            return new ItemReplaced<T>(index, fromItem, toItem, currentItems);
+            return new ItemReplaced<T>(index, fromItem, toItem);
         }
 
         public static Cleared<T> Clear<T>()

@@ -15,8 +15,8 @@ namespace MvvmKit.CollectionChangeEvents
 
         public object ToItem { get; }
 
-        public ItemReplaced(int index, object fromItem, object toItem, IEnumerable currentItems)
-            :base(ChangeType.Replaced, currentItems)
+        public ItemReplaced(int index, object fromItem, object toItem)
+            :base(ChangeType.Replaced)
         {
             FromItem = fromItem;
             ToItem = toItem;
@@ -46,8 +46,7 @@ namespace MvvmKit.CollectionChangeEvents
 
             return (rs1.Index == rs2.Index)
                 && (rs1.FromItem == rs2.FromItem)
-                && (rs1.ToItem == rs2.ToItem)
-                && rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
+                && (rs1.ToItem == rs2.ToItem);
         }
 
         public static bool operator !=(ItemReplaced rs1, ItemReplaced rs2)
@@ -57,7 +56,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(FromItem, ToItem, Index, ObjectExtensions.GenerateHashCode(CurrentItems));
+            return ObjectExtensions.GenerateHashCode(FromItem, ToItem, Index);
         }
 
         #endregion
@@ -70,18 +69,14 @@ namespace MvvmKit.CollectionChangeEvents
 
         public new T ToItem => (T)base.ToItem;
 
-        private IReadOnlyList<T> _currentItems;
-        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
-
-        public ItemReplaced(int index, T fromItem, T toItem, IEnumerable<T> currentItems)
-            : base(index, fromItem, toItem, currentItems)
+        public ItemReplaced(int index, T fromItem, T toItem)
+            : base(index, fromItem, toItem)
         {
-            _currentItems = GetCurrentItems<T>();
         }
 
-        public static implicit operator ItemReplaced<T>((int index, T fromItem, T toItem, IEnumerable<T> currentItems) value)
+        public static implicit operator ItemReplaced<T>((int index, T fromItem, T toItem) value)
         {
-            return new ItemReplaced<T>(value.index, value.fromItem, value.toItem, value.currentItems);
+            return new ItemReplaced<T>(value.index, value.fromItem, value.toItem);
         }
 
         public override string ToString()

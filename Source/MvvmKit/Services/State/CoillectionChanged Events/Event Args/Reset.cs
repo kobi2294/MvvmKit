@@ -9,9 +9,12 @@ namespace MvvmKit.CollectionChangeEvents
 {
     public abstract class Reset : Change, IReset
     {
-        public Reset(IEnumerable currentItems)
-            :base(ChangeType.Reset, currentItems)
+        public IEnumerable<object> Items { get; }
+
+        public Reset(IEnumerable<object> items)
+            : base(ChangeType.Reset)
         {
+            Items = items;
         }
 
         #region Comparing
@@ -35,7 +38,10 @@ namespace MvvmKit.CollectionChangeEvents
             if (isnull1 && isnull2) return true;
             if (isnull1 || isnull2) return false;
 
-            return rs1.CurrentItems.SequenceEqual(rs2.CurrentItems);
+            return (rs1.Items.Count() == rs2.Items.Count())
+                && rs1.Items
+                .Zip(rs2.Items, (a, b) => new { A = a, B = b })
+                .All(pair => pair.A == pair.B);
         }
 
         public static bool operator !=(Reset rs1, Reset rs2)
@@ -45,7 +51,7 @@ namespace MvvmKit.CollectionChangeEvents
 
         public override int GetHashCode()
         {
-            return ObjectExtensions.GenerateHashCode(CurrentItems);
+            return ObjectExtensions.GenerateHashCode(Items);
         }
 
         #endregion
@@ -54,19 +60,16 @@ namespace MvvmKit.CollectionChangeEvents
 
     public class Reset<T> : Reset, IReset<T>
     {
-        private IReadOnlyList<T> _currentItems;
-        IReadOnlyList<T> IChange<T>.CurrentItems => _currentItems;
+        public new IEnumerable<T> Items => base.Items.Cast<T>();
 
         public Reset(IEnumerable<T> items)
-            :base(items)
+            : base(items.Cast<object>())
         {
-            _currentItems = GetCurrentItems<T>();
         }
-
 
         public override string ToString()
         {
-            var items = string.Join(", ", CurrentItems);
+            var items = string.Join(", ", Items);
             return $"Reset to: {items}";
         }
     }
