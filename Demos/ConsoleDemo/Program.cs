@@ -22,9 +22,9 @@ namespace ConsoleDemo
     class Program
     {
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            await Samples.AsyncLocal.AsyncLocalDemo.Run();
+            Samples.Dynamic.Test.Run();
 
             Console.ReadLine();
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace ConsoleDemo.Samples.AsyncLocal
 {
@@ -37,6 +38,20 @@ namespace ConsoleDemo.Samples.AsyncLocal
             var t3 = _do("Run 2.3");
 
             alint.Value = 80;
+
+            var dis = Dispatcher.CurrentDispatcher;
+            Console.WriteLine($"Main Dispatcher is: {dis}");
+            Console.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId}");
+
+            await Task.Run(() =>
+            {
+                var d2 = Dispatcher.CurrentDispatcher;
+                Console.WriteLine($"Background Dispatcher is: {d2}");
+                Console.WriteLine($"Thread: {Thread.CurrentThread.ManagedThreadId}");
+
+                Console.WriteLine($"Equality: {dis == d2}");
+            });
+
             await Task.WhenAll(t1, t2, t3);
             
         }

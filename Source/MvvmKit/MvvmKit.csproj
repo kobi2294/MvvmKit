@@ -104,6 +104,7 @@
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
+    <Compile Include="Services\State2\ServiceState.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
     <Compile Include="Tools\StateStore\StateRestorer.cs" />
