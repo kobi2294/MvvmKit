@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public interface IStateCollection: IEnumerable, ICollection
+    public interface IStateList: IEnumerable, ICollection
     {
 
     }
 
-    public interface IStateCollection<T> : IStateCollection, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>
+    public interface IStateList<T> : IStateList, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>
     {
         bool Exists(Predicate<T> predicate);
 

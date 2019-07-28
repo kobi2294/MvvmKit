@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class CollectionProxy<T> : IStateCollection<T>
+    public class CollectionProxy<T> : IStateList<T>
     {
         private readonly object _syncRoot = new object();
         private readonly List<T> _list;

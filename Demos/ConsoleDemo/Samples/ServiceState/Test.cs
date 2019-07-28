@@ -12,7 +12,7 @@ namespace ConsoleDemo.Samples.ServiceState
     {
         public static async Task Run()
         {
-            var t = typeof(IStateCollection<int>);
+            var t = typeof(IStateList<int>);
             var service = new BackgroundServiceBase();
 
             var store = new ServiceStore<IData>(data =>

@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StateCollectionPropertyBase<K, T>
+    public class StateCollectionReader<K, T>: IStateCollectonReader<T>
         where K: class
     {
         protected ServiceStore<K> _store;
         protected ServiceBase _owner;
         protected ServiceBase.Runner _runner;
-        protected Func<K, IStateCollection<T>> _getter;
+        protected Func<K, IStateList<T>> _getter;
 
-        internal StateCollectionPropertyBase(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, IStateCollection<T>>> prop)
+        internal StateCollectionReader(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, IStateList<T>>> prop)
         {
             _store = store;
             _owner = owner;
@@ -26,7 +26,14 @@ namespace MvvmKit
         }
         public AsyncEvent<CollectionChanges<T>> Changed { get; }
 
-        public Task<TRes> Select<TRes>(Func<IStateCollection<T>, TRes> selector)
+        public async Task<IReadOnlyList<T>> Get()
+        {
+            var data = await Select(x => x);
+            var res = data.ToReadOnly();
+            return res;
+        }
+
+        public Task<TRes> Select<TRes>(Func<IStateList<T>, TRes> selector)
         {
             return _runner.Run(() => _store.Select(data => selector(_getter(data))));
         }

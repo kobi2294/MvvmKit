@@ -31,7 +31,7 @@ namespace MvvmKit
             _setters = props.ToDictionary(p => p.SetMethod);
 
             _collectionProps = props
-                .Where(p => p.PropertyType.IsGenericOf(typeof(IStateCollection<>)))
+                .Where(p => p.PropertyType.IsGenericOf(typeof(IStateList<>)))
                 .ToHashSet();
 
             // find properties that are of type IStateCollection<T> and default them to List<T>

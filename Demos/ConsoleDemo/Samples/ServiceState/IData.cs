@@ -15,6 +15,6 @@ namespace ConsoleDemo.Samples.ServiceState
 
         bool Condition { get; set; }
 
-        IStateCollection<int> Numbers { get; set; }
+        IStateList<int> Numbers { get; set; }
     }
 }

@@ -99,7 +99,7 @@ namespace MvvmKit
             return res;
         }
 
-        public AsyncEvent<CollectionChanges<K>> Observe<K>(Expression<Func<T, IStateCollection<K>>> property)
+        public AsyncEvent<CollectionChanges<K>> Observe<K>(Expression<Func<T, IStateList<K>>> property)
         {
             var prop = property.GetProperty();
             if (_events.ContainsKey(prop))
@@ -124,25 +124,25 @@ namespace MvvmKit
             return ae;
         }
 
-        public StateCollectionPropertyBase<T, K> CreateReader<K>(ServiceBase service, Expression<Func<T, IStateCollection<K>>> prop)
+        public IStateCollectonReader<K> CreateReader<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
         {
-            var res = new StateCollectionPropertyBase<T, K>(this, service, prop);
+            var res = new StateCollectionReader<T, K>(this, service, prop);
             return res;
         }
 
-        public StateCollectionProperty<T, K> CreateWriter<K>(ServiceBase service, Expression<Func<T, IStateCollection<K>>> prop)
+        public IStateCollectionProperty<K> CreateWriter<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
         {
             var res = new StateCollectionProperty<T, K>(this, service, prop);
             return res;
         }
 
-        public StatePropertyBase<T, K> CreateReader<K>(ServiceBase service, Expression<Func<T, K>> prop)
+        public IStatePropertyReader<K> CreateReader<K>(ServiceBase service, Expression<Func<T, K>> prop)
         {
-            var res = new StatePropertyBase<T, K>(this, service, prop);
+            var res = new StatePropertyReader<T, K>(this, service, prop);
             return res;
         }
 
-        public StateProperty<T, K> CreateWriter<K>(ServiceBase service, Expression<Func<T, K>> prop)
+        public IStateProperty<K> CreateWriter<K>(ServiceBase service, Expression<Func<T, K>> prop)
         {
             var res = new StateProperty<T, K>(this, service, prop);
             return res;

@@ -19,7 +19,7 @@ namespace MvvmKit
         private Dictionary<PropertyInfo, object[]> _oldCollectionValues;
         private EditableLookup<PropertyInfo, IChange> _collectionChanges;
         private Dictionary<PropertyInfo, object> _literalChanges;
-        private Dictionary<PropertyInfo, IStateCollection> _proxies;
+        private Dictionary<PropertyInfo, IStateList> _proxies;
 
 
         public AccessInterceptor(InterfaceState state, bool allowModifications = false)
@@ -32,7 +32,7 @@ namespace MvvmKit
                 .ToDictionary(p => p, p => (state[p] as IEnumerable).Cast<object>().ToArray());
             _collectionChanges = new EditableLookup<PropertyInfo, IChange>();
             _literalChanges = new Dictionary<PropertyInfo, object>();
-            _proxies = new Dictionary<PropertyInfo, IStateCollection>();
+            _proxies = new Dictionary<PropertyInfo, IStateList>();
         }
 
         public IEnumerable<(PropertyInfo prop, object value)> ChangedLiterals()
@@ -50,7 +50,7 @@ namespace MvvmKit
             return _oldCollectionValues[prop];
         }
 
-        private IStateCollection _ensureProxy(PropertyInfo prop)
+        private IStateList _ensureProxy(PropertyInfo prop)
         {
             if (_proxies.ContainsKey(prop)) return _proxies[prop];
             var itemType = prop.PropertyType.GenericTypeArguments[0];
@@ -58,7 +58,7 @@ namespace MvvmKit
 
             var list = _state[prop];
             Action<IChange> onChange = change => _onChange(prop, change);
-            var proxy = Activator.CreateInstance(proxyType, list, this, onChange, _allowModifications) as IStateCollection;
+            var proxy = Activator.CreateInstance(proxyType, list, this, onChange, _allowModifications) as IStateList;
             _proxies.Add(prop, proxy);
             return proxy;
 

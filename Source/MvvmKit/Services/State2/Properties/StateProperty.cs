@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StateProperty<K, T> : StatePropertyBase<K, T>
+    public class StateProperty<K, T> : StatePropertyReader<K, T>, IStateProperty<T>
         where K: class
     {
         Action<K, T> _setter;

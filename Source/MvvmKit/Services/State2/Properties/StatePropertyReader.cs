@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StatePropertyBase<K, T>
+    public class StatePropertyReader<K, T> : IStatePropertyReader<T>
         where K: class
     {
         protected ServiceStore<K> _store;
@@ -15,7 +15,7 @@ namespace MvvmKit
         protected ServiceBase _owner;
         protected Func<K, T> _getter;
 
-        internal StatePropertyBase(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, T>> prop)
+        internal StatePropertyReader(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, T>> prop)
         {
             _store = store;
             _owner = owner;
