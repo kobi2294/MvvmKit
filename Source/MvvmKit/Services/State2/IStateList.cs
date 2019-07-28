@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public interface IStateList: IEnumerable, ICollection
+    public interface IStateList: IEnumerable
     {
 
     }
