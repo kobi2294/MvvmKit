@@ -12,7 +12,7 @@ namespace MvvmKit
 
     }
 
-    public interface IStateList<T> : IStateList, IList<T>, ICollection<T>, IEnumerable<T>, IReadOnlyCollection<T>
+    public interface IStateList<T> : IStateList, IList<T>, ICollection<T>, IEnumerable<T>
     {
         bool Exists(Predicate<T> predicate);
 

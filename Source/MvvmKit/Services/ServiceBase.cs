@@ -11,6 +11,7 @@ namespace MvvmKit
         private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
         private Task _initTask = null;
+        private bool _initTaskCalled = false;
 
         protected virtual Task OnInit()
         {
@@ -24,8 +25,9 @@ namespace MvvmKit
 
         private Task _ensureInit()
         {
-            if (_initTask == null)
+            if (!_initTaskCalled)
             {
+                _initTaskCalled = true;
                 _initTask = _init();
             }
 
