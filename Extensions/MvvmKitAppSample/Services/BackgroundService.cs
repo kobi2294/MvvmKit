@@ -69,7 +69,7 @@ namespace MvvmKitAppSample.Services
 
         public Task Method2()
         {
-            return Run(async () =>
+            return Run(() =>
             {
                 Debug.WriteLine("I am in a ba service, method 2, thread = " + Thread.CurrentThread.ManagedThreadId);
             });

@@ -124,5 +124,15 @@ namespace MvvmKit
         {
             return source.GetName().Equals(name);
         }
+
+        public static Expression<Action<T, K>> ToSetter<T, K>(this Expression<Func<T, K>> getter)
+        {
+            var memberExpr = (MemberExpression)getter.Body;
+            var @this = Expression.Parameter(typeof(T), "$this");
+            var value = Expression.Parameter(typeof(K), "value");
+            return Expression.Lambda<Action<T, K>>(
+                Expression.Assign(Expression.MakeMemberAccess(@this, memberExpr.Member), value),
+                @this, value);
+        }
     }
 }

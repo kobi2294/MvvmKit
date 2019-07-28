@@ -14,6 +14,7 @@ namespace MvvmKit
 
         private Dictionary<PropertyInfo, object> _values;
         private Dictionary<string, PropertyInfo> _props;
+        private HashSet<PropertyInfo> _collectionProps;
         private Dictionary<MethodInfo, PropertyInfo> _getters;
         private Dictionary<MethodInfo, PropertyInfo> _setters;
 
@@ -29,8 +30,12 @@ namespace MvvmKit
             _getters = props.ToDictionary(p => p.GetMethod);
             _setters = props.ToDictionary(p => p.SetMethod);
 
+            _collectionProps = props
+                .Where(p => p.PropertyType.IsGenericOf(typeof(IStateCollection<>)))
+                .ToHashSet();
+
             // find properties that are of type IStateCollection<T> and default them to List<T>
-            foreach (var prop in props.Where(p => p.PropertyType.IsGenericOf(typeof(IStateCollection<>))))
+            foreach (var prop in _collectionProps)
             {
                 var collectionType = prop.PropertyType;
                 var itemType = collectionType.GenericTypeArguments[0];
@@ -66,6 +71,16 @@ namespace MvvmKit
         public IEnumerable<PropertyInfo> Properties
         {
             get => _values.Keys;
+        }
+
+        public IEnumerable<PropertyInfo> CollectionProperties
+        {
+            get => _collectionProps.ToArray();
+        }
+
+        public bool IsCollection(PropertyInfo prop)
+        {
+            return _collectionProps.Contains(prop);
         }
     }
 }

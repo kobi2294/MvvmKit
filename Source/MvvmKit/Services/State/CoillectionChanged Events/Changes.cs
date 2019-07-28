@@ -39,9 +39,21 @@ namespace MvvmKit.CollectionChangeEvents
             return new Reset<T>(items);
         }
 
-        public static CollectionChanges<T> Collect<T>(this IEnumerable<IChange<T>> source)
+        public static CollectionChanges<T> Init<T>(IEnumerable<T> items)
         {
-            return new CollectionChanges<T>(source);
+            var reset = Reset(items);
+            var res = new CollectionChanges<T>(reset.AsIEnumerable(), Enumerable.Empty<T>(), items);
+            return res;
+        }
+
+        public static CollectionChanges<T> Collect<T>(this IChange<T> change, IEnumerable<T> oldVals, IEnumerable<T> newVals)
+        {
+            return new CollectionChanges<T>(change.AsIEnumerable(), oldVals, newVals);
+        }
+
+        public static CollectionChanges<T> Collect<T>(this IEnumerable<IChange<T>> changes, IEnumerable<T> oldVals, IEnumerable<T> newVals)
+        {
+            return new CollectionChanges<T>(changes, oldVals, newVals);
         }
     }
 }

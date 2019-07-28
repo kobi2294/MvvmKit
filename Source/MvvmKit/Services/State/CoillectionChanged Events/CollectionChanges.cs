@@ -11,18 +11,28 @@ namespace MvvmKit
     public class CollectionChanges<T> : IEnumerable<IChange<T>>
     {
         private List<IChange<T>> _changes;
-        private IReadOnlyList<T> _oldValue;
-        private IReadOnlyList<T> _newValue;
+        private readonly IReadOnlyList<T> _oldValues;
+        private readonly IReadOnlyList<T> _newValues;
 
-        public CollectionChanges(IEnumerable<IChange<T>> changes)
+        public CollectionChanges(IEnumerable<IChange<T>> changes, IEnumerable<T> oldValues, IEnumerable<T> newValues)
         {
             _changes = new List<IChange<T>>(changes);
+            _oldValues = oldValues.ToReadOnly();
+            _newValues = newValues.ToReadOnly();
         }
 
+        public CollectionChanges(IChange[] changes, IEnumerable oldvals, IEnumerable newVals)
+            :this(changes.Cast<IChange<T>>(), oldvals.Cast<T>(), newVals.Cast<T>())
+        {
+        }
+        
         public CollectionChanges()
         {
             _changes = new List<IChange<T>>();
         }
+
+        public IReadOnlyList<T> OldValues => _oldValues;
+        public IReadOnlyList<T> NewValues => _newValues;
 
         public int Count => _changes.Count;
 
@@ -34,36 +44,6 @@ namespace MvvmKit
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public static implicit operator CollectionChanges<T>(ItemAdded<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
-        }
-
-        public static implicit operator CollectionChanges<T>(ItemRemoved<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
-        }
-
-        public static implicit operator CollectionChanges<T>(ItemMoved<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
-        }
-
-        public static implicit operator CollectionChanges<T>(ItemReplaced<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
-        }
-
-        public static implicit operator CollectionChanges<T>(Cleared<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
-        }
-
-        public static implicit operator CollectionChanges<T>(Reset<T> change)
-        {
-            return new CollectionChanges<T>(change.AsIEnumerable());
         }
     }
 }

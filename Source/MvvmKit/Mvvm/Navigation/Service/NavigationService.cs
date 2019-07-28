@@ -62,7 +62,7 @@ namespace MvvmKit
             }
         }
 
-        private async Task _unregisterRegion(Region region)
+        private Task _unregisterRegion(Region region)
         {
             if (!_serviceByRegion.ContainsKey(region))
             {
@@ -78,6 +78,8 @@ namespace MvvmKit
                 _serviceByRoute.Remove(route);
                 _routeByKey.Remove(route.Key, route);
             }
+
+            return Task.CompletedTask;
         }
 
         private void _registerStaticRegions(Type type)

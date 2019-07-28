@@ -114,6 +114,12 @@
     <Compile Include="Services\State2\ServiceStore.cs" />
     <Compile Include="Services\State2\AccessInterceptor.cs" />
     <Compile Include="Services\State2\CollectionProxy.cs" />
+    <Compile Include="Services\State2\StateCollectionProperty.cs" />
+    <Compile Include="Services\State2\StateCollectionPropertyBase.cs" />
+    <Compile Include="Services\State2\StateProperty.cs" />
+    <Compile Include="Services\State2\StatePropertyBase.cs" />
+    <Compile Include="Services\State\ServiceCollectionField.cs" />
+    <Compile Include="Tools\Async\ContextDelegates\IAsyncEventWithData.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
@@ -155,7 +161,6 @@
     <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemMoved.cs" />
     <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemRemoved.cs" />
     <Compile Include="Services\State\CoillectionChanged Events\Event Args\IItemReplaced.cs" />
-    <Compile Include="Services\State\ServiceCollectionField.cs" />
     <Compile Include="Services\State\ServiceCollectionProperty.cs" />
     <Compile Include="Services\State\ServiceCollectionPropertyBase.cs" />
     <Compile Include="Services\State\ServiceCollectionPropertyReadonly.cs" />

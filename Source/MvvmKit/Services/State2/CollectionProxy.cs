@@ -79,13 +79,6 @@ namespace MvvmKit
                 _notify(Changes.Replace(index, oldItem, value));
             }
         }
-        object IList.this[int index]
-        {
-            get => this[index];
-            set => this[index] = (T)value;
-        }
-
-        T IReadOnlyList<T>.this[int index] => this[index];
 
         public int Count {
             get

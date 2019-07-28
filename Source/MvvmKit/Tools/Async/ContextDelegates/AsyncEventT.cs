@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class AsyncEvent<T>
+    public class AsyncEvent<T>: IAsyncEventWithData
     {
         private ContextMulticastFuncTask<T> _handlers;
 
@@ -38,6 +38,12 @@ namespace MvvmKit
             LatestValue = value;
             return _handlers.Invoke(value);
         }
+
+        Task IAsyncEventWithData.Invoke(object value)
+        {
+            return Invoke((T)value);
+        }
+
 
         public AsyncEvent<T> OnSubscribe(Func<Func<T, Task>, Task> onSubscribe)
         {

@@ -9,7 +9,7 @@ namespace MvvmKit
     public class ServiceCollectionProperty<T> : ServiceCollectionPropertyBase<T>
     {
         public ServiceCollectionProperty(ServiceCollectionField<T> field, ServiceBase owner)
-            :base(field, owner)
+            : base(field, owner)
         {
         }
 
