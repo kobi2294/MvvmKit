@@ -10,7 +10,7 @@ namespace MvvmKit
     {
         private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
-        private Task _initTask = null;
+        private AsyncLazyInit _initLazy; 
 
         protected virtual Task OnInit()
         {
@@ -19,35 +19,26 @@ namespace MvvmKit
 
         private Task _init()
         {
-            return OnInit();
-        }
-
-        private Task _ensureInit()
-        {
-            if (_initTask == null)
-            {
-                _initTask = _init();
-            }
-
-            return _initTask;
+            return _runner.Run(OnInit);
         }
 
         public Task Init()
         {
-            return Run(_ensureInit);
+            return _initLazy.Task;
         }
 
         public ServiceBase(TaskScheduler taskScheduler = null)
         {
             _scheduler = taskScheduler ?? TaskScheduler.Default;
             _runner = _scheduler.ToContextRunner();
+            _initLazy = new AsyncLazyInit(_init);
         }
 
         protected Task Run(Action method)
         {
             return _runner.Run(async () =>
             {
-                await _ensureInit();
+                await _initLazy.Task;
                 method();
             });
         }
@@ -56,7 +47,7 @@ namespace MvvmKit
         {
             return _runner.Run(async () =>
             {
-                await _ensureInit();
+                await _initLazy.Task;
                 return func();
             });
         }
@@ -65,7 +56,7 @@ namespace MvvmKit
         {
             return _runner.Run(async () =>
             {
-                await _ensureInit();
+                await _initLazy.Task;
                 await method();
             });
         }
@@ -74,7 +65,7 @@ namespace MvvmKit
         {
             return _runner.Run(async () =>
             {
-                await _ensureInit();
+                await _initLazy.Task;
                 return await func();
             });
         }
