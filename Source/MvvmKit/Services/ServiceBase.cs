@@ -11,23 +11,21 @@ namespace MvvmKit
         private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
         private Task _initTask = null;
-        private bool _initTaskCalled = false;
 
         protected virtual Task OnInit()
         {
             return Tasks.Empty;
         }
 
-        private async Task _init()
+        private Task _init()
         {
-            await OnInit();
+            return OnInit();
         }
 
         private Task _ensureInit()
         {
-            if (!_initTaskCalled)
+            if (_initTask == null)
             {
-                _initTaskCalled = true;
                 _initTask = _init();
             }
 
