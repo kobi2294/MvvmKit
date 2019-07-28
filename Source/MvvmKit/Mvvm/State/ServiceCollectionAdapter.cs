@@ -16,7 +16,7 @@ namespace MvvmKit
 
         public ObservableCollection<TVM> Target { get; private set; }
 
-        public ServiceCollectionPropertyBase<T> Source { get; private set; }
+        public IStateCollectionReader<T> Source { get; private set; }
 
         public ServiceCollectionAdapter(IResolver resolver)
         {
@@ -24,7 +24,7 @@ namespace MvvmKit
         }
 
 
-        public ServiceCollectionAdapter<T, TVM> From(ServiceCollectionPropertyBase<T> source)
+        public ServiceCollectionAdapter<T, TVM> From(IStateCollectionReader<T> source)
         {
             Source = source;
             return this;

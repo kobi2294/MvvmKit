@@ -28,9 +28,8 @@ namespace MvvmKit
 
         public async Task<IReadOnlyList<T>> Get()
         {
-            var data = await Select(x => x);
-            var res = data.ToReadOnly();
-            return res;
+            var data = await Select(x => x.ToReadOnly());
+            return data;
         }
 
         public Task<TRes> Select<TRes>(Func<IStateList<T>, TRes> selector)

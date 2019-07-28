@@ -83,41 +83,51 @@ namespace MvvmKitAppSample.Components.Shell
             await _service.PropName.Set(!val);
             await _service.Method();
 
-            await _service.Numbers.Reset(Enumerable.Range(1, 3).Select(i => i * 10));
+            await _service.Numbers.Modify(list =>
+            {
+                list.Reset(Enumerable.Range(1, 3).Select(i => i * 10));
+                list.Add(50);
+                list.Add(30);
+                list.Add(40);
+            });
 
-            await _service.Numbers.Add(50);
-            await _service.Numbers.Add(30);
-            await _service.Numbers.Add(40);
-
-            var items = await _service.Numbers.Items();
+            var items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.Remove(30);
-            await _service.Numbers.RemoveAt(2);
+            await _service.Numbers.Modify(list =>
+            {
+                list.Remove(30);
+                list.RemoveAt(2);
+            });
 
-            items = await _service.Numbers.Items();
+            items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.SetAt(2, 314);
+            await _service.Numbers.Modify(list => list[2] = 314);
 
-            items = await _service.Numbers.Items();
+            items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.SetWhere(i => i > 45, 324);
+            await _service.Numbers.Modify(list => list.SetWhere(i => i > 45, 324));
 
-            items = await _service.Numbers.Items();
+            items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.MoveAt(1, 3);
-            items = await _service.Numbers.Items();
+            await _service.Numbers.Modify(list => list.MoveAt(1, 3));
+            items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.MoveWhere(i => i > 45, 0);
+            await _service.Numbers.Modify(list =>
+            {
+                var item = list.FirstOrDefault(i => i > 45);
+                if (item > 0)
+                    list.MoveItem(item, 0);
+            });
 
-            items = await _service.Numbers.Items();
+            items = await _service.Numbers.Get();
             Debug.WriteLine($"Items are: {string.Join(", ", items)}");
 
-            await _service.Numbers.Clear();
+            await _service.Numbers.Modify(list => list.Clear());
         }
 
 

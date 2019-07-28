@@ -12,23 +12,33 @@ namespace MvvmKitAppSample.Services
 {
     public class BackgroundService: BackgroundServiceBase
     {
-        private readonly ServiceCollectionField<int> _Numbers = (10, 20, 30);
-        public ServiceCollectionProperty<int> Numbers { get => (_Numbers, this); }
+        public interface IModel
+        {
+            IStateList<int> Numbers { get; set; }
+            IStateList<int> ReadNumbers { get; set; }
+            IStateList<string> MyNames { get; set; }
+            int MyNumber { get; set; }
+            int A { get; set; }
+            bool PropName { get; set; }
+            
+        }
 
-        private readonly ServiceCollectionField<int> _ReadNumbers = (10, 20, 30);
-        public ServiceCollectionPropertyReadonly<int> ReadNumbers { get => (_ReadNumbers, this); }
+        private ServiceStore<IModel> _store = new ServiceStore<IModel>(data =>
+        {
+            data.Numbers.Reset(10, 20, 30);
+            data.ReadNumbers.Reset(10, 20, 30);
+            data.MyNames.Reset("a");
+            data.MyNumber = 55;
+            data.A = 42;
+            data.PropName = true;
+        });
 
-        private readonly ServiceCollectionField<string> _MyNames = ("a");
-        public ServiceCollectionProperty<string> MyNames { get => (_MyNames, this); }
-
-        private readonly ServiceField<int> _MyNumber = 55;
-        public ServiceProperty<int> MyNumber { get => (_MyNumber, this); }
-
-        private readonly ServiceField<int> _A = 42;
-        public ServicePropertyReadonly<int> A { get => (_A, this); }
-
-        private readonly ServiceField<bool> _PropName = true;
-        public ServiceProperty<bool> PropName { get => (_PropName, this); }
+        public IStateCollection<int> Numbers { get; }
+        public IStateCollectionReader<int> ReadNumbers { get; }
+        public IStateCollection<string> MyNames { get; }
+        public IStateProperty<int> MyNumber { get; }
+        public IStatePropertyReader<int> A { get; }
+        public IStateProperty<bool> PropName { get; }
 
         public AsyncEvent<DateTime> OnMyBrithday { get; } = new AsyncEvent<DateTime>(DateTime.Now);
 
@@ -36,16 +46,21 @@ namespace MvvmKitAppSample.Services
 
         public BackgroundService()
         {
+            Numbers = _store.CreateWriter(this, x => x.Numbers);
+            ReadNumbers = _store.CreateReader(this, x => x.ReadNumbers);
+            MyNames = _store.CreateWriter(this, x => x.MyNames);
+            MyNumber = _store.CreateWriter(this, x => x.MyNumber);
+            A = _store.CreateReader(this, x => x.A);
+            PropName = _store.CreateWriter(this, x => x.PropName);
         }
 
         protected override async Task OnInit()
         {
             await base.OnInit();
-            await _MyNames.Add("b");
-            await _MyNames.Add("c");
-            await _MyNames.Add("d");
-            await _MyNames.Add("e");
-            await _MyNames.Add("f");
+            await _store.Modify(data =>
+            {
+                data.MyNames.AddRange("b", "c", "d", "e", "f");
+            });
         }
 
         [InjectionMethod]
@@ -61,7 +76,7 @@ namespace MvvmKitAppSample.Services
             {
                 Debug.WriteLine("I am in a ba service, thread = " + Thread.CurrentThread.ManagedThreadId);
 
-                await _A.Set(_A.Value + 1);
+                await _store.Modify(data => data.A++); 
 
                 await _uiService.Method();
             });

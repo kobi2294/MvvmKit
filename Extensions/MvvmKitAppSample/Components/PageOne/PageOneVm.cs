@@ -63,7 +63,7 @@ namespace MvvmKitAppSample.Components.PageOne
 
         public async void OnAddCommand(string param)
         {
-            await _service.MyNames.Add(param);
+            await _service.MyNames.Modify(list => list.Add(param));
         }
 
         #endregion
@@ -109,7 +109,7 @@ namespace MvvmKitAppSample.Components.PageOne
 
         public async Task OnChildRemove(ItemVm vm)
         {
-            await _service.MyNames.Remove(vm.Value);
+            await _service.MyNames.Modify(list => list.Remove(vm.Value));
         }
 
         protected override async Task OnInitialized(object param)
