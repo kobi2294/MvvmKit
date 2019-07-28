@@ -98,6 +98,7 @@
     <Compile Include="Services\ItemsService.cs" />
     <Compile Include="Services\IUiService.cs" />
     <Compile Include="Services\StatefullService.cs" />
+    <Compile Include="Services\StateService.cs" />
     <Compile Include="Services\UiService.cs" />
   </ItemGroup>
   <ItemGroup>

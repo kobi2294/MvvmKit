@@ -33,6 +33,7 @@
             <Button Command="{Binding ChangeACommand}">Change Property</Button>
             <Button Command="{Binding TogglePageCommand}">Toggle View Model</Button>
             <Button Command="{Binding MyRegionCommand}">I am hosted in...</Button>
+            <Button Command="{Binding ChangeStateCommand}">Change Sate</Button>
         </StackPanel>
 
         <Border DockPanel.Dock="Top" Height="250" BorderBrush="Pink" BorderThickness="8" Margin="4">

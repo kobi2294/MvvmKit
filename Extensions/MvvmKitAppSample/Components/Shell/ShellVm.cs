@@ -28,7 +28,6 @@ namespace MvvmKitAppSample.Components.Shell
 
         #region Commands
 
-
         #region TestThreads Command
 
         private DelegateCommand _TestThreadsCommand;
@@ -47,7 +46,23 @@ namespace MvvmKitAppSample.Components.Shell
         }
         #endregion
 
+        #region ChangeState Command
 
+        private DelegateCommand _ChangeStateCommand;
+        public DelegateCommand ChangeStateCommand
+        {
+            get
+            {
+                if (_ChangeStateCommand == null) _ChangeStateCommand = new DelegateCommand(OnChangeStateCommand);
+                return _ChangeStateCommand;
+            }
+        }
+
+        public async void OnChangeStateCommand()
+        {
+            await _state.Method();
+        }
+        #endregion
 
         #region ChangeA Command
 
@@ -157,6 +172,7 @@ namespace MvvmKitAppSample.Components.Shell
         private IUiService _uiService;
         private ItemsService _itemsService;
         private DialogsService _dialogs;
+        private StateService _state;
 
         public ShellVm()
         {
@@ -169,12 +185,14 @@ namespace MvvmKitAppSample.Components.Shell
             BackgroundService service, 
             IUiService uis, 
             ItemsService itemsService, 
-            DialogsService dialogs)
+            DialogsService dialogs, 
+            StateService state)
         {
             _service = service;
             _uiService = uis;
             _itemsService = itemsService;
             _dialogs = dialogs;
+            _state = state;
         }
 
 
@@ -194,6 +212,12 @@ namespace MvvmKitAppSample.Components.Shell
                     Debug.WriteLine(item);
                 }
                 return Tasks.Empty;
+            });
+
+            await _state.IsMuted.Changed.Subscribe(this, b =>
+            {
+                Debug.WriteLine("State has changed, IsMuted = " + b);
+                return Task.CompletedTask;
             });
 
             await Navigation.RegisterRegion(MyRegion);
