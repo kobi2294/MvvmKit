@@ -24,7 +24,7 @@ namespace MvvmKitAppSample.Services
         });
 
         public IStateProperty<bool> IsMuted { get; }
-        public IStateCollectonReader<string> Alarms { get; }
+        public IStateCollectionReader<string> Alarms { get; }
 
         public AsyncEvent<bool> IsMutedChanged { get; }
 

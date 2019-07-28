@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StateCollectionReader<K, T>: IStateCollectonReader<T>
+    public class StateCollectionReader<K, T>: IStateCollectionReader<T>
         where K: class
     {
         protected ServiceStore<K> _store;

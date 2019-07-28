@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public interface IStateCollectionProperty<T> : IStateCollectonReader<T>
+    public interface IStateCollection<T> : IStateCollectionReader<T>
     {
         Task Set(IEnumerable<T> values);
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class StateCollectionProperty<K, T> : StateCollectionReader<K, T>, IStateCollectionProperty<T>
+    public class StateCollectionProperty<K, T> : StateCollectionReader<K, T>, IStateCollection<T>
         where K: class
     {
         internal StateCollectionProperty(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, IStateList<T>>> prop)

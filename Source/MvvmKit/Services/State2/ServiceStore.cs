@@ -124,13 +124,13 @@ namespace MvvmKit
             return ae;
         }
 
-        public IStateCollectonReader<K> CreateReader<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
+        public IStateCollectionReader<K> CreateReader<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
         {
             var res = new StateCollectionReader<T, K>(this, service, prop);
             return res;
         }
 
-        public IStateCollectionProperty<K> CreateWriter<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
+        public IStateCollection<K> CreateWriter<K>(ServiceBase service, Expression<Func<T, IStateList<K>>> prop)
         {
             var res = new StateCollectionProperty<T, K>(this, service, prop);
             return res;

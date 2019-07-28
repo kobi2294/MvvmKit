@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public interface IStateCollectonReader<T>
+    public interface IStateCollectionReader<T>
     {
         AsyncEvent<CollectionChanges<T>> Changed { get; }
 
