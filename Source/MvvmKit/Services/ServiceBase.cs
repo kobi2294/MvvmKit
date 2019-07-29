@@ -36,18 +36,18 @@ namespace MvvmKit
 
         protected Task Run(Action method)
         {
-            return _runner.Run(async () =>
+            return _runner.Run(() =>
             {
-                await _initLazy.Task;
+                //await _initLazy.Task;
                 method();
             });
         }
 
         protected Task<T> Run<T>(Func<T> func)
         {
-            return _runner.Run(async () =>
+            return _runner.Run(() =>
             {
-                await _initLazy.Task;
+                //await _initLazy.Task;
                 return func();
             });
         }
@@ -56,7 +56,7 @@ namespace MvvmKit
         {
             return _runner.Run(async () =>
             {
-                await _initLazy.Task;
+                //await _initLazy.Task;
                 await method();
             });
         }
@@ -65,7 +65,7 @@ namespace MvvmKit
         {
             return _runner.Run(async () =>
             {
-                await _initLazy.Task;
+                //await _initLazy.Task;
                 return await func();
             });
         }
