@@ -90,6 +90,19 @@ namespace MvvmKit
 
         #endregion
 
+        #region AnimateToEmpty Property
+
+        public bool AnimateToEmpty
+        {
+            get { return (bool)GetValue(AnimateToEmptyProperty); }
+            set { SetValue(AnimateToEmptyProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AnimateToEmpty.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AnimateToEmptyProperty =
+            DependencyProperty.Register("AnimateToEmpty", typeof(bool), typeof(TransitionContentControl), new PropertyMetadata(false));
+
+        #endregion
 
 
         private int _indexOfContent(object content)
@@ -118,12 +131,11 @@ namespace MvvmKit
                 int newIndex = _indexOfContent(newContent);
 
                 TransitionDirection direction;
-                if ((oldContent == null) || (newContent == null))
+                if (((oldContent == null) || (newContent == null)) && (!AnimateToEmpty))
                     direction = TransitionDirection.None;
                 else if (oldIndex <= newIndex) direction = TransitionDirection.Forwards;
                 else direction = TransitionDirection.Backwards;
                     
-
                 _partPaintArea.Fill = CreateBrushFromVisual(_partMainContent);
                 BeginAnimateContentReplacement(direction);
 
