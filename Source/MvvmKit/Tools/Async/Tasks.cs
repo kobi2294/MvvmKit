@@ -19,6 +19,11 @@ namespace MvvmKit
             return Task.FromResult(value);
         }
 
+        public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks)
+        {
+            return Task.WhenAll(tasks);
+        }
+
         public static DeferredTask<T> ToDeferredTask<T>(this T value)
         {
             return new DeferredTask<T>(value);
