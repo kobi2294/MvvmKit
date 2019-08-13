@@ -22,18 +22,17 @@ namespace MvvmKit
 
         public int IndexOf(AvlTreeNode<T> node) => _indexOf(node);
 
-        public T RemoveAt(int index)
+        public AvlTreeNode<T> RemoveAt(int index)
         {
             var node = this[index];
-            var value = Remove(node);
-            return value;
+            Remove(node);
+            return node;
         }
 
-        public T Remove(AvlTreeNode<T> node)
+        public AvlTreeNode<T> Remove(AvlTreeNode<T> node)
         {
-            var value = node.Item;
             InternalRemoveNode(node);
-            return value;
+            return node;
         }
 
         public AvlTreeNode<T> Clear()
@@ -106,28 +105,15 @@ namespace MvvmKit
 
         internal AvlTreeNode<T> InternalInsertNode(AvlTreeTarget<T> destination, AvlTreeNode<T> newNode)
         {
+            // newnode should be dettached from the tree
+            Debug.Assert(newNode != null);
             Debug.Assert(newNode.Parent == null);
             Debug.Assert(newNode.Left == null);
             Debug.Assert(newNode.Right == null);
             Debug.Assert(newNode._tree == null);
 
             var parent = destination.Parent;
-            newNode.Parent = parent;
-
-            if (parent == null)
-            {
-                Debug.Assert(Root == null);
-                _setAsRoot(newNode);
-            } else if (destination.ChildDirection == AvlTreeNodeDirection.Left)
-            {
-                Debug.Assert(parent.Left == null);
-                parent.Left = newNode;
-            }
-            else
-            {
-                Debug.Assert(parent.Right == null);
-                parent.Right = newNode;
-            }
+            _attachToParent(newNode, parent, destination.ChildDirection);
 
             _rebalanceAfterChange(parent);
             return newNode;
@@ -136,100 +122,137 @@ namespace MvvmKit
         internal void InternalRemoveNode(AvlTreeNode<T> node)
         {
             var parent = node.Parent;
+            var dleft = node.Left;
+            var dright = node.Right;
+
             var direction = _directionOf(node);
 
-            if ((node.Left == null) && (node.Right == null))
+            if ((dleft == null) && (dright == null))
             {
+                /*
+                 *      P           P  <- Balance from here
+                 *      |-    =>    
+                 *     node
+                 */
+
                 _dettachFromParent(node);
                 _rebalanceAfterChange(parent);
-                node.Parent = null;
             }
-            else if ((node.Left != null) && (node.Right == null))
+            else if ((dleft != null) && (dright == null))
             {
-                _attachToParent(node.Left, parent, direction);
-                node.Left = null;
-                node.Parent = null;
-                _rebalanceAfterChange(parent);
+                /*
+                 *      P           P  <- Balance from here
+                 *      |-    =>    |+
+                 *     node        dleft
+                 *     /-
+                 *    dleft
+                 */
+                _dettachFromParent(dleft);
+                _dettachFromParent(node);
+                _attachToParent(dleft, parent, direction);
 
+                _rebalanceAfterChange(parent);
             }
-            else if ((node.Left == null) && (node.Right != null))
+            else if ((dleft == null) && (dright != null))
             {
-                _attachToParent(node.Right, parent, direction);
-                node.Right = null;
-                node.Parent = null;
+                /*
+                 *      P           P  <- Balance from here
+                 *      |-    =>    |+
+                 *     node        dright
+                 *       \-
+                 *       dright
+                 */
+                _dettachFromParent(dright);
+                _dettachFromParent(node);
+                _attachToParent(dright, parent, direction);
+
                 _rebalanceAfterChange(parent);
             }
             else
             {
                 // both node.left and node.right are full
-                // find successor descendent
-                var temp = node.Right;
-                while (temp.Left != null) temp = temp.Left;
+                // find successor descendent - One step to the right, and as many steps to the left as possible
+                var successor = dright;
+                while (successor.Left != null) successor = successor.Left;
 
-                // temp is now the successor node
+                var sparent = successor.Parent;
+                var sright = successor.Right; // may be null
 
                 // two cases. One of them is the the successor is the direct right child of the deleted node
                 // the second is that there is a deeper successor
-                if (temp == node.Right)
+                if (successor == dright)
                 {
-                    //          D-Parent                    D-Parent
-                    //              |                           |
-                    //           Deleted            ==>     D-Right
-                    //            /  \                          /
-                    //       D-Left  D-Right                D-Left
-                    var dleft = node.Left;
-                    var dright = node.Right;
+                    //           parent                       parent
+                    //              |-                           |+
+                    //            node            ==>        dright (Successor) <-Rebalance from here
+                    //            /- \-                         /+
+                    //       dleft  dright (Successor)     dleft
 
-                    node.Left = null;
-                    node.Right = null;
-                    node.Parent = null;
-
+                    _dettachFromParent(dright);
+                    _dettachFromParent(node);
+                    _dettachFromParent(dleft);
                     _attachToParent(dright, parent, direction);
                     _attachToParent(dleft, dright, AvlTreeNodeDirection.Left);
                     _rebalanceAfterChange(dright);
 
                 } else
                 {
-                    //      D-Parent                         D-Parent
-                    //          |                                |
-                    //       Deleted                          Succesor
-                    //       /     \                            /   \
-                    //   D-Left D-Right                     D-Left  D-Right
-                    //             /                                     /
-                    //            ...               ==>                ...
-                    //            /                                     /
-                    //          Suc-Parent                          S-Parent
-                    //            /                                     /
-                    //          Succesor                            S-Right
-                    //            \
-                    //           Suc-Right
+                    //        parent                          parent
+                    //          |-                               |+
+                    //         node                          successor
+                    //        /-   \-                          /+   \+
+                    //     dleft  dright                    dleft  dright
+                    //             /                                 /
+                    //            ...               ==>             ...
+                    //            /                                 /
+                    //          sparent                         sparent <-Rebalance from here
+                    //            /-                               /+
+                    //          successor                       sright
+                    //            \-
+                    //           sright
 
-                    var dleft = node.Left;
-                    var dright = node.Right;
+                    _dettachFromParent(sright);
+                    _dettachFromParent(successor);
+                    _dettachFromParent(dright);
+                    _dettachFromParent(dleft);
+                    _dettachFromParent(node);
 
-                    var s = temp;
-                    var sparent = s.Parent;
-                    var sright = s.Right; // may be null
-
-                    node.Parent = null;
-                    node.Left = null;
-                    node.Right = null;
-
-                    _attachToParent(s, parent, direction);
-                    _attachToParent(dleft, s, AvlTreeNodeDirection.Left);
-                    _attachToParent(dright, s, AvlTreeNodeDirection.Right);
-
+                    _attachToParent(successor, parent, direction);
+                    _attachToParent(dleft, successor, AvlTreeNodeDirection.Left);
+                    _attachToParent(dright, successor, AvlTreeNodeDirection.Right);
                     _attachToParent(sright, sparent, AvlTreeNodeDirection.Left);
+
                     _rebalanceAfterChange(sparent);
                 }
             }
 
-            node.Height = 1;
-            node.Size = 1;
+            _recalc(node); // just to make sure height and size are correct
+            Debug.Assert(node.Left == null);
+            Debug.Assert(node.Right == null);
+            Debug.Assert(node.Parent == null);
+            Debug.Assert(node._tree == null);
+            Debug.Assert(node.Height == 1);
+            Debug.Assert(node.Size == 1);
+            Debug.Assert(node.Balance == 0);
         }
 
         private void _attachToParent(AvlTreeNode<T> node, AvlTreeNode<T> parent, AvlTreeNodeDirection direction)
         {
+            // if node != null, node.parent should be free
+            Debug.Assert((node == null) || (node.Parent == null));  
+
+            // if direction is not root, parent should contain something
+            Debug.Assert((direction == AvlTreeNodeDirection.Root) || (parent != null));
+
+            // if direction is root, parent should be null
+            Debug.Assert((direction != AvlTreeNodeDirection.Root) || (parent == null));
+
+            // if direction is left, parent.left should be free
+            Debug.Assert((direction != AvlTreeNodeDirection.Left) || (parent.Left == null));
+
+            // if direction is right, parent.right should be free
+            Debug.Assert((direction != AvlTreeNodeDirection.Right) || (parent.Right == null));
+
             if (parent == null)
             {
                 _setAsRoot(node);
@@ -246,31 +269,45 @@ namespace MvvmKit
 
         private void _dettachFromParent(AvlTreeNode<T> node)
         {
+            if (node == null) return;
+
             if (node.Parent == null)
             {
-                _setAsRoot(null);
+                _unsetRoot(node);
             } else if (node.Parent.Left == node)
             {
                 node.Parent.Left = null;
+                node.Parent = null;
             } else
             {
                 node.Parent.Right = null;
+                node.Parent = null;
             }
         }
 
         private void _setAsRoot(AvlTreeNode<T> node)
         {
-            if (Root != null)
-                Root._tree = null;
+            Debug.Assert(Root == null);
+            Debug.Assert(node.Parent == null);
+            Debug.Assert(node._tree == null);
 
             Root = node;
-
             if (node != null)
             {
                 node._tree = this;
-                node.Parent = null;
             }
         }
+
+        private void _unsetRoot(AvlTreeNode<T> node)
+        {
+            Debug.Assert(Root == node);
+            Debug.Assert((node == null) || (node.Parent == null));
+            Debug.Assert((node == null) || (node._tree == this));
+
+            Root = null;
+            if (node != null) node._tree = null;            
+        }
+
 
         private void _rebalanceAfterChange(AvlTreeNode<T> start)
         {
@@ -281,8 +318,6 @@ namespace MvvmKit
                 _recalc(start);
                 var parent = start.Parent;
                 var balanced = _doBalance(start);
-
-                _attachToParent(balanced, parent, direction);
 
                 start = parent;
             }
@@ -299,7 +334,7 @@ namespace MvvmKit
             {
                 Debug.Assert(Math.Abs(node.Left.Balance) <= 1);
                 if (node.Left.Balance == 1)
-                    node.Left = _rotateLeft(node.Left);
+                    _rotateLeft(node.Left);
                 res = _rotateRight(node);
             }
             else if (bal == 2)
@@ -314,30 +349,36 @@ namespace MvvmKit
         }
 
         /*   Parent       Parent
-         *   |            |
+         *   |-           |+
 		 *   A            B
-		 *  / \          / \
-		 * 0   B   ->   A   2
-		 *    / \      / \
-		 *   1   2    0   1
+		 *  / \-        +/ \
+		 * AL  B   ->   A   BR
+		 *   -/ \      / \+
+		 *   C   BR    0   C
          *   
+         *   - marks connections that are dettached
+         *   + marks connections that are created
 		 */
         private AvlTreeNode<T> _rotateLeft(AvlTreeNode<T> a)
         {
-            Debug.Assert(a.Right != null);
             AvlTreeNode<T> b = a.Right;
-            AvlTreeNode<T> parent = a.Parent;
+            AvlTreeNode<T> parent = a.Parent; // may be null if A was root
+            AvlTreeNode<T> c = b.Left; // may be null
 
-            // a.Left remains 0 so no need to change this
-            // b.Right remains 2 so no need to change this
-            // b.Left (1) becomes a.Right
+            var direction = _directionOf(a);
 
-            a.Right = b.Left; // 1
-            b.Left = a;
+            Debug.Assert(b != null);
 
-            a.Parent = b;
-            if (a.Right != null) a.Right.Parent = a;
-            b.Parent = parent;
+            // a.Left remains so no need to change this
+            // b.Right remains so no need to change this
+
+            _dettachFromParent(a); // a from parent
+            _dettachFromParent(b); // b from a
+            _dettachFromParent(c); // c from b
+
+            _attachToParent(c, a, AvlTreeNodeDirection.Right);
+            _attachToParent(a, b, AvlTreeNodeDirection.Left);
+            _attachToParent(b, parent, direction);
 
             _recalc(a);
             _recalc(b);
@@ -345,30 +386,37 @@ namespace MvvmKit
         }
 
         /*     Parent     Parent
-         *     |          |
+         *     |-         |+
 		 *     B          A
-		 *    / \        / \
-		 *   A   2  ->  0   B
-		 *  / \            / \
-		 * 0   1          1   2
+		 *   -/ \        / \+
+		 *   A   BL  -> AL   B
+		 *  / \-          +/ \
+		 * AL   C          C   BR
          * 
+         *   - marks connections that are dettached
+         *   + marks connections that are created
 		 */
 
         private AvlTreeNode<T> _rotateRight(AvlTreeNode<T> b)
         {
-            Debug.Assert(b.Left != null);
             AvlTreeNode<T> a = b.Left;
-            AvlTreeNode<T> parent = b.Parent;
+            AvlTreeNode<T> parent = b.Parent; // may be null if B was root
+            AvlTreeNode<T> c = a.Right; // may be null
 
-            // a.Left remains 0 so no need to change this
-            // b.Right remains 2 so no need to change this
-            // a.Right (1) becomes b.Left
-            b.Left = a.Right; // 1 
-            a.Right = b;
+            var direction = _directionOf(b);
 
-            b.Parent = a;
-            if (b.Left != null) b.Left.Parent = b;
-            a.Parent = parent;
+            Debug.Assert(a != null);
+
+            // a.Left remains so no need to change this
+            // b.Right remains so no need to change this
+
+            _dettachFromParent(b); // b from parent
+            _dettachFromParent(a); // a from b
+            _dettachFromParent(c); // c from a
+
+            _attachToParent(c, b, AvlTreeNodeDirection.Left);
+            _attachToParent(b, a, AvlTreeNodeDirection.Right);
+            _attachToParent(a, parent, direction);
 
             _recalc(b);
             _recalc(a);

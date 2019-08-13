@@ -36,10 +36,13 @@ namespace ConsoleDemo.Samples.AvlTrees
             foreach (var item in Enumerable.Range(0, 181))
             {
                 var index = rand.Next(0, t.Count);
-                t.RemoveAt(index);
-                Console.WriteLine($"Removing {index}");
+                var remnode = t.RemoveAt(index);
+                Console.WriteLine($"Removed [{index}] (item {remnode.Item}), tree count: {t.Count}, tree root: {t.Root.Item}");
+
+                t.CheckStructure();
 
                 if (t.Count % 10 == 5) PrintTree(t);
+
             }
 
             // 20 items remaining
