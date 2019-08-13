@@ -10,21 +10,31 @@ namespace MvvmKitAppSample.Services
 {
     public class ItemsService : BackgroundServiceBase
     {
-        private readonly ServiceCollectionField<TodoItem> _TodoItems = new ServiceCollectionField<TodoItem>();
-        public ServiceCollectionPropertyReadonly<TodoItem> TodoItems { get => (_TodoItems, this); }
+        public interface IModel
+        {
+            IStateList<TodoItem> TodoItems { get; set; }
+        }
+
+        private ServiceStore<IModel> _store = new ServiceStore<IModel>();
+        public IStateCollectionReader<TodoItem> TodoItems;
+
 
         public Task AddItem(string caption)
         {
             return Run(async () =>
             {
-                var item = new TodoItem
+                await _store.Modify(model =>
                 {
-                    Uid = Guid.NewGuid().ToString(),
-                    Caption = caption,
-                    IsChecked = false
-                };
+                    var item = new TodoItem
+                    {
+                        Uid = Guid.NewGuid().ToString(),
+                        Caption = caption,
+                        IsChecked = false
+                    };
 
-                await _TodoItems.Add(item);
+                    model.TodoItems.Add(item);
+
+                });
             });
         }
 
@@ -32,9 +42,12 @@ namespace MvvmKitAppSample.Services
         {
             return Run(async () =>
             {
-                var item = _TodoItems.Find(x => x.Uid == guid);
-                item.IsChecked = !item.IsChecked;
-                await _TodoItems.SetWhere(x => x.Uid == guid, item);
+                await _store.Modify(model =>
+                {
+                    var item = model.TodoItems.Find(x => x.Uid == guid);
+                    item.IsChecked = !item.IsChecked;
+                    model.TodoItems.SetWhere(x => x.Uid == guid, item);
+                });
             });
         }
 
