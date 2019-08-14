@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    internal class AvlTreeTarget<T>
+    public class AvlTreeTarget<T>
     {
         public AvlTreeNode<T> Parent { get; set; }
 

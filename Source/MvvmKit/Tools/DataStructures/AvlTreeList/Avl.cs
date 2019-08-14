@@ -18,11 +18,24 @@ namespace MvvmKit
             return new SortedAvlTree<T>(values);
         }
 
-        internal static AvlTreeTarget<T> Target<T>(this AvlTree<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        public static string ToVisualString<T>(this AvlTreeNode<T> source, string textFormat = "{0}", int spacing = 2, int topMargin = 1, int leftMargin = 1)
         {
-            if (source.Root == null) return new AvlTreeTarget<T> { Parent = null, ChildDirection = AvlTreeNodeDirection.Root };
+            var console = new StringConsole();
+            source.PrintToConsole(console, textFormat, spacing, topMargin, leftMargin);
+            return console.ToString();
+        }
 
-            var current = source.Root;
+        public static string ToVisualString<T>(this AvlTree<T> source, string textFormat = "{0}", int spacing = 2, int topMargin = 1, int leftMargin = 1)
+        {
+            return source.Root.ToVisualString(textFormat, spacing, topMargin, leftMargin);
+        }
+
+
+        public static AvlTreeTarget<T> Target<T>(this AvlTreeNode<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        {
+            if (source == null) return new AvlTreeTarget<T> { Parent = null, ChildDirection = AvlTreeNodeDirection.Root };
+
+            var current = source;
 
             AvlTreeTarget<T> res = null;
 
@@ -40,12 +53,12 @@ namespace MvvmKit
             return res;
         }
 
-        internal static AvlTreeTarget<T> Target<T, K>(this AvlTree<T> source, K initialPayload, 
+        public static AvlTreeTarget<T> Target<T, K>(this AvlTreeNode<T> source, K initialPayload, 
             Func<AvlTreeNode<T>, K, (AvlTreeNodeDirection, K)> selector)
         {
-            if (source.Root == null) return new AvlTreeTarget<T> { Parent = null, ChildDirection = AvlTreeNodeDirection.Root };
+            if (source == null) return new AvlTreeTarget<T> { Parent = null, ChildDirection = AvlTreeNodeDirection.Root };
 
-            var current = source.Root;
+            var current = source;
             var payload = initialPayload;
 
             AvlTreeTarget<T> res = null;
@@ -66,5 +79,63 @@ namespace MvvmKit
             return res;
         }
 
+        public static AvlTreeTarget<T> Target<T>(this AvlTree<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        {
+            return source.Root.Target(selector);
+        }
+
+        public static AvlTreeTarget<T> Target<T, K>(this AvlTree<T> source, K initialPayload,
+            Func<AvlTreeNode<T>, K, (AvlTreeNodeDirection, K)> selector)
+        {
+            return source.Root.Target(initialPayload, selector);
+        }
+
+        public static AvlTreeNode<T> Find<T>(this AvlTreeNode<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        {
+            if (source == null) return null;
+
+            var current = source;
+
+            while (current != null)
+            {
+                var nextDir = selector(current);
+                if (nextDir == AvlTreeNodeDirection.Root) return current;
+
+                current = nextDir == AvlTreeNodeDirection.Left ? current.Left : current.Right;
+            }
+
+            return null;           
+        }
+
+        public static AvlTreeNode<T> Find<T, K>(this AvlTreeNode<T> source, K initialPayload, Func<AvlTreeNode<T>, K, (AvlTreeNodeDirection, K)> selector)
+        {
+            if (source == null) return null;
+
+            var current = source;
+            var payload = initialPayload;
+
+            while (current != null)
+            {
+                var nextDir = AvlTreeNodeDirection.Root;
+
+                (nextDir, payload) = selector(current, payload);
+                if (nextDir == AvlTreeNodeDirection.Root) return current;
+
+                current = nextDir == AvlTreeNodeDirection.Left ? current.Left : current.Right;
+            }
+
+            return null;
+        }
+
+
+        public static AvlTreeNode<T> Find<T>(this AvlTree<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        {
+            return source.Root.Find(selector);
+        }
+
+        public static AvlTreeNode<T> Find<T, K>(this AvlTree<T> source, K initialPayload, Func<AvlTreeNode<T>, K, (AvlTreeNodeDirection, K)> selector)
+        {
+            return source.Root.Find(initialPayload, selector);
+        }
     }
 }

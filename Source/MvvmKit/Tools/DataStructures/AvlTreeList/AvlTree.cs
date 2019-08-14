@@ -94,15 +94,6 @@ namespace MvvmKit
             return count;
         }
 
-        private AvlTreeNodeDirection _directionOf(AvlTreeNode<T> node)
-        {
-            if (node.Parent == null) return AvlTreeNodeDirection.Root;
-            if (node.Parent.Left == node) return AvlTreeNodeDirection.Left;
-            if (node.Parent.Right == node) return AvlTreeNodeDirection.Right;
-
-            throw new InvalidOperationException("Node has no relation to its parent");
-        }
-
         internal AvlTreeNode<T> InternalInsertNode(AvlTreeTarget<T> destination, AvlTreeNode<T> newNode)
         {
             // newnode should be dettached from the tree
@@ -125,7 +116,7 @@ namespace MvvmKit
             var dleft = node.Left;
             var dright = node.Right;
 
-            var direction = _directionOf(node);
+            var direction = node.Direction;
 
             if ((dleft == null) && (dright == null))
             {
@@ -178,7 +169,7 @@ namespace MvvmKit
                 var sparent = successor.Parent;
                 var sright = successor.Right; // may be null
 
-                // two cases. One of them is the the successor is the direct right child of the deleted node
+                // two cases. One of them is that the successor is the direct right child of the deleted node
                 // the second is that there is a deeper successor
                 if (successor == dright)
                 {
@@ -313,7 +304,7 @@ namespace MvvmKit
         {
             while (start != null)
             {
-                var direction = _directionOf(start);
+                var direction = start.Direction;
 
                 _recalc(start);
                 var parent = start.Parent;
@@ -365,7 +356,7 @@ namespace MvvmKit
             AvlTreeNode<T> parent = a.Parent; // may be null if A was root
             AvlTreeNode<T> c = b.Left; // may be null
 
-            var direction = _directionOf(a);
+            var direction = a.Direction;
 
             Debug.Assert(b != null);
 
@@ -403,7 +394,7 @@ namespace MvvmKit
             AvlTreeNode<T> parent = b.Parent; // may be null if B was root
             AvlTreeNode<T> c = a.Right; // may be null
 
-            var direction = _directionOf(b);
+            var direction = b.Direction;
 
             Debug.Assert(a != null);
 

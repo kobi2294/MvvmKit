@@ -132,6 +132,9 @@
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNodeDirection.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\OrderedAvlTree.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\SortedAvlTree.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\IConsole.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\StringConsole.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\TreePrinter.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
@@ -203,8 +206,6 @@
     <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
-    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree_o.cs" />
-    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode_o.cs" />
     <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
     <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
