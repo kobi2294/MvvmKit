@@ -14,6 +14,8 @@ namespace MvvmKit
 
         public Func<T, TVM, Task> Modifier { get; private set; }
 
+        public Action<CollectionChanges<T>> Logger { get; private set; }
+
         public ObservableCollection<TVM> Target { get; private set; }
 
         public IStateCollectionReader<T> Source { get; private set; }
@@ -22,7 +24,6 @@ namespace MvvmKit
         {
             _resolver = resolver;
         }
-
 
         public ServiceCollectionAdapter<T, TVM> From(IStateCollectionReader<T> source)
         {
@@ -39,6 +40,12 @@ namespace MvvmKit
         public ServiceCollectionAdapter<T, TVM> ModifyWith(Func<T, TVM, Task> modifier)
         {
             Modifier = modifier;
+            return this;
+        }
+
+        public ServiceCollectionAdapter<T, TVM> LogWith(Action<CollectionChanges<T>> logger)
+        {
+            Logger = logger;
             return this;
         }
 
@@ -69,13 +76,15 @@ namespace MvvmKit
         {
             if (index < 0) index = Target.Count;
             var vm = await _generateNewItem();
-            await _readModel(source, vm);
             Target.Insert(index, vm);
+            await _readModel(source, vm);
             return vm;
         }
 
         private async Task OnSourceChanged(CollectionChanges<T> arg)
         {
+            Logger?.Invoke(arg);
+
             foreach (var change in arg)
             {
                 switch (change)
