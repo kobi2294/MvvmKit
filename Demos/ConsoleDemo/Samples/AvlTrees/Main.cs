@@ -1,6 +1,8 @@
 ﻿using MvvmKit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,39 +13,109 @@ namespace ConsoleDemo.Samples.AvlTrees
     {
         public static void Run()
         {
-            var t = new AvlTree<int>();
+            Console.BufferWidth = 2400;
+            var t = new SortedAvlTree<int>();
             var rand = new Random();
 
-            foreach (var item in Enumerable.Range(0, 201))
+            foreach (var item in Enumerable.Range(0, 100))
             {
+                var num = (item * 29) % 100;
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Adding {num}");
+                t.Add(num);
+                Console.ForegroundColor = ConsoleColor.White;
+                PrintTree(t);
+
+            }
+
+            foreach (var item in Enumerable.Range(100, 701).Reverse())
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Adding {item}");
+                Console.ForegroundColor = ConsoleColor.White;
                 t.Add(item);
-                if (item % 10 == 0) PrintTree(t);
+                if (item % 20 == 0) PrintTree(t);
             }
 
             t.CheckStructure();
 
             foreach (var item in Enumerable.Range(0, 41))
             {
-                Console.WriteLine($"{item*5}: {t[item*5]}");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{item*5}: {t[item*5].Item}");
             }
 
-            foreach (var item in Enumerable.Range(0, 201))
+            foreach (var item in Enumerable.Range(0, 781))
             {
                 var index = rand.Next(0, t.Count);
-                t.RemoveAt(index);
-                Console.WriteLine($"Removing {index}");
+                var remnode = t.RemoveAt(index);
 
-                if (t.Count % 10 == 5) PrintTree(t);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Removed [{index}] (item {remnode.Item}), tree count: {t.Count}, tree root: {t.Root.Item}");
+
+                t.CheckStructure();
+
+                Console.ForegroundColor = ConsoleColor.White;
+                if (t.Count % 20 == 5) PrintTree(t);
+
             }
 
+            // 20 items remaining
+            Console.WriteLine("-------------------");
+            Console.WriteLine("20 items remaining");
+            t.CheckStructure();
+
+            PrintTree(t);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Shuffling");
+
+            foreach (var item in Enumerable.Range(0, 50))
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                var fromIndex = rand.Next(0, t.Count);
+                var toIndex = rand.Next(0, t.Count);
+
+                var fromNode = t[fromIndex];
+                var toNode = t[toIndex];
+                Console.WriteLine($"Shuffle {item} [{fromIndex}] ({fromNode.Item}) <-----> [{toIndex}] ({toNode.Item})");
+
+                var tmp = fromNode.Item;
+
+                Console.WriteLine($"item[{fromIndex}]({fromNode.Item}) = {toNode.Item}");
+                fromNode.Item = toNode.Item;
+                var idx = t.IndexOf(fromNode);
+                Console.WriteLine($"Moved to: {idx} ");
+                Console.ForegroundColor = ConsoleColor.White;
+                PrintTree(t);
+                t.CheckStructure();
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"item[{toIndex}]({toNode.Item}) = {tmp}");
+                toNode.Item = tmp;
+                idx = t.IndexOf(toNode);
+                Console.WriteLine($"Moved to: {idx} ");
+
+                Console.WriteLine($"And original moved to {t.IndexOf(fromNode)}");
+                Console.WriteLine($"Tree Height: {t.Height}");
+                Console.ForegroundColor = ConsoleColor.White;
+                PrintTree(t);
+                t.CheckStructure();
+            }
         }
 
         public static void PrintTree<T>(AvlTree<T> tree)
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Count " + tree.Count);
-            PrintTreeNode(0, "T", tree.Root);
-            Console.WriteLine();
+            var console = new StringConsole();
+            tree.Root.PrintToConsole(console, topMargin: 0, leftMargin: 0);
+            var res = console.ToString();
+
+            Console.BufferWidth = Math.Max(Console.BufferWidth, console.BufferWidth);
+            Console.WriteLine(res);
+
+            //Console.ForegroundColor = ConsoleColor.White;
+            //Console.WriteLine("Count " + tree.Count);
+            //PrintTreeNode(0, "T", tree.Root);
+            //Console.WriteLine();
 
 
         }
@@ -65,10 +137,10 @@ namespace ConsoleDemo.Samples.AvlTrees
                     break;
             }
 
-            if (node.IsEmpty) Console.ForegroundColor = ConsoleColor.DarkBlue;
+            if (node == null) Console.ForegroundColor = ConsoleColor.DarkBlue;
 
             var indent = new string('│', level);
-            var val = node.IsEmpty ? " ** " : node.Value.ToString();
+            var val = node==null ? " ** " : node.Item.ToString();
 
             var nodechar = (node.Left == null) && (node.Right == null) ? '└' : '├';
 
@@ -78,6 +150,115 @@ namespace ConsoleDemo.Samples.AvlTrees
                 PrintTreeNode(level + 1, "L", node.Left);
             if (node.Right != null)
                 PrintTreeNode(level + 1, "R", node.Right);
+        }
+
+        public static void Benchmark()
+        {
+            // Benchmark results for 1,000,000 items:
+            //          Build Time  | Search Time
+            // Tree            5.4  |   1.3 
+            // List          191.1  | 446.1
+
+            // Benchmark results for 500,000 items:
+            //          Build Time  | Search Time
+            // Tree            2.8  |   0.7
+            // List           45.0  | 111.3
+
+            // Benchmark results for 200,000 items:
+            //          Build Time  | Search Time
+            // Tree            1.0  |   0.3
+            // List            7.4  |  17.8
+
+            // Benchmark results for 100,000 items:
+            //          Build Time  | Search Time
+            // Tree            0.5  |   0.1
+            // List            1.8  |   4.5
+
+            // Benchmark results for 50,000 items:
+            //          Build Time  | Search Time
+            // Tree            0.2  |   0.1
+            // List            0.5  |   1.5
+
+            // Benchmark results for 20,000 items:
+            //          Build Time  | Search Time
+            // Tree           0.08  |  0.03
+            // List           0.08  |  0.20
+
+            // Benchmark results for 10,000 items:
+            //          Build Time  | Search Time
+            // Tree           0.04  |  0.01
+            // List           0.02  |  0.05
+
+            // Benchmark results for  5,000 items:
+            //          Build Time  | Search Time
+            // Tree          0.022  |  0.006
+            // List          0.004  |  0.012
+
+            // Benchmark results for  1,000 items:
+            //          Build Time  | Search Time
+            // Tree         0.0088  |  0.0018
+            // List         0.0002  |  0.0006
+
+            var amount = 2;
+
+            var tree = new SortedAvlTree<int>();
+
+            var list = new List<int>();
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"Adding {amount} items to tree");
+            Stopwatch s = new Stopwatch();
+            s.Reset();
+            s.Start();
+            for (int i = 0; i < amount; i++)
+            {
+                tree.Add(i);
+            }
+            s.Stop();
+            Console.WriteLine($"Tree: Size = {tree.Count}, Height = {tree.Height}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Ellapsed time: {s.Elapsed.TotalSeconds:N4} seconds");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"Adding {amount} items to list");
+            s.Reset();
+            s.Start();
+            for (int i = 0; i < amount; i++)
+            {
+                list.Insert(0, i);
+            }
+            s.Stop();
+            Console.WriteLine($"List: Size = {list.Count}");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Ellapsed time: {s.Elapsed.TotalSeconds:N4} seconds");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"Searching {amount} items in tree");
+            s.Reset();
+            s.Start();
+            for (int i = 0; i < amount; i++)
+            {
+                var node = tree.Find(n => n.Item == i
+                ? AvlTreeNodeDirection.Root
+                : n.Item < i ? AvlTreeNodeDirection.Right : AvlTreeNodeDirection.Left);
+
+                var index = tree.IndexOf(node);
+            }
+            s.Stop();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Ellapsed time: {s.Elapsed.TotalSeconds:N4} seconds");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"Searching {amount} items in list");
+            s.Reset();
+            s.Start();
+            for (int i = 0; i < amount; i++)
+            {
+                var index = list.IndexOf(i);
+            }
+            s.Stop();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Ellapsed time: {s.Elapsed.TotalSeconds:N4} seconds");
         }
 
 

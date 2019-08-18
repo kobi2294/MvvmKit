@@ -37,6 +37,11 @@ namespace MvvmKit
             return new HashSet<T>(source);
         }
 
+        public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
+        {
+            return new ObservableCollection<T>(source);
+        }
+
         public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> source)
         {
             var builder = new ReadOnlyCollectionBuilder<T>(source);
