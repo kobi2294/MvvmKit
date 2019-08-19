@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public abstract class AvlTree<T>
+    public abstract class AvlTree<T>: IEnumerable<AvlTreeNode<T>>
     {
+        private int _version = 0;
+
         public AvlTree()
         {}
 
@@ -37,9 +40,17 @@ namespace MvvmKit
 
         public AvlTreeNode<T> Clear()
         {
-            var root = Root;
-            _dettachFromParent(Root);
-            return root;
+            return InternalClear();
+        }
+
+        public IEnumerator<AvlTreeNode<T>> GetEnumerator()
+        {
+            return InternalEnumerate();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public abstract void Reset(IEnumerable<T> collection);
@@ -52,50 +63,25 @@ namespace MvvmKit
 
         internal abstract void OnItemChanged(AvlTreeNode<T> node);
 
-        internal abstract void CheckStructureOfNode(AvlTreeNode<T> node);
+        protected abstract void CheckStructureOfNode(AvlTreeNode<T> node);
 
-        private int _leftSize(AvlTreeNode<T> node) => node.Left == null ? 0 : node.Left.Size;
 
-        private int _rightSize(AvlTreeNode<T> node) => node.Right == null ? 0 : node.Right.Size;
 
-        private int _size(AvlTreeNode<T> node) => node == null ? 0 : node.Size;
-
-        private AvlTreeNode<T> rec_getNodeAt(AvlTreeNode<T> node, int index)
+        internal IEnumerator<AvlTreeNode<T>> InternalEnumerate()
         {
-            var nodeSize = _size(node);
-            if ((index < 0) || (index >= nodeSize)) throw new ArgumentOutOfRangeException(nameof(index));
-
-            int leftSize = _leftSize(node);
-            if (index < leftSize) return rec_getNodeAt(node.Left, index);
-            if (index > leftSize) return rec_getNodeAt(node.Right, index - leftSize - 1);
-
-            return node;
-        }
-
-        private int _indexOf(AvlTreeNode<T> node)
-        {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            // the index of a node is actually that number of nodes that are "before" it. That includes 
-            // left children, and left siblings, including ancestors that the node is "right child" of.
-
-
-            var count = _leftSize(node);
-            var cur = node;
-            while (cur.Parent != null)
+            var version = _version;
+            var all = _enumerate(Root);
+            foreach (var item in all)
             {
-                if (cur.Parent.Right == cur) // if cur is the right child of the parent
-                {
-                    count = count + _leftSize(cur.Parent) + 1; // count all the left descendants of the parent, and the parent itself
-                }
-                cur = cur.Parent;
+                if (_version != version)
+                    throw new InvalidOperationException("Tree was modified; enumeration operation may not execute.");
+                yield return item;
             }
-
-            return count;
         }
 
         internal AvlTreeNode<T> InternalInsertNode(AvlTreeTarget<T> destination, AvlTreeNode<T> newNode)
         {
+            _version++;
             // newnode should be dettached from the tree
             Debug.Assert(newNode != null);
             Debug.Assert(newNode.Parent == null);
@@ -112,6 +98,7 @@ namespace MvvmKit
 
         internal void InternalRemoveNode(AvlTreeNode<T> node)
         {
+            _version++;
             var parent = node.Parent;
             var dleft = node.Left;
             var dright = node.Right;
@@ -227,6 +214,91 @@ namespace MvvmKit
             Debug.Assert(node.Balance == 0);
         }
 
+        internal AvlTreeNode<T> InternalClear()
+        {
+            _version++;
+            var root = Root;
+            _dettachFromParent(Root);
+            return root;
+        }
+
+        internal void InternalReset(T[] items)
+        {
+            InternalClear();
+            var root = rec_createRangeSubtree(items, 0, items.Length - 1);
+            if (root != null) _attachToParent(root, null, AvlTreeNodeDirection.Root);
+        }
+
+
+        private int _leftSize(AvlTreeNode<T> node) => node.Left == null ? 0 : node.Left.Size;
+
+        private int _rightSize(AvlTreeNode<T> node) => node.Right == null ? 0 : node.Right.Size;
+
+        private int _size(AvlTreeNode<T> node) => node == null ? 0 : node.Size;
+
+        private AvlTreeNode<T> rec_getNodeAt(AvlTreeNode<T> node, int index)
+        {
+            var nodeSize = _size(node);
+            if ((index < 0) || (index >= nodeSize)) throw new ArgumentOutOfRangeException(nameof(index));
+
+            int leftSize = _leftSize(node);
+            if (index < leftSize) return rec_getNodeAt(node.Left, index);
+            if (index > leftSize) return rec_getNodeAt(node.Right, index - leftSize - 1);
+
+            return node;
+        }
+
+        private int _indexOf(AvlTreeNode<T> node)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+
+            // the index of a node is actually that number of nodes that are "before" it. That includes 
+            // left children, and left siblings, including ancestors that the node is "right child" of.
+
+
+            var count = _leftSize(node);
+            var cur = node;
+            while (cur.Parent != null)
+            {
+                if (cur.Parent.Right == cur) // if cur is the right child of the parent
+                {
+                    count = count + _leftSize(cur.Parent) + 1; // count all the left descendants of the parent, and the parent itself
+                }
+                cur = cur.Parent;
+            }
+
+            return count;
+        }
+
+        private IEnumerable<AvlTreeNode<T>> _enumerate(AvlTreeNode<T> node)
+        {
+            var res = Enumerable.Empty<AvlTreeNode<T>>();
+            if (node == null) return res;
+
+            if (node.Left != null) res = res.Concat(_enumerate(node.Left));
+            res = res.Concat(node);
+            if (node.Right != null) res = res.Concat(_enumerate(node.Right));
+
+            return res;
+        }
+
+        private AvlTreeNode<T> rec_createRangeSubtree(T[] items, int start, int end)
+        {
+            if (start > end) return null;
+
+            var mid = (start + end) / 2;
+            var item = items[mid];
+
+            var node = new AvlTreeNode<T>(item);
+            var left = rec_createRangeSubtree(items, start, mid - 1);
+            var right = rec_createRangeSubtree(items, mid + 1, end);
+
+            if (left != null) _attachToParent(left, node, AvlTreeNodeDirection.Left);
+            if (right != null) _attachToParent(right, node, AvlTreeNodeDirection.Right);
+            _recalc(node);
+            return node;
+        }
+
         private void _attachToParent(AvlTreeNode<T> node, AvlTreeNode<T> parent, AvlTreeNodeDirection direction)
         {
             // if node != null, node.parent should be free
@@ -298,7 +370,6 @@ namespace MvvmKit
             Root = null;
             if (node != null) node._tree = null;            
         }
-
 
         private void _rebalanceAfterChange(AvlTreeNode<T> start)
         {
@@ -460,7 +531,5 @@ namespace MvvmKit
         {
             rec_checkStructure(Root, new HashSet<AvlTreeNode<T>>());
         }
-
-
     }
 }

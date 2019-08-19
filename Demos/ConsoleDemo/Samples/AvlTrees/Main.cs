@@ -199,9 +199,8 @@ namespace ConsoleDemo.Samples.AvlTrees
             // Tree         0.0088  |  0.0018
             // List         0.0002  |  0.0006
 
-            var amount = 2;
+            var amount = 1000000;
 
-            var tree = new SortedAvlTree<int>();
 
             var list = new List<int>();
 
@@ -210,23 +209,19 @@ namespace ConsoleDemo.Samples.AvlTrees
             Stopwatch s = new Stopwatch();
             s.Reset();
             s.Start();
-            for (int i = 0; i < amount; i++)
-            {
-                tree.Add(i);
-            }
+            var tree = Enumerable.Range(0, amount).ToAvlTree();
             s.Stop();
             Console.WriteLine($"Tree: Size = {tree.Count}, Height = {tree.Height}");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"Ellapsed time: {s.Elapsed.TotalSeconds:N4} seconds");
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"Adding {amount} items to list");
             s.Reset();
             s.Start();
-            for (int i = 0; i < amount; i++)
-            {
-                list.Insert(0, i);
-            }
+            list = Enumerable.Range(0, amount).OrderBy(x => x).ToList();
             s.Stop();
             Console.WriteLine($"List: Size = {list.Count}");
             Console.ForegroundColor = ConsoleColor.Green;

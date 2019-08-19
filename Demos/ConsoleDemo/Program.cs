@@ -24,7 +24,15 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.AvlTrees.Main.Run();
+            var tree = new SortedAvlTree<int>() { 1, 2, 3, 4 };
+            var arr = tree.Select(n => n.Item).ToArray();
+
+            foreach (var item in tree)
+            {
+                tree.Remove(item);
+            }
+
+            Samples.AvlTrees.Main.Benchmark();
 
             Console.ReadLine();
         }

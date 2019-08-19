@@ -62,7 +62,7 @@ namespace MvvmKit
 
         public override void Reset(IEnumerable<T> collection)
         {
-            throw new NotImplementedException();
+            InternalReset(collection.OrderBy(x => x, _comparer).ToArray());
         }
 
         internal override void OnItemChanged(AvlTreeNode<T> node)
@@ -72,7 +72,7 @@ namespace MvvmKit
             _add(node);
         }
 
-        internal override void CheckStructureOfNode(AvlTreeNode<T> node)
+        protected override void CheckStructureOfNode(AvlTreeNode<T> node)
         {
             if (node.Left != null)
             {
