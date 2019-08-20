@@ -105,7 +105,7 @@ namespace ConsoleDemo.Samples.AvlTrees
 
         public static void TestOredered()
         {
-            var tree = 1.Yield().Concat(5, 15, 20).ToAvlTree();
+            var tree = 1.Yield().Concat(5, 15, 20, 40, 60 , 80).ToAvlTree();
             Console.ForegroundColor = ConsoleColor.Yellow;
             PrintTree(tree);
 
