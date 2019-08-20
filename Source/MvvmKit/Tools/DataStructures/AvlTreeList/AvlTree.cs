@@ -25,6 +25,30 @@ namespace MvvmKit
 
         public int IndexOf(AvlTreeNode<T> node) => _indexOf(node);
 
+        public AvlTreeNode<T> SuccessorOf(AvlTreeNode<T> node)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return InternalSuccessor(node);
+        }
+
+        public AvlTreeNode<T> PredecessorOf(AvlTreeNode<T> node)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return InternalPredecessor(node);
+        }
+
+        public AvlTreeNode<T> FirstInSubtree(AvlTreeNode<T> node)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return InternalFirstInSubtree(node);
+        }
+
+        public AvlTreeNode<T> LastInSubtree(AvlTreeNode<T> node)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return InternalLastInSubtree(node);
+        }
+
         public AvlTreeNode<T> RemoveAt(int index)
         {
             var node = this[index];
@@ -67,7 +91,77 @@ namespace MvvmKit
 
         protected abstract void CheckStructureOfNode(AvlTreeNode<T> node);
 
+        internal AvlTreeNode<T> InternalSuccessor(AvlTreeNode<T> node)
+        {
+            Debug.Assert(node != null);
 
+            // 3 cases:
+            // case 1 - there is a right subtree, in that case, the successor is the first in the right sub tree.
+            // case 2 - there is no right subtree, but there is a parent - the successor is the first parent "on the right" - so it's child is a left child
+            // case 3 - no parent, or we keep clibing up parents where we are the "child on the right" - there is no successor
+
+            // case 1
+            if (node.Right != null) return InternalFirstInSubtree(node.Right);
+
+            var cur = node;
+            while (cur.Parent != null)
+            {
+                // case 2
+                // if we are the left child, so the parent is on our right - this is the successor
+                if (cur.Direction == AvlTreeNodeDirection.Left) return cur.Parent;
+
+                // else - keep climbing up
+                cur = cur.Parent;
+            }
+
+            // case 3 - no more parents - no successor
+            return null;            
+        }
+
+        internal AvlTreeNode<T> InternalPredecessor(AvlTreeNode<T> node)
+        {
+            Debug.Assert(node != null);
+
+            // 3 cases:
+            // case 1 - there is a left subtree, in that case, the predecessor is the last in the left sub tree.
+            // case 2 - there is no left subtree, but there is a parent - the predecessor is the first parent "on the left" - so it's child is a right child
+            // case 3 - no parent, or we keep clibing up parents where we are the "child on the left" - there is no predecessor
+
+            // case 1
+            if (node.Left != null) return InternalLastInSubtree(node.Left);
+
+            var cur = node;
+            while (cur.Parent != null)
+            {
+                // case 2
+                // if we are the right child, so the parent is on our left - this is the predecessor
+                if (cur.Direction == AvlTreeNodeDirection.Right) return cur.Parent;
+
+                // else - keep climbing up
+                cur = cur.Parent;
+            }
+
+            // case 3 - no more parents - no predecessor
+            return null;
+        }
+
+        internal AvlTreeNode<T> InternalFirstInSubtree(AvlTreeNode<T> node)
+        {
+            Debug.Assert(node != null);
+
+            var cur = node;
+            while (cur.Left != null) cur = cur.Left;
+            return cur;            
+        }
+
+        internal AvlTreeNode<T> InternalLastInSubtree(AvlTreeNode<T> node)
+        {
+            Debug.Assert(node != null);
+
+            var cur = node;
+            while (cur.Right != null) cur = cur.Right;
+            return cur;
+        }
 
         internal IEnumerator<AvlTreeNode<T>> InternalEnumerate()
         {

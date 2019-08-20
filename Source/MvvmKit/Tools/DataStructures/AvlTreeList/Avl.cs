@@ -109,22 +109,6 @@ namespace MvvmKit
             return source.Root.Target(initialPayload, selector);
         }
 
-        public static AvlTreeNode<T> Find<T>(this AvlTreeNode<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
-        {
-            if (source == null) return null;
-
-            var current = source;
-
-            while (current != null)
-            {
-                var nextDir = selector(current);
-                if (nextDir == AvlTreeNodeDirection.Root) return current;
-
-                current = nextDir == AvlTreeNodeDirection.Left ? current.Left : current.Right;
-            }
-
-            return null;           
-        }
 
         public static AvlTreeNode<T> Find<T, K>(this AvlTreeNode<T> source, K initialPayload, Func<AvlTreeNode<T>, K, (AvlTreeNodeDirection, K)> selector)
         {
@@ -146,6 +130,22 @@ namespace MvvmKit
             return null;
         }
 
+        public static AvlTreeNode<T> Find<T>(this AvlTreeNode<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
+        {
+            if (source == null) return null;
+
+            var current = source;
+
+            while (current != null)
+            {
+                var nextDir = selector(current);
+                if (nextDir == AvlTreeNodeDirection.Root) return current;
+
+                current = nextDir == AvlTreeNodeDirection.Left ? current.Left : current.Right;
+            }
+
+            return null;           
+        }
 
         public static AvlTreeNode<T> Find<T>(this AvlTree<T> source, Func<AvlTreeNode<T>, AvlTreeNodeDirection> selector)
         {
@@ -156,5 +156,7 @@ namespace MvvmKit
         {
             return source.Root.Find(initialPayload, selector);
         }
+
+
     }
 }
