@@ -309,7 +309,7 @@ namespace ConsoleDemo.Samples.AvlTrees
             for (int i = 0; i < amount; i++)
             {
                 var node = tree.Find(n => n.Item == i
-                ? AvlTreeNodeDirection.Root
+                ? AvlTreeNodeDirection.None
                 : n.Item < i ? AvlTreeNodeDirection.Right : AvlTreeNodeDirection.Left);
 
                 var index = tree.IndexOf(node);

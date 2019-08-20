@@ -86,16 +86,16 @@ namespace MvvmKit
 
             var newNode = new AvlTreeNode<T>(item);
             if (anchor == null)
-                return InternalInsertNode(new AvlTreeTarget<T> { Parent = null, ChildDirection = AvlTreeNodeDirection.Root }, newNode);
+                return InternalInsertNode(AvlTreeEdge<T>.Root, newNode);
 
-            var target = anchor.Target(index, (node, idx) =>
+            var edge = anchor.FindFree(index, (node, idx) =>
             {
                 int leftSize = node.LeftSize;
-                if (idx <= leftSize) return (AvlTreeNodeDirection.Left, idx);
-                return (AvlTreeNodeDirection.Right, idx - leftSize - 1);
+                if (idx <= leftSize) return (node.EdgeLeft(), idx);
+                return (node.EdgeRight(), idx - leftSize - 1);
             });
 
-            return InternalInsertNode(target, newNode);
+            return InternalInsertNode(edge, newNode);
         }
 
         public override void Reset(IEnumerable<T> collection)

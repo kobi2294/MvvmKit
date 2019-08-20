@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            Samples.AvlTrees.Main.TestOredered();
+            Samples.AvlTrees.Main.Benchmark();
 
             Console.ReadLine();
         }

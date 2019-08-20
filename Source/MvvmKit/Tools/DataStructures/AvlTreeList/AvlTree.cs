@@ -175,8 +175,10 @@ namespace MvvmKit
             }
         }
 
-        internal AvlTreeNode<T> InternalInsertNode(AvlTreeTarget<T> destination, AvlTreeNode<T> newNode)
+        internal AvlTreeNode<T> InternalInsertNode(AvlTreeEdge<T> edge, AvlTreeNode<T> newNode)
         {
+            Debug.Assert(edge.IsChildOrRoot);
+
             if (Count == int.MaxValue)
                 throw new InvalidOperationException("Maximum size reached");
 
@@ -188,10 +190,9 @@ namespace MvvmKit
             Debug.Assert(newNode.Right == null);
             Debug.Assert(newNode._tree == null);
 
-            var parent = destination.Parent;
-            _attachToParent(newNode, parent, destination.ChildDirection);
+            _attachToParentEdge(newNode, edge);
 
-            _rebalanceAfterChange(parent);
+            _rebalanceAfterChange(edge.Source);
             return newNode;
         }
 
@@ -226,7 +227,7 @@ namespace MvvmKit
                  */
                 _dettachFromParent(dleft);
                 _dettachFromParent(node);
-                _attachToParent(dleft, parent, direction);
+                _attachToParentEdge(dleft, parent.EdgeTo(direction));
 
                 _rebalanceAfterChange(parent);
             }
@@ -241,7 +242,7 @@ namespace MvvmKit
                  */
                 _dettachFromParent(dright);
                 _dettachFromParent(node);
-                _attachToParent(dright, parent, direction);
+                _attachToParentEdge(dright, parent.EdgeTo(direction));
 
                 _rebalanceAfterChange(parent);
             }
@@ -268,8 +269,8 @@ namespace MvvmKit
                     _dettachFromParent(dright);
                     _dettachFromParent(node);
                     _dettachFromParent(dleft);
-                    _attachToParent(dright, parent, direction);
-                    _attachToParent(dleft, dright, AvlTreeNodeDirection.Left);
+                    _attachToParentEdge(dright, parent.EdgeTo(direction));
+                    _attachToParentEdge(dleft, dright.EdgeLeft());
                     _rebalanceAfterChange(dright);
 
                 } else
@@ -294,10 +295,10 @@ namespace MvvmKit
                     _dettachFromParent(dleft);
                     _dettachFromParent(node);
 
-                    _attachToParent(successor, parent, direction);
-                    _attachToParent(dleft, successor, AvlTreeNodeDirection.Left);
-                    _attachToParent(dright, successor, AvlTreeNodeDirection.Right);
-                    _attachToParent(sright, sparent, AvlTreeNodeDirection.Left);
+                    _attachToParentEdge(successor, parent.EdgeTo(direction));
+                    _attachToParentEdge(dleft, successor.EdgeLeft());
+                    _attachToParentEdge(dright, successor.EdgeRight());
+                    _attachToParentEdge(sright, sparent.EdgeLeft());
 
                     _rebalanceAfterChange(sparent);
                 }
@@ -325,7 +326,7 @@ namespace MvvmKit
         {
             InternalClear();
             var root = rec_createRangeSubtree(items, 0, items.Length - 1);
-            if (root != null) _attachToParent(root, null, AvlTreeNodeDirection.Root);
+            if (root != null) _attachToParentEdge(root, AvlTreeEdge<T>.Root);
         }
 
 
@@ -392,40 +393,33 @@ namespace MvvmKit
             var left = rec_createRangeSubtree(items, start, mid - 1);
             var right = rec_createRangeSubtree(items, mid + 1, end);
 
-            if (left != null) _attachToParent(left, node, AvlTreeNodeDirection.Left);
-            if (right != null) _attachToParent(right, node, AvlTreeNodeDirection.Right);
+            if (left != null) _attachToParentEdge(left, node.EdgeLeft());
+            if (right != null) _attachToParentEdge(right, node.EdgeRight());
             _recalc(node);
             return node;
         }
 
-        private void _attachToParent(AvlTreeNode<T> node, AvlTreeNode<T> parent, AvlTreeNodeDirection direction)
+        private void _attachToParentEdge(AvlTreeNode<T> node, AvlTreeEdge<T> edge)
         {
+            Debug.Assert(edge.IsChildOrRoot);
+
             // if node != null, node.parent should be free
-            Debug.Assert((node == null) || (node.Parent == null));  
+            Debug.Assert((node == null) || (node.Parent == null));
 
-            // if direction is not root, parent should contain something
-            Debug.Assert((direction == AvlTreeNodeDirection.Root) || (parent != null));
+            // if edge is child then the target should be free;
+            Debug.Assert((edge.IsRoot) || (edge.Target() == null));
 
-            // if direction is root, parent should be null
-            Debug.Assert((direction != AvlTreeNodeDirection.Root) || (parent == null));
-
-            // if direction is left, parent.left should be free
-            Debug.Assert((direction != AvlTreeNodeDirection.Left) || (parent.Left == null));
-
-            // if direction is right, parent.right should be free
-            Debug.Assert((direction != AvlTreeNodeDirection.Right) || (parent.Right == null));
-
-            if (parent == null)
+            if (edge.IsRoot)
             {
                 _setAsRoot(node);
-            } else if (direction == AvlTreeNodeDirection.Left)
+            } else if (edge.Direction == AvlTreeNodeDirection.Left)
             {
-                parent.Left = node;
-                if (node != null) node.Parent = parent;
+                edge.Source.Left = node;
+                if (node != null) node.Parent = edge.Source;
             } else
             {
-                parent.Right = node;
-                if (node != null) node.Parent = parent;
+                edge.Source.Right = node;
+                if (node != null) node.Parent = edge.Source;
             }
         }
 
@@ -537,9 +531,9 @@ namespace MvvmKit
             _dettachFromParent(b); // b from a
             _dettachFromParent(c); // c from b
 
-            _attachToParent(c, a, AvlTreeNodeDirection.Right);
-            _attachToParent(a, b, AvlTreeNodeDirection.Left);
-            _attachToParent(b, parent, direction);
+            _attachToParentEdge(c, a.EdgeRight());
+            _attachToParentEdge(a, b.EdgeLeft());
+            _attachToParentEdge(b, parent.EdgeTo(direction));
 
             _recalc(a);
             _recalc(b);
@@ -575,9 +569,9 @@ namespace MvvmKit
             _dettachFromParent(a); // a from b
             _dettachFromParent(c); // c from a
 
-            _attachToParent(c, b, AvlTreeNodeDirection.Left);
-            _attachToParent(b, a, AvlTreeNodeDirection.Right);
-            _attachToParent(a, parent, direction);
+            _attachToParentEdge(c, b.EdgeLeft());
+            _attachToParentEdge(b, a.EdgeRight());
+            _attachToParentEdge(a, parent.EdgeTo(direction));
 
             _recalc(b);
             _recalc(a);

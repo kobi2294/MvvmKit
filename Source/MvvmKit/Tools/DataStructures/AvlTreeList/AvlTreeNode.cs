@@ -55,7 +55,7 @@ namespace MvvmKit
 
         private AvlTreeNodeDirection _getDirection()
         {
-            if (Parent == null) return AvlTreeNodeDirection.Root;
+            if (Parent == null) return AvlTreeNodeDirection.None;
             if (Parent.Left == this) return AvlTreeNodeDirection.Left;
             if (Parent.Right == this) return AvlTreeNodeDirection.Right;
             throw new SystemException("Tree node relation to parent is inconsistant");

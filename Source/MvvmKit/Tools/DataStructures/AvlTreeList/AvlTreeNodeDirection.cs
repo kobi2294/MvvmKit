@@ -9,8 +9,9 @@ namespace MvvmKit
     // What is the relation of the node to it's parent. Either it is a left child, a right child or the root
     public enum AvlTreeNodeDirection
     {
-        Root,
+        None,
+        Parent,
         Left, 
-        Right
+        Right, 
     }
 }

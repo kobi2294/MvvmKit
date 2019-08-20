@@ -42,8 +42,6 @@ namespace MvvmKit
         {
         }
 
-
-
         public AvlTreeNode<T> Add(T item)
         {
             return _add(new AvlTreeNode<T>(item));
@@ -52,11 +50,11 @@ namespace MvvmKit
         private AvlTreeNode<T> _add(AvlTreeNode<T> node)
         {
             var item = node.Item;
-            var target = this.Target(n => _comparer.Compare(item, n.Item) > 0
-                ? AvlTreeNodeDirection.Right
-                : AvlTreeNodeDirection.Left);
+            var edge = this.FindFree(n => _comparer.Compare(item, n.Item) > 0
+                ? n.EdgeRight()
+                : n.EdgeLeft());
 
-            return InternalInsertNode(target, node);
+            return InternalInsertNode(edge, node);
         }
 
 

@@ -128,7 +128,7 @@
     <Compile Include="Tools\DataStructures\AvlTreeList\Avl.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode.cs" />
-    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeTarget.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeEdge.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNodeDirection.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\OrderedAvlTree.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\SortedAvlTree.cs" />
