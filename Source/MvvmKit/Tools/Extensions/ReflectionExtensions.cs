@@ -16,7 +16,7 @@ namespace MvvmKit
 
         private static IEnumerable<PropertyInfo> _allPRopertiesOfInterface(this Type type)
         {
-            return type.AsIEnumerable()
+            return type.Yield()
                 .Concat(type.GetInterfaces())
                 .SelectMany(i => i.GetProperties());
         }

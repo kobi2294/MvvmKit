@@ -103,6 +103,81 @@ namespace ConsoleDemo.Samples.AvlTrees
             }
         }
 
+        public static void TestOredered()
+        {
+            var tree = 1.Yield().Concat(5, 15, 20).ToAvlTree();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("InsertAt(2, 10)");
+            tree.InsertAt(2, 10);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("AddFirst(0)");
+            tree.AddFirst(0);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("AddLast(100)");
+            tree.AddLast(100);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("AddBefore(node(15), 14)");
+            var anchor = tree.Find(15);
+            tree.AddBefore(anchor, 14);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("AddAfter(node(15), 16)");
+            anchor = tree.Find(15);
+            var sixteen = tree.AddAfter(anchor, 16);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("AddAfter(node(16), 17)");
+            tree.AddAfter(sixteen, 17);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(tree);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Sort by units digit");
+            var desc = tree.Items.ToSortedAvlTree(n => n % 10);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(desc);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("add 13 to sorted");
+            desc.Add(13);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(desc);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("add 122 to sorted");
+            desc.Add(122);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(desc);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("add 1222 to sorted");
+            desc.Add(1222);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(desc);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Rebuild");
+            desc = desc.Items.ToSortedAvlTree(n => n % 10);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            PrintTree(desc);
+        }
+
         public static void PrintTree<T>(AvlTree<T> tree)
         {
             var console = new StringConsole();

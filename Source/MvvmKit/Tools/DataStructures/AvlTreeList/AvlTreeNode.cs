@@ -23,6 +23,9 @@ namespace MvvmKit
 
         public AvlTreeNodeDirection Direction => _getDirection();
 
+        public int LeftSize => Left?.Size ?? 0;
+        public int RightSize => Right?.Size ?? 0;
+
         public AvlTree<T> Tree => _getTree();
 
         public AvlTreeNode<T> Parent { get; internal set; }

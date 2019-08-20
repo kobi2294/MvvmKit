@@ -43,6 +43,8 @@ namespace MvvmKit
             return InternalClear();
         }
 
+        public IEnumerable<T> Items => this.Select(node => node.Item);
+
         public IEnumerator<AvlTreeNode<T>> GetEnumerator()
         {
             return InternalEnumerate();
@@ -81,6 +83,9 @@ namespace MvvmKit
 
         internal AvlTreeNode<T> InternalInsertNode(AvlTreeTarget<T> destination, AvlTreeNode<T> newNode)
         {
+            if (Count == int.MaxValue)
+                throw new InvalidOperationException("Maximum size reached");
+
             _version++;
             // newnode should be dettached from the tree
             Debug.Assert(newNode != null);

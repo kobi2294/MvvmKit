@@ -18,6 +18,25 @@ namespace MvvmKit
             return new SortedAvlTree<T>(values);
         }
 
+        public static SortedAvlTree<T> ToSortedAvlTree<T>(this IEnumerable<T> values, IComparer<T> comparer)
+        {
+            return new SortedAvlTree<T>(values, comparer);
+        }
+
+        public static SortedAvlTree<T> ToSortedAvlTree<T>(this IEnumerable<T> values, Func<T, T, int> comparer)
+        {
+            return new SortedAvlTree<T>(values, comparer.ToComparer());
+        }
+
+        public static SortedAvlTree<T> ToSortedAvlTree<T, K>(this IEnumerable<T> values, Func<T, K> orderBy)
+        {
+            Func<T, T, int> comparer = (t1, t2) => Comparer<K>.Default.Compare(orderBy(t1), orderBy(t2));
+
+            return new SortedAvlTree<T>(values, comparer.ToComparer());
+        }
+
+
+
         public static string ToVisualString<T>(this AvlTreeNode<T> source, string textFormat = "{0}", int spacing = 2, int topMargin = 1, int leftMargin = 1)
         {
             var console = new StringConsole();
