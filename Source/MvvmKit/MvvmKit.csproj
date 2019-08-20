@@ -126,6 +126,16 @@
     <Compile Include="Services\State\ServiceCollectionField.cs" />
     <Compile Include="Tools\Async\ContextDelegates\IAsyncEventWithData.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncLazyInit.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\Avl.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeTarget.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNodeDirection.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\OrderedAvlTree.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\SortedAvlTree.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\IConsole.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\StringConsole.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\TreePrinter.cs" />
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
@@ -198,8 +208,6 @@
     <Compile Include="Tools\Async\AsyncContextRunner.cs" />
     <Compile Include="Tools\Async\SingleThreadTaskScheduler.cs" />
     <Compile Include="Tools\Async\Tasks.cs" />
-    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree.cs" />
-    <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode.cs" />
     <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
     <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />

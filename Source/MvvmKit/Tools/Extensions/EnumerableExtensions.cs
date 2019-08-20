@@ -17,7 +17,7 @@ namespace MvvmKit
         private static MethodInfo CastMethod = typeof(Enumerable).GetMethod("Cast", new[] { typeof(IEnumerable) });
         private static MethodInfo ToListMethod = typeof(Enumerable).GetMethods().Where(m => m.Name == "ToList").FirstOrDefault();
 
-        public static IEnumerable<T> AsIEnumerable<T>(this T obj)
+        public static IEnumerable<T> Yield<T>(this T obj)
         {
             yield return obj;
         }

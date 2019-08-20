@@ -44,7 +44,7 @@ namespace MvvmKit.HeckelDiff
 
             public override int GetHashCode()
             {
-                var members = OldCounter.AsIEnumerable<object>()
+                var members = OldCounter.Yield<object>()
                     .Concat(OldItem)
                     .Concat(NewCounter)
                     .Concat(OldNumbers);

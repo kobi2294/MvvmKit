@@ -22,9 +22,9 @@ namespace ConsoleDemo
     class Program
     {
 
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
-            await Samples.ServiceState.Test.Run();
+            Samples.AvlTrees.Main.TestOredered();
 
             Console.ReadLine();
         }

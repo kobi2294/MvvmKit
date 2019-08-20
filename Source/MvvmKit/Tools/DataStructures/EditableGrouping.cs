@@ -20,7 +20,7 @@ namespace MvvmKit
         public EditableGrouping(K key, T value)
         {
             _key = key;
-            _values = new HashSet<T>(value.AsIEnumerable());
+            _values = new HashSet<T>(value.Yield());
         }
 
         public EditableGrouping(K key, IEnumerable<T> values)
