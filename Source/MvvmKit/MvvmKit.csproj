@@ -261,6 +261,7 @@
     <Compile Include="Ui\Controls\Design Time Support\SelectiveResources.cs" />
     <Compile Include="Ui\Controls\Navigator.cs" />
     <Compile Include="Ui\Controls\NavigatorItem.cs" />
+    <Compile Include="Ui\Controls\PopupEx.cs" />
     <Compile Include="Ui\Controls\TransitionContentControl.cs" />
     <Compile Include="Ui\Controls\TransitionDirection.cs" />
     <Compile Include="Ui\Tools\ConverterExtension.cs" />

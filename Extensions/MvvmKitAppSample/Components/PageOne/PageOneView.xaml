@@ -7,7 +7,7 @@
     xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
     xmlns:local="clr-namespace:MvvmKitAppSample.Components.PageOne"
     mc:Ignorable="d" 
-    d:DesignHeight="300" d:DesignWidth="300"
+    d:DesignHeight="300" d:DesignWidth="500"
     d:DataContext="{StaticResource dt.PageOne.PageOneVm}"
     >
     <UserControl.Resources>
@@ -39,6 +39,35 @@
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
             <TextBox x:Name="txtbox" Width="100"/>
             <Button Content="Add" Command="{Binding AddCommand}" CommandParameter="{Binding ElementName=txtbox, Path=Text}"/>
+
+            <CheckBox x:Name="tgl" Margin="20,0,0,0">Test Popup</CheckBox>
+            <CheckBox x:Name="tglIsTopMost" Margin="20,0,0,0" IsChecked="True">Is Top Most</CheckBox>
+            <t:PopupEx PlacementTarget="{Binding ElementName=tgl}" Placement="Right"
+                   IsOpen="{Binding ElementName=tgl, Path=IsChecked}"
+                   IsTopmost="{Binding ElementName=tglIsTopMost, Path=IsChecked}"
+                   HorizontalOffset="-120" AllowsTransparency="True" VerticalOffset="10"
+                   >
+                <Border Width="100" Height="100" Background="Green" Opacity="0.8">
+                    <DockPanel>
+                        <TextBlock Text="This is a Test" FontSize="32" TextWrapping="Wrap"
+                                   Foreground="White"
+                                   />
+                    </DockPanel>
+                </Border>
+            </t:PopupEx>
+            <Popup PlacementTarget="{Binding ElementName=tgl}" Placement="Right"
+                   IsOpen="{Binding ElementName=tgl, Path=IsChecked}"                   
+                   HorizontalOffset="120" AllowsTransparency="True" VerticalOffset="10"
+                   >
+                <Border Width="100" Height="100" Background="Lime" Opacity="0.8">
+                    <DockPanel>
+                        <TextBlock Text="This is a Test" FontSize="32" TextWrapping="Wrap"
+                                   Foreground="Green"
+                                   />
+                    </DockPanel>
+                </Border>
+            </Popup>
+            <TextBlock Text="Can you see me?" Background="White"/>
         </StackPanel>
         <ItemsControl ItemsSource="{Binding Items}">
             <ItemsControl.ItemTemplate>
