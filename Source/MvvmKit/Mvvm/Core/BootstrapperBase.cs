@@ -67,7 +67,7 @@ namespace MvvmKit
         #endregion
 
         private HashSet<Type> _servicesToInit = new HashSet<Type>();
-
+        protected List<ServiceBase> _services;
         public UnityContainer Container { get; private set; }
 
         public IResolver Resolver => Container.Resolve<IResolver>();
@@ -94,17 +94,15 @@ namespace MvvmKit
             RegisterService<NavigationService>();
 
             await ConfigureContainerOverride();
-
+            _services = _servicesToInit.Select(type => Container.Resolve(type) as ServiceBase).ToList();
             // init services
-            var services = _servicesToInit.Select(type => Container.Resolve(type) as ServiceBase)
-                                          .Select(service => service.Init())
-                                          .ToList();
+            var servicesInitTasks = _services.Select(service => service.Init()).ToList();
 
             await OnServicesInitializing();
 
             await InitializeShellOverride();
 
-            await Task.WhenAll(services);
+            await Task.WhenAll(servicesInitTasks);
 
             await OnServicesInitialized();
         }
