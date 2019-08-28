@@ -18,6 +18,10 @@ namespace MvvmKitAppSample.Services
         private ServiceStore<IModel> _store = new ServiceStore<IModel>();
         public IStateCollectionReader<TodoItem> TodoItems;
 
+        public ItemsService()
+        {
+            TodoItems = _store.CreateReader(this, m => m.TodoItems);
+        }
 
         public Task AddItem(string caption)
         {
