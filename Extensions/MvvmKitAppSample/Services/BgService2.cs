@@ -1,6 +1,7 @@
 ﻿using MvvmKit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,15 @@ namespace MvvmKitAppSample.Services
             await base.OnInit();
 
             // init logic here
+        }
+
+        protected async override Task OnShutDown()
+        {
+            await base.OnShutDown();
+
+            Debug.WriteLine("BG Service 2 started shutting down");
+            await Task.Delay(1000);
+            Debug.WriteLine("BG Service 2 Completed shutting down");
         }
 
         public static int counter = 0;

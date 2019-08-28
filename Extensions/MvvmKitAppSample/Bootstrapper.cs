@@ -23,6 +23,9 @@ namespace MvvmKitAppSample
             RegisterService<IBgService2, BgService2>();
             RegisterService<IBgService1, BgService1>();
             RegisterService<DialogsService>();
+            RegisterService<ItemsService>();
+            RegisterService<StatefullService>();
+            RegisterService<StateService>();
         }
 
         protected override async Task InitializeShellOverride()
@@ -35,6 +38,18 @@ namespace MvvmKitAppSample
             await Navigation.RouteTo(GlobalNav.ShellRoutes.Shell);
             await Navigation.RouteTo(GlobalNav.Main, GlobalNav.MainRoutes.One);
             await Navigation.RouteTo(GlobalNav.Gain, GlobalNav.MainRoutes.Two);
+        }
+
+        protected override Task BeforeServicesShutDown()
+        {
+            Debug.WriteLine("Before Services Shutdown");
+            return base.BeforeServicesShutDown();
+        }
+
+        protected override Task BeforeShutDownOverride()
+        {
+            Debug.WriteLine("Final Shutdown about to start");
+            return base.BeforeShutDownOverride();
         }
     }
 }

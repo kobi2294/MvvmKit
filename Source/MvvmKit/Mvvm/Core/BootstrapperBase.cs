@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -66,13 +67,37 @@ namespace MvvmKit
 
         #endregion
 
-        private HashSet<Type> _servicesToInit = new HashSet<Type>();
-        protected List<ServiceBase> _services;
+        private HashSet<Type> _services;
+        private HashSet<Type> _servicesToInit;
+        private bool _isShuttingDown = false;
+        private AsyncLazyInit _shutDownLazy;
+
+        protected IEnumerable<ServiceBase> AllServices => 
+            _services
+            .Select(typ => Container.Resolve(typ) as ServiceBase)
+            .ToReadOnly();
+
         public UnityContainer Container { get; private set; }
 
         public IResolver Resolver => Container.Resolve<IResolver>();
 
         public NavigationService Navigation => Container.Resolve<NavigationService>();
+
+
+        public BootstrapperBase()
+        {
+            _services = new HashSet<Type>();
+            _servicesToInit = new HashSet<Type>();
+            _shutDownLazy = new AsyncLazyInit(_shutDown);
+        }
+
+        private async void _onWindowUnload(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.Windows.Count == 0)
+            {
+                await ShutDown();
+            }
+        }
 
 
         /// <summary>
@@ -81,6 +106,12 @@ namespace MvvmKit
         /// </summary>
         public async void Run()
         {
+            // make sure the application does not close unless buttstrapper shutdown is called
+            Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            // Listening to all shutdown events of windows, so we can shutdown when the last window is closed.
+            EventManager.RegisterClassHandler(typeof(Window), Window.UnloadedEvent, new RoutedEventHandler(_onWindowUnload), true);
+
             _bootstrappers.Add(Application.Current, this);
             Exec.InitUiTaskScheduler();
             Container = CreateContainerOverride();
@@ -94,9 +125,12 @@ namespace MvvmKit
             RegisterService<NavigationService>();
 
             await ConfigureContainerOverride();
-            _services = _servicesToInit.Select(type => Container.Resolve(type) as ServiceBase).ToList();
             // init services
-            var servicesInitTasks = _services.Select(service => service.Init()).ToList();
+            var servicesInitTasks = _servicesToInit
+                .Select(type => Container.Resolve(type) as ServiceBase)
+                .Select(service => service.Init())
+                .ToList();
+
 
             await OnServicesInitializing();
 
@@ -107,28 +141,40 @@ namespace MvvmKit
             await OnServicesInitialized();
         }
 
-        public async Task ShutDown()
+        // private method that will be called by the lazy init object, to make sure it is only called once
+        private async Task _shutDown()
         {
+            await BeforeServicesShutDown();
+
+            var servicesShutdownTasks = _services
+                .Select(type => Container.Resolve(type) as ServiceBase)
+                .Select(service => service.ShutDown())
+                .ToList();
+
+            await servicesShutdownTasks.WhenAll();
+
             await BeforeShutDownOverride();
+
             Application.Current.Shutdown();
         }
 
-        protected void RegisterService<ServiceType>(bool initService = true)
-            where ServiceType : ServiceBase
+        public Task ShutDown()
         {
-            Container.RegisterType<ServiceType>(new ContainerControlledLifetimeManager());
-
-            if (initService)
-            {
-                _servicesToInit.Add(typeof(ServiceType));
-            }
+            return _shutDownLazy.Task;
         }
 
-        protected void RegisterService<InterfaceType, ServiceType>(bool initService = true)
+        protected void RegisterService<ServiceType>(bool shouldInit = true)
+            where ServiceType : ServiceBase
+        {
+            RegisterService<ServiceType, ServiceType>(shouldInit);
+        }
+
+        protected void RegisterService<InterfaceType, ServiceType>(bool shouldInit = true)
             where ServiceType : ServiceBase, InterfaceType
         {
+            _services.Add(typeof(InterfaceType));
             Container.RegisterType<InterfaceType, ServiceType>(new ContainerControlledLifetimeManager());
-            if (initService)
+            if (shouldInit)
             {
                 _servicesToInit.Add(typeof(InterfaceType));
             }
@@ -169,7 +215,17 @@ namespace MvvmKit
         }
 
         /// <summary>
+        /// Use this method to perform cleanups before services start to shut down
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task BeforeServicesShutDown()
+        {
+            return Tasks.Empty;
+        }
+
+        /// <summary>
         /// Use this method to perform last miniute clean up before shut down
+        /// Note that this method will be called only after all services have completed to shut down
         /// </summary>
         /// <returns></returns>
         protected virtual Task BeforeShutDownOverride()

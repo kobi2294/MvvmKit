@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmKit;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -17,7 +18,6 @@ namespace MvvmKitAppSample
         {
             base.OnStartup(e);
             (new Bootstrapper()).Run();
-
         }
     }
 }

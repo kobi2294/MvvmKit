@@ -21,6 +21,15 @@ namespace MvvmKitAppSample.Services
             await _svc.OnString.Subscribe(this, OnString);
         }
 
+        protected async override Task OnShutDown()
+        {
+            await base.OnShutDown();
+
+            Debug.WriteLine("BG Service 1 started shutting down");
+            await Task.Delay(1000);
+            Debug.WriteLine("BG Service 1 Completed shutting down");
+        }
+
         private async Task OnString(string arg)
         {
             await Task.Delay(1000);

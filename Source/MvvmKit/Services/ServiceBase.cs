@@ -10,7 +10,9 @@ namespace MvvmKit
     {
         private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
-        private AsyncLazyInit _initLazy; 
+        private AsyncLazyInit _initLazy;
+        private AsyncLazyInit _shutDownLazy;
+
 
         protected virtual Task OnInit()
         {
@@ -27,11 +29,27 @@ namespace MvvmKit
             return _initLazy.Task;
         }
 
+        protected virtual Task OnShutDown()
+        {
+            return Tasks.Empty;
+        }
+
+        private Task _shutDown()
+        {
+            return _runner.Run(OnShutDown);
+        }
+
+        public Task ShutDown()
+        {
+            return _shutDownLazy.Task;
+        }
+
         public ServiceBase(TaskScheduler taskScheduler = null)
         {
             _scheduler = taskScheduler ?? TaskScheduler.Default;
             _runner = _scheduler.ToContextRunner();
             _initLazy = new AsyncLazyInit(_init);
+            _shutDownLazy = new AsyncLazyInit(_shutDown);
         }
 
         protected Task Run(Action method)

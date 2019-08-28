@@ -2,6 +2,7 @@
 using MvvmKitAppSample.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,16 @@ namespace MvvmKitAppSample.Services
         {
             TodoItems = _store.CreateReader(this, m => m.TodoItems);
         }
+
+        protected async override Task OnShutDown()
+        {
+            await base.OnShutDown();
+
+            Debug.WriteLine("Items Service started shutting down");
+            await Task.Delay(3000);
+            Debug.WriteLine("Items Service Completed shutting down");
+        }
+
 
         public Task AddItem(string caption)
         {
