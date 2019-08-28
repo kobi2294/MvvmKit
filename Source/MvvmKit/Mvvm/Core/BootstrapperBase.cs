@@ -144,7 +144,7 @@ namespace MvvmKit
         // private method that will be called by the lazy init object, to make sure it is only called once
         private async Task _shutDown()
         {
-            await BeforeServicesShutDown();
+            await BeforeServicesShutDownOverride();
 
             var servicesShutdownTasks = _services
                 .Select(type => Container.Resolve(type) as ServiceBase)
@@ -218,7 +218,7 @@ namespace MvvmKit
         /// Use this method to perform cleanups before services start to shut down
         /// </summary>
         /// <returns></returns>
-        protected virtual Task BeforeServicesShutDown()
+        protected virtual Task BeforeServicesShutDownOverride()
         {
             return Tasks.Empty;
         }

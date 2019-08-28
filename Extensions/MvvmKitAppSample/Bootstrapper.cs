@@ -40,10 +40,10 @@ namespace MvvmKitAppSample
             await Navigation.RouteTo(GlobalNav.Gain, GlobalNav.MainRoutes.Two);
         }
 
-        protected override Task BeforeServicesShutDown()
+        protected override Task BeforeServicesShutDownOverride()
         {
             Debug.WriteLine("Before Services Shutdown");
-            return base.BeforeServicesShutDown();
+            return base.BeforeServicesShutDownOverride();
         }
 
         protected override Task BeforeShutDownOverride()
