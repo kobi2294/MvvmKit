@@ -218,6 +218,21 @@ namespace MvvmKit
         }
 
 
+        public static AvlTreeNode<T> Target<T>(this IEnumerable<AvlTreeEdge<T>> source)
+        {
+            var last = source.LastOrDefault();
+
+            return last?.Target();
+        }
+
+        public static IEnumerable<AvlTreeNode<T>> Nodes<T>(this IEnumerable<AvlTreeEdge<T>> source)
+        {
+            var first = source.FirstOrDefault()?.Source;
+
+            return first.Yield().Concat(
+                source.Select(edge => edge.Target()).Where(n => n != null)
+                );
+        }
 
     }
 }
