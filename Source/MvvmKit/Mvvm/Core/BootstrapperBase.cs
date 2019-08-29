@@ -69,7 +69,6 @@ namespace MvvmKit
 
         private HashSet<Type> _services;
         private HashSet<Type> _servicesToInit;
-        private bool _isShuttingDown = false;
         private AsyncLazyInit _shutDownLazy;
 
         protected IEnumerable<ServiceBase> AllServices => 
