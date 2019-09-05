@@ -26,7 +26,7 @@ namespace MvvmKit
 
         public ModalDialogWindowBehavior WithStyle(Style style)
         {
-            if (style.TargetType != typeof(Window))
+            if ((style.TargetType != typeof(Window)) && (Exec.IsRunTime))
                 throw new ArgumentException("Style must have a target type set to Window", nameof(style));
 
             WindowStyle = style;

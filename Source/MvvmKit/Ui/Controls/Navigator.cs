@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -21,6 +16,8 @@ namespace MvvmKit
         private const string PartMarker = nameof(PartMarker);
         private FrameworkElement _partMarker;
         private MatrixTransform _markerTransform;
+        private Matrix _animationTargetMatrix = Matrix.Identity;
+
 
         static Navigator()
         {
@@ -109,6 +106,13 @@ namespace MvvmKit
             var shouldShowMarker = (selected != null) && (_partMarker != null) && (selected.IsLoaded) && (_partMarker.IsLoaded);
             var shouldAnimateMarker = shouldShowMarker && animate && _partMarker.Visibility == Visibility.Visible;
 
+            // special case - selected is not loaded yet. in this case we sign up to the loaded event and re do this
+            if ((selected!=null) && (!selected.IsLoaded))
+            {
+                selected.Loaded += (s, e) => _invalidateMarkerPosition(animate);
+                return;
+            }
+
             var duration = shouldAnimateMarker ? Duration : new Duration(TimeSpan.Zero);
 
             if (shouldShowMarker)
@@ -132,18 +136,27 @@ namespace MvvmKit
 
         private void _animateMarkerTo(Matrix translate, double width, double height, Duration duration)
         {
+
+
             var widthAnim = new DoubleAnimation(width, duration) { EasingFunction = EasingFunction };
             var heightAnim = new DoubleAnimation(height, duration) { EasingFunction = EasingFunction };
-            var transAnim = new LinearMatrixAnimation
-            {
-                Duration = duration,
-                To = translate, 
-                Easing = EasingFunction
-            };
-
             _partMarker.BeginAnimation(WidthProperty, widthAnim);
             _partMarker.BeginAnimation(HeightProperty, heightAnim);
-            _markerTransform.BeginAnimation(MatrixTransform.MatrixProperty, transAnim);
+
+            if (translate != _animationTargetMatrix)
+            {
+                var transAnim = new LinearMatrixAnimation
+                {
+                    Duration = duration,
+                    To = translate,
+                    Easing = EasingFunction
+                };
+
+                _animationTargetMatrix = translate;
+                _markerTransform.BeginAnimation(MatrixTransform.MatrixProperty, transAnim);
+            }
+
+
         }
 
         private Matrix _calcTransformationToTarget(FrameworkElement target)
