@@ -15,6 +15,8 @@ namespace MvvmKit
     /// </summary>
     public class OpenWindowRegionBehavior : RegionBehavior
     {
+        private HashSet<Window> _myWindows = new HashSet<Window>();
+
         public Style WindowStyle { get; private set; }
 
         public OpenWindowRegionBehavior WithStyle(Style style)
@@ -26,17 +28,52 @@ namespace MvvmKit
             return this;
         }
 
-        protected override async Task BeforeNavigationOverride(RegionService service)
+        private Task _ensureWindowOpen(RegionService service)
         {
-            await base.BeforeNavigationOverride(service);
-
             if (!service.Hosts.OfType<Window>().Any())
             {
                 var w = new Window();
+                _myWindows.Add(w);
                 w.Style = WindowStyle;
                 RegionHost.SetRegion(w, service.Region);
                 w.Show();
             }
+
+            return Tasks.Empty;
+        }
+
+        private Task _ensureWindowCloses(RegionService service)
+        {
+            var windows = service.Hosts.OfType<Window>();
+            var mine = windows.Intersect(_myWindows).ToList();
+
+            foreach (var win in mine)
+            {
+                win.Close();
+                _myWindows.Remove(win);
+            }
+
+            return Tasks.Empty;
+        }
+
+        private async Task _invalidate(RegionService service)
+        {
+            var entry = await service.CurrentRegionEntry.Get();
+
+            if (entry == RegionEntry.Empty)
+            {
+                await _ensureWindowCloses(service);
+            }
+            else
+            {
+                await _ensureWindowOpen(service);
+            }
+        }
+
+        protected override async Task BeforeNavigationOverride(RegionService service)
+        {
+            await base.BeforeNavigationOverride(service);
+            await _invalidate(service);
         }
     }
 }
