@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 
 namespace MvvmKit
 {
@@ -19,6 +21,11 @@ namespace MvvmKit
         public ObservableCollection<TVM> Target { get; private set; }
 
         public IStateCollectionReader<T> Source { get; private set; }
+
+        private BufferBlock<CollectionChanges<T>> _handleQueue;
+        private CancellationTokenSource _handleCancelSource;
+        private Task _handleLoopTask;
+
 
         public ServiceCollectionAdapter(IResolver resolver)
         {
@@ -51,13 +58,42 @@ namespace MvvmKit
 
         public async Task<ServiceCollectionAdapter<T, TVM>> Start()
         {
-            await Source.Changed.Subscribe(this, OnSourceChanged);
+            _handleQueue = new BufferBlock<CollectionChanges<T>>();
+            _handleCancelSource = new CancellationTokenSource();
+            _handleLoopTask = _handleLoop();
+
+            await Source.Changed.Subscribe(this, _onEvent);
             return this;
+        }
+
+        private Task _onEvent(CollectionChanges<T> arg)
+        {
+            _handleQueue.Post(arg);
+            return Task.CompletedTask;
+        }
+
+        private async Task _handleLoop()
+        {
+            CollectionChanges<T> current = null;
+
+            try
+            {
+                while(true)
+                {
+                    current = await _handleQueue.ReceiveAsync(_handleCancelSource.Token);
+                    await _handleSingleEvent(current);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+            }
         }
 
         public async Task Stop()
         {
             await Source.Changed.Unsubscribe(this);
+            _handleCancelSource.Cancel();
+            await _handleLoopTask;
         }
 
         private Task<TVM> _generateNewItem()
@@ -81,7 +117,7 @@ namespace MvvmKit
             return vm;
         }
 
-        private async Task OnSourceChanged(CollectionChanges<T> arg)
+        private async Task _handleSingleEvent(CollectionChanges<T> arg)
         {
             Logger?.Invoke(arg);
 
