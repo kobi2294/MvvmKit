@@ -22,10 +22,9 @@ namespace ConsoleDemo
     class Program
     {
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Samples.AvlTrees.Main.Benchmark();
-
+            await ConsoleDemo.Samples.AsyncEvent.Main.Run();
             Console.ReadLine();
         }
     }

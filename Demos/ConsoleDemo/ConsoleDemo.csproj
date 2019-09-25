@@ -58,6 +58,7 @@
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Samples\AsyncEvent\Main.cs" />
     <Compile Include="Samples\AsyncLocal\AsyncLocalDemo.cs" />
     <Compile Include="Samples\AvlTrees\Main.cs" />
     <Compile Include="Samples\Bindable\Observe.cs" />
