@@ -15,6 +15,8 @@ namespace MvvmKit
 
         public object Target => WeakAction.Target;
 
+        public object Owner => WeakAction.Owner;
+
         public bool IsAlive => WeakAction.IsAlive;
 
         public MethodInfo Method => WeakAction.Method;

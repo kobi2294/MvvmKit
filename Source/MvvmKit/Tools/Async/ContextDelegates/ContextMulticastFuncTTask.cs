@@ -194,6 +194,19 @@ namespace MvvmKit
             return cma.Remove(action.runner, action.owner);
         }
 
+        public ContextMulticastFuncTask<T> Remove(object owner, Func<T, Task> a)
+        {
+            return new ContextMulticastFuncTask<T>(_actions.Where(ac =>
+                (ac.Method != a.Method) ||
+                (ac.Owner != owner)));
+        }
+
+        public static ContextMulticastFuncTask<T> operator -(ContextMulticastFuncTask<T> cma, (object owner, Func<T, Task> callback) action)
+        {
+            return cma.Remove(action.owner, action.callback);
+        }
+
+
         public ContextMulticastFuncTask<T> Remove(object owner)
         {
             return new ContextMulticastFuncTask<T>(_actions.Where(ac => ac.WeakFunc.Owner != owner));

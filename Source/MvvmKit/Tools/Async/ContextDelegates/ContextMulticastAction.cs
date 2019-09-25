@@ -102,7 +102,6 @@ namespace MvvmKit
             return cma.Add(action.a, action.owner);
         }
 
-
         public ContextMulticastAction Remove(ContextAction ca)
         {
             return new ContextMulticastAction(_actions.Where(a => a != ca));
@@ -191,6 +190,18 @@ namespace MvvmKit
         public static ContextMulticastAction operator -(ContextMulticastAction cma, (object owner, AsyncContextRunner runner) action)
         {
             return cma.Remove(action.owner, action.runner);
+        }
+
+        public ContextMulticastAction Remove(object owner, Action a)
+        {
+            return new ContextMulticastAction(_actions.Where(ac =>
+                (ac.Method != a.Method) ||
+                (ac.Owner != owner)));
+        }
+
+        public static ContextMulticastAction operator -(ContextMulticastAction cma, (object owner, Action callback) action )
+        {
+            return cma.Remove(action.owner, action.callback);
         }
 
         public ContextMulticastAction Remove(object owner)

@@ -184,14 +184,27 @@ namespace MvvmKit
         public ContextMulticastAction<T> Remove(object owner, AsyncContextRunner runner)
         {
             return new ContextMulticastAction<T>(_actions.Where(ac =>
-            (ac.WeakAction.Owner != owner)
-            || (ac.ContextRunner != runner)));
+                (ac.WeakAction.Owner != owner) ||
+                (ac.ContextRunner != runner)));
         }
 
         public static ContextMulticastAction<T> operator -(ContextMulticastAction<T> cma, (object owner, AsyncContextRunner runner) action)
         {
             return cma.Remove(action.owner, action.runner);
         }
+
+        public ContextMulticastAction<T> Remove(object owner, Action<T> a)
+        {
+            return new ContextMulticastAction<T>(_actions.Where(ac =>
+                (ac.Method != a.Method) ||
+                (ac.Owner != owner)));
+        }
+
+        public static ContextMulticastAction<T> operator-(ContextMulticastAction<T> cma, (object owner, Action<T> callback) action)
+        {
+            return cma.Remove(action.owner, action.callback);
+        }
+
 
         public ContextMulticastAction<T> Remove(object owner)
         {

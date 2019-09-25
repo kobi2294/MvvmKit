@@ -15,13 +15,19 @@ namespace ConsoleDemo.Samples.AsyncEvent
         {
             var ae = new AsyncEvent<int>(12);
 
-            await ae.Subscribe(_owner, OnAeChanged);
+            await ae.Subscribe(_owner, OnAeChanged1);
+            Console.WriteLine("Subscribe 1");
 
-            Console.WriteLine("Subscribe");
+            await ae.Subscribe(_owner, OnAeChanged2);
+            Console.WriteLine("Subscribe 2");
+
+            await ae.Subscribe(_owner, OnAeChanged3);
+            Console.WriteLine("Subscribe 3");
+
             await ae.Invoke(13);
            
-            await ae.Unsubscribe(_owner, OnAeChanged);
-            Console.WriteLine("Unubscribe specific");
+            await ae.Unsubscribe(_owner, OnAeChanged1);
+            Console.WriteLine("Unubscribe 1");
 
             await ae.Invoke(14);
 
@@ -31,9 +37,21 @@ namespace ConsoleDemo.Samples.AsyncEvent
             await ae.Invoke(15);
         }
 
-        private static Task OnAeChanged(int arg)
+        private static Task OnAeChanged1(int arg)
         {
-            Console.WriteLine($"Event thrown, with value: {arg}");
+            Console.WriteLine($"(1) Event thrown, with value: {arg}");
+            return Task.CompletedTask;
+        }
+
+        private static Task OnAeChanged2(int arg)
+        {
+            Console.WriteLine($"(2) Event thrown, with value: {arg}");
+            return Task.CompletedTask;
+        }
+
+        private static Task OnAeChanged3(int arg)
+        {
+            Console.WriteLine($"(3) Event thrown, with value: {arg}");
             return Task.CompletedTask;
         }
     }
