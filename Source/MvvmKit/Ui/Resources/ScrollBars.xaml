@@ -136,6 +136,7 @@
             <Track x:Name="PART_Track"
                 Grid.Row="1"
                 IsEnabled="{TemplateBinding IsMouseOver}"
+                IsDirectionReversed="True"
                 Margin="0,1">
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" 
