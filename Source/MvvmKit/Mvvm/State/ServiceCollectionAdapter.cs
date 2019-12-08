@@ -78,11 +78,14 @@ namespace MvvmKit
 
             try
             {
-                while(true)
+                while (true)
                 {
                     current = await _handleQueue.ReceiveAsync(_handleCancelSource.Token);
                     await _handleSingleEvent(current);
                 }
+            }
+            catch (TaskCanceledException)
+            {
             }
             catch (OperationCanceledException)
             {
@@ -91,9 +94,20 @@ namespace MvvmKit
 
         public async Task Stop()
         {
-            await Source.Changed.Unsubscribe(this);
-            _handleCancelSource.Cancel();
-            await _handleLoopTask;
+            try
+            {
+                await Source.Changed.Unsubscribe(this);
+                _handleCancelSource.Cancel();
+                await _handleLoopTask;
+            }
+            catch (TaskCanceledException)
+            {
+
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
         }
 
         private Task<TVM> _generateNewItem()
@@ -136,7 +150,7 @@ namespace MvvmKit
                         break;
                     case IReset<T> c:
                         Target.Clear();
-                        foreach (var item in c.Items)
+                        foreach (var item in c.Items.ToArray())
                         {
                             await _addAt(item);
                         }
@@ -155,3 +169,4 @@ namespace MvvmKit
         }
     }
 }
+
