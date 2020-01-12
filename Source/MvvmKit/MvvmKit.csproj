@@ -135,6 +135,14 @@
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListReset.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListItemReplaced.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListItemMoved.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListItemRemoved.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListItemAdded.cs" />
+    <Compile Include="Tools\Immutables\ItemChanges\List\ListChange.cs" />
+    <Compile Include="Tools\Immutables\IImmutable.cs" />
+    <Compile Include="Tools\Immutables\VersionedList.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
     <Compile Include="Tools\StateStore\StateRestorer.cs" />
@@ -278,10 +286,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mvvm\Navigation\State\" />
+    <Folder Include="Tools\Change\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Castle.Core">
       <Version>4.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable">
+      <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>4.5.2</Version>
