@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace MvvmKit
 {
     public class ServiceStore<T>
-        where T: class
+        where T : class
     {
         private InterfaceState _state;
         private AsyncReaderWriterLock _lock = new AsyncReaderWriterLock();
@@ -31,7 +31,7 @@ namespace MvvmKit
         }
 
         public ServiceStore(Action<T> init)
-            :this()
+            : this()
         {
             using (var inter = new AccessInterceptor(_state, true))
             {
@@ -48,9 +48,17 @@ namespace MvvmKit
 
         public async Task Modify(Action<T> modifer)
         {
-            using (var inter = new AccessInterceptor(_state, true))
+            AccessInterceptor inter = null;
+            T proxy = default(T);
+
+            using (await _lock.ReaderLock())
             {
-                var proxy = _createProxy(inter);
+                inter = new AccessInterceptor(_state, true);
+                proxy = _createProxy(inter);
+            }
+
+            using (inter)
+            {
                 using (await _lock.WriterLock())
                 {
                     modifer(proxy);
@@ -86,16 +94,20 @@ namespace MvvmKit
 
         public async Task<K> Select<K>(Func<T, K> query)
         {
+            AccessInterceptor inter = null;
+            T proxy = default(T);
             K res = default;
 
-            using (var inter = new AccessInterceptor(_state, false))
+
+            using (await _lock.ReaderLock())
             {
-                var proxy = _createProxy(inter);
-                using (await _lock.ReaderLock())
+                using (inter = new AccessInterceptor(_state, false))
                 {
+                    proxy = _createProxy(inter);
                     res = query(proxy);
                 }
             }
+
             return res;
         }
 
