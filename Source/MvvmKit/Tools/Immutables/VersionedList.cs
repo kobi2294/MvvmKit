@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public sealed class VersionedList<T>
+    public sealed class VersionedList<T>: IEnumerable<T>, IEnumerable
     {
         public ImmutableList<T> Items { get; }
         public int Version { get; }
@@ -266,6 +266,11 @@ namespace MvvmKit
         public VersionedList<T> Sort()
         {
             return new VersionedList<T>(Items.Sort(), Version + 1);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return GetEnumerator() as IEnumerator<T>;
         }
     }
 }
