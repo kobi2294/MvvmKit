@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public sealed class VersionedList<T>: IEnumerable<T>, IEnumerable
+    public sealed class VersionedList<T>: IEnumerable<T>
     {
         public ImmutableList<T> Items { get; }
         public int Version { get; }
