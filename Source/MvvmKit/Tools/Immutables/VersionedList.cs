@@ -35,6 +35,11 @@ namespace MvvmKit
 
         public static VersionedList<T> Empty { get; } = new VersionedList<T>(ImmutableList<T>.Empty);
 
+        public static VersionedList<T> Create(IEnumerable<T> items)
+        {
+            return new VersionedList<T>(items.ToImmutableList());
+        }
+
         public T this[int index] => Items[index];
         public bool IsEmpty => Items.IsEmpty;
         public int Count => Items.Count;

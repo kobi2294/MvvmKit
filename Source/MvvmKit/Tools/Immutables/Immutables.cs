@@ -19,7 +19,7 @@ namespace MvvmKit
             if (_verified.Contains(typeof(T))) return;
 
             var ctor = typeof(T).GetConstructors()
-                .OrderBy(xtor => xtor.GetParameters().Length)
+                .OrderByDescending(xtor => xtor.GetParameters().Length)
                 .First();
 
             _config.Configure(ctor);
@@ -44,6 +44,11 @@ namespace MvvmKit
         {
             _verifyRemute<T>();
             return _remute.With(instance, expression, value(instance));
+        }
+
+        public static VersionedList<T> ToVersionedList<T>(this IEnumerable<T> source)
+        {
+            return VersionedList<T>.Create(source);
         }
     }
 }
