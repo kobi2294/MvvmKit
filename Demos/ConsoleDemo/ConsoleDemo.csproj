@@ -76,6 +76,7 @@
     <Compile Include="Samples\IoC\IoCTest.cs" />
     <Compile Include="Samples\IoC\ServiceClass.cs" />
     <Compile Include="Samples\LazyDictionaryDemo.cs" />
+    <Compile Include="Samples\Lis\LisTest.cs" />
     <Compile Include="Samples\Observables\ObservablesDemo.cs" />
     <Compile Include="Samples\Reflection\Test.cs" />
     <Compile Include="Samples\Research\ObservableTest.cs" />

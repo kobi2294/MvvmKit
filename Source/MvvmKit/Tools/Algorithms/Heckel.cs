@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmKit.HeckelDiff;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using static MvvmKit.HeckelDiff.Entries;
 using static MvvmKit.HeckelDiff.Operations;
 
-namespace MvvmKit.HeckelDiff
+namespace MvvmKit
 {
     public static class Heckel
     {
