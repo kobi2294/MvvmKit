@@ -13,6 +13,11 @@ namespace MvvmKit
             return new OrderedAvlTree<T>(values);
         }
 
+        public static AvlList<T> ToAvlList<T>(this IEnumerable<T> values)
+        {
+            return new AvlList<T>(values);
+        }
+
         public static SortedAvlTree<T> ToSortedAvlTree<T>(this IEnumerable<T> values)
         {
             return new SortedAvlTree<T>(values);

@@ -123,6 +123,7 @@
     <Compile Include="Tools\Async\ContextDelegates\IAsyncEventWithData.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncLazyInit.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\Avl.cs" />
+    <Compile Include="Tools\DataStructures\AvlTreeList\AvlList.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTree.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeNode.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\AvlTreeEdge.cs" />
