@@ -136,6 +136,7 @@
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
+    <Compile Include="Tools\Algorithms\Lis.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListReset.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemReplaced.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemMoved.cs" />
@@ -238,10 +239,10 @@
     <Compile Include="Tools\Extensions\ObjectExtensions.cs" />
     <Compile Include="Tools\Extensions\PropertyPathExtensions.cs" />
     <Compile Include="Tools\Extensions\TupleExtensions.cs" />
-    <Compile Include="Tools\HeckelDiff\Counter.cs" />
-    <Compile Include="Tools\HeckelDiff\Diff.cs" />
-    <Compile Include="Tools\HeckelDiff\Entries.cs" />
-    <Compile Include="Tools\HeckelDiff\Operations.cs" />
+    <Compile Include="Tools\Algorithms\HeckelDiff\Counter.cs" />
+    <Compile Include="Tools\Algorithms\Heckel.cs" />
+    <Compile Include="Tools\Algorithms\HeckelDiff\Entries.cs" />
+    <Compile Include="Tools\Algorithms\HeckelDiff\Operations.cs" />
     <Compile Include="Tools\Indexers\Indexers.cs" />
     <Compile Include="Tools\Indexers\IReadOnlyIndexer.cs" />
     <Compile Include="Tools\Indexers\IWriteableIndexer.cs" />

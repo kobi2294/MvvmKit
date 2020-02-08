@@ -1,4 +1,5 @@
-﻿using MvvmKit.HeckelDiff;
+﻿using MvvmKit;
+using MvvmKit.HeckelDiff;
 using System;
 using System.Collections.Generic;
 using System.Linq;

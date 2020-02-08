@@ -32,11 +32,6 @@ namespace MvvmKit
             return source.Concat(items.AsEnumerable());
         }
 
-        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> source)
-        {
-            return new HashSet<T>(source);
-        }
-
         public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> source)
         {
             return new ObservableCollection<T>(source);
