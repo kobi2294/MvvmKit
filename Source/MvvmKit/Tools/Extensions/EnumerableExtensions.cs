@@ -22,7 +22,7 @@ namespace MvvmKit
             yield return obj;
         }
 
-        public static IEnumerable<(int, T)> Enumerated<T>(this IEnumerable<T> source)
+        public static IEnumerable<(int index, T item)> Enumerated<T>(this IEnumerable<T> source)
         {
             return source.Select((t, i) => (i, t)).ToArray();
         }

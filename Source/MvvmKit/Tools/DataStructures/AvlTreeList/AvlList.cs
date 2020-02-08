@@ -189,7 +189,12 @@ namespace MvvmKit
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            this.ToList().CopyTo(array, arrayIndex);
+            int index = 0;
+            foreach (var node in _tree)
+            {
+                array[index++] = node.Item;
+            }
+
         }
 
     }

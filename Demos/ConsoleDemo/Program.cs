@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            ConsoleDemo.Samples.AvlList.Main.Run();
+            ConsoleDemo.Samples.Permute.Main.Run();
             Console.ReadLine();
         }
     }

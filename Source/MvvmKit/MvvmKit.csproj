@@ -120,6 +120,7 @@
     <Compile Include="Services\State2\Properties\StateProperty.cs" />
     <Compile Include="Services\State2\Properties\StatePropertyReader.cs" />
     <Compile Include="Services\State\ServiceCollectionField.cs" />
+    <Compile Include="Tools\Algorithms\Indexify.cs" />
     <Compile Include="Tools\Async\ContextDelegates\IAsyncEventWithData.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncLazyInit.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\Avl.cs" />
@@ -136,7 +137,7 @@
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
-    <Compile Include="Tools\Algorithms\Lis.cs" />
+    <Compile Include="Tools\Algorithms\LisAlgorithm.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListReset.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemReplaced.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemMoved.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Tools\Immutables\VersionedList.cs" />
     <Compile Include="Tools\Immutables\IImmutable.cs" />
     <Compile Include="Tools\Immutables\Immutables.cs" />
+    <Compile Include="Tools\Algorithms\PermuteAlgorithm.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
     <Compile Include="Tools\StateStore\StateRestorer.cs" />

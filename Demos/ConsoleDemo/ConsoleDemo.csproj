@@ -73,12 +73,14 @@
     <Compile Include="Samples\EditableLookupSample.cs" />
     <Compile Include="Samples\HeckelDiff\Start.cs" />
     <Compile Include="Samples\Indexers\IndexerDemo.cs" />
+    <Compile Include="Samples\Indexify\Main.cs" />
     <Compile Include="Samples\IoC\ConsumerClass.cs" />
     <Compile Include="Samples\IoC\IoCTest.cs" />
     <Compile Include="Samples\IoC\ServiceClass.cs" />
     <Compile Include="Samples\LazyDictionaryDemo.cs" />
     <Compile Include="Samples\Lis\LisTest.cs" />
     <Compile Include="Samples\Observables\ObservablesDemo.cs" />
+    <Compile Include="Samples\Permute\Main.cs" />
     <Compile Include="Samples\Reflection\Test.cs" />
     <Compile Include="Samples\Research\ObservableTest.cs" />
     <Compile Include="Samples\ServiceState\IData.cs" />

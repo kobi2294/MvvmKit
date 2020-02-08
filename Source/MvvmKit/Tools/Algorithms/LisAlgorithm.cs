@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public static class Lis
+    public static class LisAlgorithm
     {
 
         // Binary search  
@@ -94,6 +94,19 @@ namespace MvvmKit
             // collect results
 
             return _collectResults(len, tailIndices, data, prevIndices);
+        }
+
+        public static int[] Lis(this IEnumerable<int> data)
+        {
+            return Calculate(data.ToArray());
+        }
+
+        public static T[] LisBy<T>(this IEnumerable<T> target, IEnumerable<T> original)
+        {
+            var originalList = original.ToList();
+            var indices = target.IndicesIn(original);
+            var lis = indices.Lis();
+            return lis.Select(i => originalList[i]).ToArray();
         }
     }
 }
