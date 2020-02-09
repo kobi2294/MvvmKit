@@ -63,6 +63,7 @@
     <Compile Include="Samples\AvlList\Main.cs" />
     <Compile Include="Samples\AvlTrees\Main.cs" />
     <Compile Include="Samples\Bindable\Observe.cs" />
+    <Compile Include="Samples\Diff\Main.cs" />
     <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
     <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
     <Compile Include="Samples\Disposables\OneTimeCalc.cs" />

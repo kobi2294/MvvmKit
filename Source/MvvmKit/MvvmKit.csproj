@@ -120,6 +120,8 @@
     <Compile Include="Services\State2\Properties\StateProperty.cs" />
     <Compile Include="Services\State2\Properties\StatePropertyReader.cs" />
     <Compile Include="Services\State\ServiceCollectionField.cs" />
+    <Compile Include="Tools\Algorithms\Diff\DiffAlgorithm.cs" />
+    <Compile Include="Tools\Algorithms\Diff\DiffResults.cs" />
     <Compile Include="Tools\Algorithms\Indexify.cs" />
     <Compile Include="Tools\Async\ContextDelegates\IAsyncEventWithData.cs" />
     <Compile Include="Tools\Async\Primitives\AsyncLazyInit.cs" />

@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            ConsoleDemo.Samples.Permute.Main.Run();
+            ConsoleDemo.Samples.Diff.Main.Run();
             Console.ReadLine();
         }
     }
