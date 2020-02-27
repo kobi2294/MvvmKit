@@ -137,6 +137,7 @@
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\StringConsole.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\TreePrinter.cs" />
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
+    <Compile Include="Tools\Extensions\ImmutableExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
     <Compile Include="Tools\Algorithms\LisAlgorithm.cs" />
