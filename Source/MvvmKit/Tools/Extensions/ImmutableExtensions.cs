@@ -17,11 +17,11 @@ namespace MvvmKit
             return source.SetItem(index, item);
         }
 
-        public static ImmutableList<T> Upsert<T, K>(this ImmutableList<T> source, Func<T, K> keySelector, T item)
+        public static ImmutableList<T> Upsert<T, K>(this ImmutableList<T> source, Func<T, K> trackBy, T item)
         {
-            var key = keySelector(item);
+            var key = trackBy(item);
 
-            return source.UpsertWhere(t => Equals(keySelector(t), key), item);
+            return source.UpsertWhere(t => Equals(trackBy(t), key), item);
         }
 
         public static ImmutableList<T> Upsert<T>(this ImmutableList<T> source, T item)
@@ -37,11 +37,11 @@ namespace MvvmKit
             return source.SetItem(index, item);
         }
 
-        public static VersionedList<T> Upsert<T, K>(this VersionedList<T> source, Func<T, K> keySelector, T item)
+        public static VersionedList<T> Upsert<T, K>(this VersionedList<T> source, Func<T, K> trackBy, T item)
         {
-            var key = keySelector(item);
+            var key = trackBy(item);
 
-            return source.UpsertWhere(t => Equals(keySelector(t), key), item);
+            return source.UpsertWhere(t => Equals(trackBy(t), key), item);
         }
 
         public static VersionedList<T> Upsert<T>(this VersionedList<T> source, T item)
