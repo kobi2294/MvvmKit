@@ -28,5 +28,26 @@ namespace MvvmKit
         {
             return source.Upsert(item, t => t);
         }
+
+        public static VersionedList<T> UpsertWhere<T>(this VersionedList<T> source, T item, Func<T, bool> predicate)
+        {
+            var index = source.IndexOf(predicate);
+            if (index < 0) return source.Add(item);
+
+            return source.SetItem(index, item);
+        }
+
+        public static VersionedList<T> Upsert<T, K>(this VersionedList<T> source, T item, Func<T, K> keySelector)
+        {
+            var key = keySelector(item);
+
+            return source.UpsertWhere(item, t => Equals(keySelector(t), key));
+        }
+
+        public static VersionedList<T> Upsert<T>(this VersionedList<T> source, T item)
+        {
+            return source.Upsert(item, t => t);
+        }
+
     }
 }
