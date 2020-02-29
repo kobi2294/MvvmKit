@@ -1,6 +1,8 @@
-﻿using Remutable;
+﻿using MvvmKit.Tools.Immutables.Fluent;
+using Remutable;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -49,6 +51,38 @@ namespace MvvmKit
         public static VersionedList<T> ToVersionedList<T>(this IEnumerable<T> source)
         {
             return VersionedList<T>.Create(source);
+        }
+
+        public static ImmutableInstanceWrapper<TRoot, T> With<TRoot, T>(this TRoot source, Expression<Func<TRoot, T>> expression)
+            where TRoot : class, IImmutable
+            where T : class, IImmutable
+        {
+            var wrapper = new RootWrapper<TRoot>(source);
+            return wrapper.Target.With(expression);
+        }
+
+        public static ImmutableListWrapper<TRoot, T> With<TRoot, T>(this TRoot source, Expression<Func<TRoot, ImmutableList<T>>> expression)
+            where TRoot : class, IImmutable
+            where T : class, IImmutable
+        {
+            var wrapper = new RootWrapper<TRoot>(source);
+            return wrapper.Target.With(expression);
+        }
+
+        public static ImmutableInstanceWrapper<TRoot, TRoot> Set<TRoot, T>(this TRoot source, Expression<Func<TRoot, T>> expression, T value)
+            where TRoot : class, IImmutable
+        {
+            var wrapper = new RootWrapper<TRoot>(source);
+            wrapper.Target.Set(expression, value);
+            return wrapper.Target;
+        }
+
+        public static ImmutableInstanceWrapper<TRoot, TRoot> Set<TRoot, T>(this TRoot source, Expression<Func<TRoot, T>> expression, Func<TRoot, T> valueFunc)
+            where TRoot : class, IImmutable
+        {
+            var wrapper = new RootWrapper<TRoot>(source);
+            wrapper.Target.Set(expression, valueFunc);
+            return wrapper.Target;
         }
     }
 }

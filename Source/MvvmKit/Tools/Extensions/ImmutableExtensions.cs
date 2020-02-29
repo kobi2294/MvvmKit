@@ -29,6 +29,14 @@ namespace MvvmKit
             return source.Upsert(t => t, item);
         }
 
+        public static ImmutableList<T> UpdateIfExists<T>(this ImmutableList<T> source, Predicate<T> predicate, Func<T, T> newValue)
+        {
+            var item = source.Find(predicate);
+            if (item == null) return source;
+
+            return source.Replace(item, newValue(item));
+        }
+
         public static VersionedList<T> UpsertWhere<T>(this VersionedList<T> source, Func<T, bool> predicate, T item)
         {
             var index = source.IndexOf(predicate);
