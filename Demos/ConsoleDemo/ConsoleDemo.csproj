@@ -83,6 +83,10 @@
     <Compile Include="Samples\Permute\Main.cs" />
     <Compile Include="Samples\Reflection\Test.cs" />
     <Compile Include="Samples\Research\ObservableTest.cs" />
+    <Compile Include="Samples\RxMvvm\ItemModel.cs" />
+    <Compile Include="Samples\RxMvvm\ItemVm.cs" />
+    <Compile Include="Samples\RxMvvm\Main.cs" />
+    <Compile Include="Samples\RxMvvm\ViewModel.cs" />
     <Compile Include="Samples\ServiceState\IData.cs" />
     <Compile Include="Samples\ServiceState\Test.cs" />
     <Compile Include="Samples\Weaks\WeakDelegateDemo.cs" />

@@ -138,6 +138,7 @@
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
     <Compile Include="Tools\Algorithms\LisAlgorithm.cs" />
+    <Compile Include="Tools\Immutables\ImmutableCollectionsExtensions.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListReset.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemReplaced.cs" />
     <Compile Include="Tools\Immutables\ItemChanges\List\ListItemMoved.cs" />
