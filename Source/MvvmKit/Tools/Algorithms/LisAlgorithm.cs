@@ -54,6 +54,7 @@ namespace MvvmKit
         public static int[] Calculate(int[] data)
         {
             int length = data.Length;
+            if (length == 0) return new int[0];
 
             int[] tailIndices = _initArray(length, 0);
             int[] prevIndices = _initArray(length, -1);

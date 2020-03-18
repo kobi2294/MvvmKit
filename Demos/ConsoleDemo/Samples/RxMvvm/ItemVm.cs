@@ -24,12 +24,19 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         #endregion
 
-        public void ReadModel(ItemModel model)
+        public ItemVm ReadModel(ItemModel model)
         {
             _model = model;
             Uid = model.Uid;
             DisplayName = model.DisplayName;
             Category = model.Category;
+            Console.WriteLine($"updated model. uid: {Uid}, displayName: {DisplayName}, category: {Category}");
+            return this;
+        }
+
+        public void BeforeRemove()
+        {
+            Console.WriteLine($"Removing item uid: {Uid}");
         }
 
     }

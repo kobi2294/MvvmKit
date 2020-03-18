@@ -6,6 +6,8 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
+using Unity;
+using Unity.Lifetime;
 
 namespace ConsoleDemo.Samples.RxMvvm
 {
@@ -13,7 +15,9 @@ namespace ConsoleDemo.Samples.RxMvvm
     {
         public static void Run()
         {
-            var vm = new ViewModel();
+            var container = new UnityContainer();
+            container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
+            var vm = container.Resolve<ViewModel>();
             var model = ImmutableList.Create(
                 new ItemModel("1", "First", "Odd"),
                 new ItemModel("2", "Second", "Even"),
@@ -24,13 +28,12 @@ namespace ConsoleDemo.Samples.RxMvvm
             var subj = new BehaviorSubject<ImmutableList<ItemModel>>(model);
             vm.Initialize(subj);
 
+            Console.WriteLine("------------------------------------");
+
             model = model
                 .RemoveAt(2)
-                .Move(2, 4);
+                .Move(2, 3);
             subj.OnNext(model);
-
-
-            
 
         }
     }
