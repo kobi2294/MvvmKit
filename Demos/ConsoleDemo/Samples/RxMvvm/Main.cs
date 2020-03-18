@@ -25,6 +25,8 @@ namespace ConsoleDemo.Samples.RxMvvm
                 new ItemModel("4", "Fourth", "Even"),
                 new ItemModel("5", "Fifth", "Odd"));
 
+            Console.WriteLine(model.ToJson());
+
             var subj = new BehaviorSubject<ImmutableList<ItemModel>>(model);
             vm.Initialize(subj);
 
@@ -33,6 +35,19 @@ namespace ConsoleDemo.Samples.RxMvvm
             model = model
                 .RemoveAt(2)
                 .Move(2, 3);
+
+            Console.WriteLine(model.ToJson());
+
+            subj.OnNext(model);
+
+            Console.WriteLine("------------------------------------");
+
+            model = model
+                .SetItem(1, new ItemModel("6", "Sixth", "Even"))
+                .Add(new ItemModel("7", "Seventh", "Odd"))
+                .RemoveAll(m => m.Category == "Odd");
+
+            Console.WriteLine(model.ToJson());
             subj.OnNext(model);
 
         }

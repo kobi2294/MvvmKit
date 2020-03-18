@@ -11,7 +11,7 @@ namespace MvvmKit
     {
         private List<WeakAction> _whenClearing = new List<WeakAction>();
 
-        protected IResolver Resolver { get; private set; }
+        public IResolver Resolver { get; private set; }
 
         protected NavigationService Navigation { get; private set; }
 
