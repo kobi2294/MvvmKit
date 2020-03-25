@@ -11,7 +11,7 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
-        public static TComponent Attach<TComponent, TProperty>(this TComponent component, 
+        public static TComponent Link<TComponent, TProperty>(this TComponent component, 
             IObservable<TProperty> source, Expression<Func<TComponent, TProperty>> property)
             where TComponent: ComponentBase
         {
@@ -21,7 +21,7 @@ namespace MvvmKit
             return component;
         }
 
-        public static TComponent Attach<TComponent, TModel, TViewModel, TKey>(this TComponent component,
+        public static TComponent Link<TComponent, TModel, TViewModel, TKey>(this TComponent component,
             IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target,
             Func<TModel, TViewModel, TViewModel> syncer,
             Func<TModel, TKey> trackBy,
@@ -45,7 +45,7 @@ namespace MvvmKit
         }
 
 
-        public static TComponent Attach<TComponent, TModel, TViewModel>(this TComponent component, 
+        public static TComponent Link<TComponent, TModel, TViewModel>(this TComponent component, 
             IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target, 
             Func<TModel, TViewModel, TViewModel> syncer, Action<TViewModel> onRemove = null
             )
