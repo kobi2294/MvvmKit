@@ -28,6 +28,7 @@ namespace ConsoleDemo.Samples.RxMvvm
         {
             Items.CollectionChanged += Items_CollectionChanged;
             this.Attach(param, Items, (m, vm) => vm.ReadModel(m), 
+                trackBy: m => m.Uid, 
                 onRemove: vm => vm.BeforeRemove());
         }
 
