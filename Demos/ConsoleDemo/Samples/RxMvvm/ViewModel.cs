@@ -27,11 +27,10 @@ namespace ConsoleDemo.Samples.RxMvvm
         public void Initialize(IObservable<ImmutableList<ItemModel>> param)
         {
             Items.CollectionChanged += Items_CollectionChanged;
-            this.Link(
-                source: param, 
-                target: Items, 
-                syncer: (m, vm) => vm.ReadModel(m), 
-                trackBy: m => m.Uid, 
+            param.Link(this,
+                target: Items,
+                syncer: (m, vm) => vm.ReadModel(m),
+                trackBy: m => m.Uid,
                 onRemove: vm => vm.BeforeRemove());
         }
 

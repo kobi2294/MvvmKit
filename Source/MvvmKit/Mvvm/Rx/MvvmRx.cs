@@ -11,8 +11,9 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
-        public static TComponent Link<TComponent, TProperty>(this TComponent component, 
-            IObservable<TProperty> source, Expression<Func<TComponent, TProperty>> property)
+        public static TComponent Link<TComponent, TProperty>(this IObservable<TProperty> source, 
+            TComponent component, 
+            Expression<Func<TComponent, TProperty>> property)
             where TComponent: ComponentBase
         {
             var setter = property.GetProperty().ToSetter<TComponent, TProperty>();
@@ -21,8 +22,9 @@ namespace MvvmKit
             return component;
         }
 
-        public static TComponent Link<TComponent, TModel, TViewModel, TKey>(this TComponent component,
-            IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target,
+        public static TComponent Link<TComponent, TModel, TViewModel, TKey>(this IObservable<ImmutableList<TModel>> source,
+            TComponent component,
+            ObservableCollection<TViewModel> target,
             Func<TModel, TViewModel, TViewModel> syncer,
             Func<TModel, TKey> trackBy,
             Action<TViewModel> onRemove = null
@@ -45,8 +47,9 @@ namespace MvvmKit
         }
 
 
-        public static TComponent Link<TComponent, TModel, TViewModel>(this TComponent component, 
-            IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target, 
+        public static TComponent Link<TComponent, TModel, TViewModel>(this IObservable<ImmutableList<TModel>> source,
+            TComponent component, 
+            ObservableCollection<TViewModel> target, 
             Func<TModel, TViewModel, TViewModel> syncer, Action<TViewModel> onRemove = null
             )
             where TComponent: ComponentBase           
