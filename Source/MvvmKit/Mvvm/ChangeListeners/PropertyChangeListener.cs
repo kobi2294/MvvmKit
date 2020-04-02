@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class PropertyChangeListener
+    public class PropertyChangeListener: BaseDisposable
     {
         private HashSet<WeakAction> _listeners;
 
@@ -79,6 +79,11 @@ namespace MvvmKit
             _ensureListeners().RemoveWhere(wa => (wa.Owner == owner) && (wa.Method == a.Method));
         }
 
+        protected override void OnDisposed()
+        {
+            base.OnDisposed();
+            _listeners = null;
+        }
 
     }
 }

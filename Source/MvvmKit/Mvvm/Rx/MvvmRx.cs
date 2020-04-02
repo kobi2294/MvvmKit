@@ -11,59 +11,100 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
-        public static TComponent Link<TComponent, TProperty>(this TComponent component, 
-            IObservable<TProperty> source, Expression<Func<TComponent, TProperty>> property)
-            where TComponent: ComponentBase
+        public static void LinkProperty<TVm, TProperty>(this IObservable<TProperty> source,
+            TVm vm,
+            Expression<Func<TVm, TProperty>> property)
+            where TVm: BindableBase
         {
-            var setter = property.GetProperty().ToSetter<TComponent, TProperty>();
-            var subscription = source.Subscribe(val => setter(component, val));
-            component.WhenClearing(() => subscription.Dispose());
-            return component;
+            var setter = property.GetProperty().ToSetter<TVm, TProperty>();
+            source.Subscribe(val => setter(vm, val))
+                .DisposedBy(vm);
         }
 
-        public static TComponent Link<TComponent, TModel, TViewModel, TKey>(this TComponent component,
-            IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target,
-            Func<TModel, TViewModel, TViewModel> syncer,
+        public static void LinkCollection<TOwner, TModel, TItem, TKey>(this IObservable<ImmutableList<TModel>> source,
+            TOwner owner,
+            ObservableCollection<TItem> targetCollection,
+            Func<TItem> factory, 
+            Func<TModel, TItem, TItem> syncer,
             Func<TModel, TKey> trackBy,
-            Action<TViewModel> onRemove = null
+            Action<TItem> onRemove = null
             )
-    where TComponent : ComponentBase
+        where TOwner : BindableBase
         {
             var latestModel = ImmutableList<TModel>.Empty;
-            var subscription = source.Subscribe(val =>
+            source.Subscribe(val =>
             {
                 var diff = latestModel.Diff(val, trackBy);
                 latestModel = val;
-                target.ApplyDiff(diff,
-                    onAdd: (i, model) => syncer(model, component.Resolver.Resolve<TViewModel>()),
-                    onModify: (i, oldModel, newModel, vm) => syncer(newModel, vm),
-                    onRemove: (i, model, vm) => onRemove?.Invoke(vm));
-            });
-
-            component.WhenClearing(() => subscription.Dispose());
-            return component;
+                targetCollection.ApplyDiff(diff,
+                    onAdd: (index, model) => syncer(model, factory()),
+                    onModify: (index, oldModel, newModel, item) => syncer(newModel, item),
+                    onRemove: (index, model, vm) => onRemove?.Invoke(vm)
+                    );
+            }).DisposedBy(owner);
         }
 
 
-        public static TComponent Link<TComponent, TModel, TViewModel>(this TComponent component, 
-            IObservable<ImmutableList<TModel>> source, ObservableCollection<TViewModel> target, 
-            Func<TModel, TViewModel, TViewModel> syncer, Action<TViewModel> onRemove = null
+        public static TOwner LinkCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
+            TOwner owner, 
+            ObservableCollection<TItem> targetCollection, 
+            Func<TItem> factory, 
+            Func<TModel, TItem, TItem> syncer, 
+            Action<TItem> onRemove = null
             )
-            where TComponent: ComponentBase           
+            where TOwner: BindableBase
         {
             var latestModel = ImmutableList<TModel>.Empty;
-            var subscription = source.Subscribe(val =>
+            source.Subscribe(val =>
             {
                 var diff = latestModel.Diff(val);
                 latestModel = val;
-                target.ApplyDiff(diff,
-                    onAdd: (i, model) => syncer(model, component.Resolver.Resolve<TViewModel>()),
+                targetCollection.ApplyDiff(diff,
+                    onAdd: (i, model) => syncer(model, factory()),
                     onModify: (i, oldModel, newModel, vm) => syncer(newModel, vm),
                     onRemove: (i, model, vm) => onRemove?.Invoke(vm));
-            });
+            }).DisposedBy(owner);
 
-            component.WhenClearing(() => subscription.Dispose());
-            return component;
+            return owner;
         }
+
+        public static IRxCommand CreateCommand(BindableBase owner)
+        {
+            return new RxCommand()
+                .DisposedBy(owner);
+        }
+
+        public static IRxCommand CreateCommand(BindableBase owner, IObservable<bool> canExecute)
+        {
+            return new RxCommand<bool>(canExecute, t => t)
+                .DisposedBy(owner);
+        }
+
+        public static IRxCommand CreateCommand<TCanExecute>(BindableBase owner, 
+            IObservable<TCanExecute> canExecuteObservable, Func<TCanExecute, bool> canExecuteFunc)
+        {
+            return new RxCommand<TCanExecute>(canExecuteObservable, canExecuteFunc)
+                .DisposedBy(owner);
+        }
+
+        public static IRxCommand<T> CreateCommand<T>(BindableBase owner)
+        {
+            return new RxCommand<T, bool>()
+                .DisposedBy(owner);
+        }
+
+        public static IRxCommand<T> CreateCommand<T>(BindableBase owner, IObservable<bool> canExecute)
+        {
+            return new RxCommand<T, bool>(canExecute, (t, cx) => cx)
+                .DisposedBy(owner);
+        }
+
+        public static IRxCommand<T> CreateCommand<T, TCanExecute>(BindableBase owner,
+            IObservable<TCanExecute> canExecuteObservable, Func<T, TCanExecute, bool> canExecuteFunc)
+        {
+            return new RxCommand<T, TCanExecute>(canExecuteObservable, (t, cx) => canExecuteFunc(t, cx))
+                .DisposedBy(owner);
+        }
+
     }
 }

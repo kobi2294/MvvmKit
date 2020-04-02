@@ -34,9 +34,11 @@ namespace ConsoleDemo.Samples.RxMvvm
             return this;
         }
 
-        public void BeforeRemove()
+
+        protected override void OnDisposed()
         {
-            Console.WriteLine($"Removing item uid: {Uid}");
+            base.OnDisposed();
+            Console.WriteLine($"Disposing ItemVm uid: {Uid}");
         }
 
     }

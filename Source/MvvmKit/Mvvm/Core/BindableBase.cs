@@ -10,8 +10,50 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class BindableBase : PrismBindableBase
+    public class BindableBase : PrismBindableBase, INotifyDisposable
     {
+        #region INotifyDisposable
+
+        public bool IsDisposed { get; private set; } = false;
+
+        public event EventHandler Disposing;
+
+        public void Validate()
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+        }
+
+        protected virtual void OnDisposed()
+        {
+            if (_listeners != null)
+            {
+                foreach (var listener in _listeners.Values)
+                {
+                    listener.Dispose();
+                }
+                _listeners = null;
+            }
+        }
+
+        public void DisposeIfNeeded()
+        {
+            if (!IsDisposed)
+                Dispose();
+        }
+
+        public void Dispose()
+        {
+            Validate();
+            IsDisposed = true;
+            OnDisposed();
+            Disposing?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+
         private Dictionary<string, PropertyChangeListener> _listeners;
 
         private void _callListenersIfExist<T>(string propertyName, T oldval, T newval)

@@ -13,6 +13,7 @@ namespace ConsoleDemo.Samples.RxMvvm
 {
     public static class Main
     {
+        private static int _counter = 10;
         private static ViewModel _vm;
         private static ImmutableList<ItemModel> _model;
         private static UnityContainer _container;
@@ -66,6 +67,25 @@ namespace ConsoleDemo.Samples.RxMvvm
                 .RemoveAt(1)
                 .Insert(0, new ItemModel("4", "New Fourth", "Edited")));
 
+            _vm.AddItem.Subscribe(x =>
+            {
+                _do(_model
+                    .Add(new ItemModel((++_counter).ToString(), "Item " + _counter, "Category " + _counter)));
+            },
+            () => Console.WriteLine("Command Completed")
+            );
+
+            _vm.RemoveItem.Subscribe(id =>
+            {
+                _do(_model.RemoveAll(x => x.Uid == id));
+            });
+
+
+            _vm.AddItem.Execute(null);
+            _vm.AddItem.Execute(null);
+            _vm.RemoveItem.Execute("4");
+
+            _vm.Dispose();
         }
     }
 }

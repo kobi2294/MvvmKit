@@ -105,7 +105,9 @@
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
+    <Compile Include="Mvvm\Rx\IRxCommand.cs" />
     <Compile Include="Mvvm\Rx\MvvmRx.cs" />
+    <Compile Include="Mvvm\Rx\RxCommand.cs" />
     <Compile Include="Services\State2\InterfaceState.cs" />
     <Compile Include="Services\State2\IStateList.cs" />
     <Compile Include="Services\State2\Properties\IStateCollection.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\IConsole.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\StringConsole.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\TreePrinter.cs" />
+    <Compile Include="Tools\Disposables\INotifyDisposable.cs" />
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ImmutableExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />

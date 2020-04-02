@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class BaseDisposable : IDisposable
+    public class BaseDisposable : INotifyDisposable
     {
         public bool IsDisposed { get; private set; } = false;
+
+        public event EventHandler Disposing;
 
         public void Validate()
         {
@@ -33,6 +35,7 @@ namespace MvvmKit
             Validate();
             IsDisposed = true;
             OnDisposed();
+            Disposing?.Invoke(this, EventArgs.Empty);
         }
     }
 }

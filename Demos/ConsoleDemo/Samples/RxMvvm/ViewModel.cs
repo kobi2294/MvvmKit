@@ -19,25 +19,33 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         #endregion
 
+        #region Commands
+
+        public IRxCommand AddItem { get; }
+
+        public IRxCommand<string> RemoveItem { get; }
+
+        #endregion
+
         public ViewModel()
         {
-            Items = new ObservableCollection<ItemVm>();
+            Items = new ObservableCollection<ItemVm>().AllDisposedBy(this);
+            AddItem = MvvmRx.CreateCommand(this);
+            RemoveItem = MvvmRx.CreateCommand<string>(this);
         }
 
         public void Initialize(IObservable<ImmutableList<ItemModel>> param)
         {
             Items.CollectionChanged += Items_CollectionChanged;
-            this.Link(
-                source: param, 
-                target: Items, 
-                syncer: (m, vm) => vm.ReadModel(m), 
-                trackBy: m => m.Uid, 
-                onRemove: vm => vm.BeforeRemove());
+            param.LinkCollection(this, Items,
+                factory: () => Resolver.Resolve<ItemVm>(),
+                syncer: (model, vm) => vm.ReadModel(model),
+                onRemove: vm => vm.Dispose());
         }
 
         private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Console.WriteLine($"{e.Action}, {e.NewStartingIndex}, {e.OldStartingIndex}");
+            Console.WriteLine($"Collection Changed: {e.Action}, {e.NewStartingIndex}, {e.OldStartingIndex}");
         }
     }
 }
