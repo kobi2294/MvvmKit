@@ -4,6 +4,8 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -104,6 +106,28 @@ namespace MvvmKit
         {
             return new RxCommand<T, TCanExecute>(canExecuteObservable, (t, cx) => canExecuteFunc(t, cx))
                 .DisposedBy(owner);
+        }
+
+        public static IObservable<TProp> PropertyValues<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+            where TBindable: BindableBase
+        {
+            var propInfo = property.GetProperty();
+            var getter = propInfo.ToGetter<TBindable, TProp>();
+            var value = getter(owner);
+            var subject = new BehaviorSubject<TProp>(value);
+            owner.Observe<TProp>(propInfo.Name, val => subject.OnNext(val));
+            owner.Disposing += (s, e) => subject.OnCompleted();
+            return subject.AsObservable();
+        }
+
+        public static IObservable<(TProp oldValue, TProp newValue)> PropertyChanges<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+            where TBindable: BindableBase
+        {
+            var values = PropertyValues(owner, property);
+            var changes = values
+                .Scan((oldValue: default(TProp), newValue: default(TProp)), (pair, val) => (pair.newValue, val))
+                .Skip(1);
+            return changes;                
         }
 
     }

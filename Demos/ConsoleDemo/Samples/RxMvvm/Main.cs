@@ -85,6 +85,13 @@ namespace ConsoleDemo.Samples.RxMvvm
             _vm.AddItem.Execute(null);
             _vm.RemoveItem.Execute("4");
 
+            MvvmRx.PropertyChanges(_vm, x => x.Caption)
+                .Subscribe(x => Console.WriteLine($"Property Caption changed from {x.oldValue} to {x.newValue}"),
+                () => Console.WriteLine("Property observer completed"));
+
+            _vm.Caption = "A";
+            _vm.Caption = "B";
+
             _vm.Dispose();
         }
     }

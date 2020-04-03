@@ -17,6 +17,11 @@ namespace ConsoleDemo.Samples.RxMvvm
         private ObservableCollection<ItemVm> _Items;
         public ObservableCollection<ItemVm> Items { get { return _Items; } set { SetProperty(ref _Items, value); } }
 
+
+        private string _Caption;
+        public string Caption { get { return _Caption; } set { SetProperty(ref _Caption, value); } }
+
+
         #endregion
 
         #region Commands
@@ -40,6 +45,7 @@ namespace ConsoleDemo.Samples.RxMvvm
             param.LinkCollection(this, Items,
                 factory: () => Resolver.Resolve<ItemVm>(),
                 syncer: (model, vm) => vm.ReadModel(model),
+                trackBy: model => model.Uid, 
                 onRemove: vm => vm.Dispose());
         }
 
