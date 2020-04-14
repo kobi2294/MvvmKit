@@ -191,7 +191,7 @@ namespace ConsoleDemo.Samples.RxMvvm
                 .Subscribe(x => Console.WriteLine($"Property Caption changed from {x.oldValue} to {x.newValue}"),
                 () => Console.WriteLine("Property observer completed"));
 
-            // property changes observable shoud fire two evnets
+            // property changes observable should fire two events
             _vm.Caption = "A";
             _vm.Caption = "B";
 
