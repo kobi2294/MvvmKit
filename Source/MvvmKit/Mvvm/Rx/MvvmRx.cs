@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -133,31 +135,133 @@ namespace MvvmKit
         }
 
 
-        public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> 
+        public static IObservable<(ImmutableList<T> values, NotifyCollectionChangedEventArgs args)>
             CollectionChanges<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
-            where TBindable: INotifyDisposable
+            where TBindable : INotifyDisposable
         {
             var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
                 h => collection.CollectionChanged += h,
                 h => collection.CollectionChanged -= h);
 
-            return obs.Select(x => (value: (x.Sender as ObservableCollection<T>).ToImmutableList(), args: x.EventArgs))
-               .StartWith((value: collection.ToImmutableList(), args: new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)))
+            return obs.Select(x => (values: (x.Sender as ObservableCollection<T>).ToImmutableList(), args: x.EventArgs))
+               .StartWith((values: collection.ToImmutableList(), args: new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)))
+               .CompletedBy(owner);
+        }
+
+        public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> 
+            CollectionChangesExtended<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            where TBindable: INotifyDisposable
+        {
+            return CollectionChanges(owner, collection)
                .Buffer(2, 1)
                .Where(list => list.Count == 2)
-               .Select(pair => (oldValue: pair[0].value, newValue: pair[1].value, args: pair[1].args))
-               .CompletedBy(owner);
+               .Select(pair => (oldValue: pair[0].values, newValue: pair[1].values, args: pair[1].args));
         }
 
         public static IObservable<ImmutableList<T>> 
             CollectionValues<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable: INotifyDisposable
         {
-            var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
-                h => collection.CollectionChanged += h,
-                h => collection.CollectionChanged -= h);
-            return obs.Select(x => (x.Sender as ObservableCollection<T>).ToImmutableList())
-                .StartWith(collection.ToImmutableList<T>())
+            return CollectionChanges(owner, collection)
+                .Select(pair => pair.values);
+        }
+
+        private static void _subscribeToNewItems<TItem, TObservable, T>(IEnumerable<TItem> items, 
+            Func<TItem, IObservable<TObservable>> selector, 
+            Func<TItem, TObservable, T> value, 
+            Dictionary<TItem, IDisposable> subscriptions, 
+            IObserver<T> observer)
+        {
+            foreach (var item in items)
+            {
+                var observable = selector(item);
+                var subscription = observable.Subscribe(Observer.Create<TObservable>(val =>
+                {
+                    var finalValue = value(item, val);
+                    observer.OnNext(finalValue);
+                }, observer.OnError, observer.OnCompleted));
+                subscriptions.Add(item, subscription);
+            }
+        }
+
+        private static void _unsubscribeFromItems<TItem>(IEnumerable<TItem> items, Dictionary<TItem, IDisposable> subscriptions)
+        {
+            foreach (var item in items)
+            {
+                var disposable = subscriptions[item];
+                disposable.Dispose();
+                subscriptions.Remove(item);
+            }
+        }
+
+        private static void _clearSubscriptions<TItem>(Dictionary<TItem, IDisposable> subscriptions)
+        {
+            foreach (var pair in subscriptions)
+            {
+                var disposable = pair.Value;
+                disposable.Dispose();
+            }
+            subscriptions.Clear();
+        }
+
+        private static IDisposable _subscribeCollectMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection,
+            Func<TItem, IObservable<TObservable>> selector,
+            Func<TItem, TObservable, T> value, 
+            IObserver<T> observer)
+            where TBindable : INotifyDisposable
+        {
+            var subscriptions = new Dictionary<TItem, IDisposable>();
+            var mainSubscription = CollectionChanges(owner, collection)
+                    .Synchronize()
+                    .Subscribe(pair =>
+                    {
+                        switch (pair.args.Action)
+                        {
+                            case NotifyCollectionChangedAction.Add:
+                                _subscribeToNewItems(pair.args.NewItems.Cast<TItem>(), selector, value, subscriptions, observer);
+                                break;
+                            case NotifyCollectionChangedAction.Remove:
+                                _unsubscribeFromItems(pair.args.OldItems.Cast<TItem>(), subscriptions);
+                                break;
+                            case NotifyCollectionChangedAction.Replace:
+                                _unsubscribeFromItems(pair.args.OldItems.Cast<TItem>(), subscriptions);
+                                _subscribeToNewItems(pair.args.NewItems.Cast<TItem>(), selector, value, subscriptions, observer);
+                                break;
+                            case NotifyCollectionChangedAction.Move:
+                                break;
+                            case NotifyCollectionChangedAction.Reset:
+                                _clearSubscriptions(subscriptions);
+                                _subscribeToNewItems(pair.values, selector, value, subscriptions, observer);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    err =>
+                    {
+                        _clearSubscriptions(subscriptions);
+                    },
+                    () =>
+                    {
+                        _clearSubscriptions(subscriptions);
+                    });
+
+            return Disposable.Create(() =>
+            {
+                _clearSubscriptions(subscriptions);
+                mainSubscription.Dispose();
+            });
+
+
+        }
+
+        public static IObservable<T> CollectMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection, 
+            Func<TItem, IObservable<TObservable>> selector, 
+            Func<TItem, TObservable, T> value)
+            where TBindable: INotifyDisposable
+        {
+            return Observable
+                .Create((IObserver<T> observer) => _subscribeCollectMany(owner, collection, selector, value, observer))
                 .CompletedBy(owner);
         }
     }

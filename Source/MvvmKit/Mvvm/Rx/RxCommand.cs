@@ -34,7 +34,7 @@ namespace MvvmKit
         protected override void OnDisposed()
         {
             base.OnDisposed();
-            _subject.OnCompleted();
+            _subject.Dispose();
         }
 
         #region ICommand

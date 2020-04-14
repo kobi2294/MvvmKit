@@ -29,7 +29,7 @@ namespace ConsoleDemo.Samples.RxMvvm
             Console.ForegroundColor = ConsoleColor.White;
             _model = model;
             var str = _model.ToJson();
-            Console.WriteLine(str);
+            Console.WriteLine("Model: " + str);
             Console.ForegroundColor = ConsoleColor.Yellow;
             _subj.OnNext(_model);            
         }
@@ -110,7 +110,18 @@ namespace ConsoleDemo.Samples.RxMvvm
             _container = new UnityContainer();
             _container.RegisterType<IResolver, UnityResolver>(new ContainerControlledLifetimeManager());
             _vm = _container.Resolve<ViewModel>();
+            _vm.Items.CollectionChanged += (s, e) =>
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"Collection Changed: {e.AsString()}");
+            };
 
+            MvvmRx.CollectMany(_vm, _vm.Items, item => item.DoMath, (item, number) => $"item: {item.Uid}, number: {number}")
+                .Subscribe(val =>
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(val);
+                }).DisposedBy(_vm);
 
             Console.WriteLine(_model.ToJson());
 
@@ -124,10 +135,27 @@ namespace ConsoleDemo.Samples.RxMvvm
                 new ItemModel("4", "Fourth", "Even"),
                 new ItemModel("5", "Fifth", "Odd")));
 
+            var cmd3 = _vm.Items[2].DoMath;
+
             // 1, 2, 5, 4
             _do(_model
                 .RemoveAt(2)
                 .Move(2, 3));
+
+            _vm.Items[1].DoMath.Execute(100);
+            _vm.Items.Last().DoMath.Execute(200);
+
+            // this should not do anything becuase the command is not in the loop anymore
+            // since the owner of the command is disposed, this shoud throw an error
+            try
+            {
+                cmd3.Execute(300);
+            }
+            catch (ObjectDisposedException ex)
+            {
+                Console.WriteLine("Thrown object disposed exception as expected");
+            }
+                
 
             // 6, 4
             _do(_model

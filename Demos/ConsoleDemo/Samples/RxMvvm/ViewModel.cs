@@ -41,7 +41,6 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         public void Initialize(IObservable<ImmutableList<ItemModel>> param)
         {
-            Items.CollectionChanged += Items_CollectionChanged;
             param.LinkCollection(this, Items,
                 factory: () => Resolver.Resolve<ItemVm>(),
                 syncer: (model, vm) => vm.ReadModel(model),
@@ -49,9 +48,10 @@ namespace ConsoleDemo.Samples.RxMvvm
                 onRemove: vm => vm.Dispose());
         }
 
-        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        protected override void OnDisposed()
         {
-            Console.WriteLine($"Collection Changed: {e.Action}, {e.NewStartingIndex}, {e.OldStartingIndex}");
+            Console.WriteLine("Disposing ViewModel");
+            base.OnDisposed();
         }
     }
 }
