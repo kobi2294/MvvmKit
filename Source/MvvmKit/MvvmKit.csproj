@@ -142,6 +142,7 @@
     <Compile Include="Tools\Disposables\INotifyDisposable.cs" />
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ImmutableExtensions.cs" />
+    <Compile Include="Tools\Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Tools\Extensions\SerializationExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />

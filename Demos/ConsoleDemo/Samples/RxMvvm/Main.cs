@@ -79,14 +79,20 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         public static void TestObservableCollection()
         {
+            var owner = new BindableBase();
             var oc = new ObservableCollection<string>();
-            var obs = MvvmRx.CollectionChanges(oc);
-            obs.Subscribe(val =>
+            var obsc = MvvmRx.CollectionChanges(owner, oc);
+            var values = MvvmRx.CollectionValues(owner, oc);
+            obsc.Subscribe(val =>
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(string.Join<string>(", ", val.oldValue));
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(string.Join<string>(", ", val.newValue));
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(val.args.AsString());
+            });
+
+            values.Subscribe(val =>
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"[{string.Join<string>(", ", val)}]");
             });
 
             oc.Add("A");

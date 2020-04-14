@@ -132,8 +132,10 @@ namespace MvvmKit
             return changes;
         }
 
-        public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> CollectionChanges<T>(
-            ObservableCollection<T> collection)
+
+        public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> 
+            CollectionChanges<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            where TBindable: INotifyDisposable
         {
             var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
                 h => collection.CollectionChanged += h,
@@ -143,7 +145,20 @@ namespace MvvmKit
                .StartWith((value: collection.ToImmutableList(), args: new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)))
                .Buffer(2, 1)
                .Where(list => list.Count == 2)
-               .Select(pair => (oldValue: pair[0].value, newValue: pair[1].value, args: pair[1].args));
+               .Select(pair => (oldValue: pair[0].value, newValue: pair[1].value, args: pair[1].args))
+               .CompletedBy(owner);
+        }
+
+        public static IObservable<ImmutableList<T>> 
+            CollectionValues<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            where TBindable: INotifyDisposable
+        {
+            var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                h => collection.CollectionChanged += h,
+                h => collection.CollectionChanged -= h);
+            return obs.Select(x => (x.Sender as ObservableCollection<T>).ToImmutableList())
+                .StartWith(collection.ToImmutableList<T>())
+                .CompletedBy(owner);
         }
     }
 }

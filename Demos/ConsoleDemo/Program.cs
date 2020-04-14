@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            ConsoleDemo.Samples.RxMvvm.Main.TestCompletedByDisposable();
+            ConsoleDemo.Samples.RxMvvm.Main.TestObservableCollection();
             Console.ReadLine();
         }
     }
