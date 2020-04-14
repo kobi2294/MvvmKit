@@ -145,36 +145,5 @@ namespace MvvmKit
                .Where(list => list.Count == 2)
                .Select(pair => (oldValue: pair[0].value, newValue: pair[1].value, args: pair[1].args));
         }
-
-        public static IObservable<T> AsObservable<T>(this INotifyDisposable disposable, Func<T> lastValue = null)
-        {
-            return Observable.Create<T>(observer =>           
-            {
-                if (disposable.IsDisposed)
-                {
-                    if (lastValue != null) observer.OnNext(lastValue());
-                    observer.OnCompleted();
-                    return Disposables.Empty;
-                }
-
-                EventHandler handler = (s, e) =>
-                {
-                    if (lastValue != null) observer.OnNext(lastValue());
-                    observer.OnCompleted();
-                };
-
-                disposable.Disposing += handler;
-                return Disposables.Call(() =>
-                {
-                    disposable.Disposing -= handler;
-                });
-            });
-        }
-
-        public static IObservable<T> CompletedBy<T>(this IObservable<T> source, INotifyDisposable disposable)
-        {
-            var completer = disposable.AsObservable<bool>(() => true);
-            return source.TakeUntil(completer);
-        }
     }
 }
