@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
@@ -16,7 +17,7 @@ namespace MvvmKit
         public static void LinkProperty<TVm, TProperty>(this IObservable<TProperty> source,
             TVm vm,
             Expression<Func<TVm, TProperty>> property)
-            where TVm: BindableBase
+            where TVm : BindableBase
         {
             var setter = property.GetProperty().ToSetter<TVm, TProperty>();
             source.Subscribe(val => setter(vm, val))
@@ -26,7 +27,7 @@ namespace MvvmKit
         public static void LinkCollection<TOwner, TModel, TItem, TKey>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
-            Func<TItem> factory, 
+            Func<TItem> factory,
             Func<TModel, TItem, TItem> syncer,
             Func<TModel, TKey> trackBy,
             Action<TItem> onRemove = null
@@ -48,13 +49,13 @@ namespace MvvmKit
 
 
         public static TOwner LinkCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
-            TOwner owner, 
-            ObservableCollection<TItem> targetCollection, 
-            Func<TItem> factory, 
-            Func<TModel, TItem, TItem> syncer, 
+            TOwner owner,
+            ObservableCollection<TItem> targetCollection,
+            Func<TItem> factory,
+            Func<TModel, TItem, TItem> syncer,
             Action<TItem> onRemove = null
             )
-            where TOwner: BindableBase
+            where TOwner : BindableBase
         {
             var latestModel = ImmutableList<TModel>.Empty;
             source.Subscribe(val =>
@@ -82,7 +83,7 @@ namespace MvvmKit
                 .DisposedBy(owner);
         }
 
-        public static IRxCommand CreateCommand<TCanExecute>(BindableBase owner, 
+        public static IRxCommand CreateCommand<TCanExecute>(BindableBase owner,
             IObservable<TCanExecute> canExecuteObservable, Func<TCanExecute, bool> canExecuteFunc)
         {
             return new RxCommand<TCanExecute>(canExecuteObservable, canExecuteFunc)
@@ -109,7 +110,7 @@ namespace MvvmKit
         }
 
         public static IObservable<TProp> PropertyValues<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
-            where TBindable: BindableBase
+            where TBindable : BindableBase
         {
             var propInfo = property.GetProperty();
             var getter = propInfo.ToGetter<TBindable, TProp>();
@@ -121,14 +122,59 @@ namespace MvvmKit
         }
 
         public static IObservable<(TProp oldValue, TProp newValue)> PropertyChanges<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
-            where TBindable: BindableBase
+            where TBindable : BindableBase
         {
             var values = PropertyValues(owner, property);
             var changes = values
-                .Scan((oldValue: default(TProp), newValue: default(TProp)), (pair, val) => (pair.newValue, val))
-                .Skip(1);
-            return changes;                
+                .Buffer(2, 1)
+                .Where(list => list.Count == 2)
+                .Select(pair => (oldValue: pair[0], newValue: pair[1]));
+            return changes;
         }
 
+        public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> CollectionChanges<T>(
+            ObservableCollection<T> collection)
+        {
+            var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
+                h => collection.CollectionChanged += h,
+                h => collection.CollectionChanged -= h);
+
+            return obs.Select(x => (value: (x.Sender as ObservableCollection<T>).ToImmutableList(), args: x.EventArgs))
+               .StartWith((value: collection.ToImmutableList(), args: new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)))
+               .Buffer(2, 1)
+               .Where(list => list.Count == 2)
+               .Select(pair => (oldValue: pair[0].value, newValue: pair[1].value, args: pair[1].args));
+        }
+
+        public static IObservable<T> AsObservable<T>(this INotifyDisposable disposable, Func<T> lastValue = null)
+        {
+            return Observable.Create<T>(observer =>           
+            {
+                if (disposable.IsDisposed)
+                {
+                    if (lastValue != null) observer.OnNext(lastValue());
+                    observer.OnCompleted();
+                    return Disposables.Empty;
+                }
+
+                EventHandler handler = (s, e) =>
+                {
+                    if (lastValue != null) observer.OnNext(lastValue());
+                    observer.OnCompleted();
+                };
+
+                disposable.Disposing += handler;
+                return Disposables.Call(() =>
+                {
+                    disposable.Disposing -= handler;
+                });
+            });
+        }
+
+        public static IObservable<T> CompletedBy<T>(this IObservable<T> source, INotifyDisposable disposable)
+        {
+            var completer = disposable.AsObservable<bool>(() => true);
+            return source.TakeUntil(completer);
+        }
     }
 }

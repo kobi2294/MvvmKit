@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +32,71 @@ namespace ConsoleDemo.Samples.RxMvvm
             Console.WriteLine(str);
             Console.ForegroundColor = ConsoleColor.Yellow;
             _subj.OnNext(_model);            
+        }
+
+        public static void TestDisposableAsObservable()
+        {
+            Console.WriteLine(DateTime.Now);
+            var disposable = new BaseDisposable();
+            var observable = disposable.AsObservable<int>(() => 42).Timestamp();
+
+            observable.Subscribe(i => Console.WriteLine("ob 1 Next " + i), () => Console.WriteLine("ob 1 Completed"));
+            var sub = observable.Subscribe(i => Console.WriteLine("ob 2 Next " + i), () => Console.WriteLine("ob 2 Completed"));
+
+            Task.Delay(1000).Wait();
+
+            sub.Dispose();
+
+            Task.Delay(1000).Wait();
+
+            disposable.Dispose();
+
+            Task.Delay(1000).Wait();
+
+            observable.Subscribe(i => Console.WriteLine("ob 3 Next " + i), () => Console.WriteLine("ob 3 Completed"));
+
+        }
+
+        public static void TestCompletedByDisposable()
+        {
+            var disposable = new BaseDisposable();
+            var obs = Observable
+                .Interval(TimeSpan.FromSeconds(1))
+                .CompletedBy(disposable)
+                .Timestamp();
+
+            obs.Subscribe(i => Console.WriteLine("ob 1 Next " + i), () => Console.WriteLine("ob 1 Completed"));
+            Task.Delay(2200).Wait();
+            obs.Subscribe(i => Console.WriteLine("ob 2 Next " + i), () => Console.WriteLine("ob 2 Completed"));
+            Task.Delay(2200).Wait();
+            var sub = obs.Subscribe(i => Console.WriteLine("ob 3 Next " + i), () => Console.WriteLine("ob 3 Completed"));
+            Task.Delay(2200).Wait();
+            sub.Dispose();
+            Task.Delay(2200).Wait();
+            disposable.Dispose();
+
+        }
+
+        public static void TestObservableCollection()
+        {
+            var oc = new ObservableCollection<string>();
+            var obs = MvvmRx.CollectionChanges(oc);
+            obs.Subscribe(val =>
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(string.Join<string>(", ", val.oldValue));
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(string.Join<string>(", ", val.newValue));
+            });
+
+            oc.Add("A");
+            oc.Add("B");
+            oc.Add("C");
+            oc.Add("D");
+            oc.Move(1, 3);
+            oc[2] = "E";
+            oc.RemoveAt(2);
+            oc.Clear();
         }
 
         public static void Run()
@@ -89,8 +157,11 @@ namespace ConsoleDemo.Samples.RxMvvm
                 .Subscribe(x => Console.WriteLine($"Property Caption changed from {x.oldValue} to {x.newValue}"),
                 () => Console.WriteLine("Property observer completed"));
 
+            // property changes observable shoud fire two evnets
             _vm.Caption = "A";
             _vm.Caption = "B";
+
+
 
             _vm.Dispose();
         }

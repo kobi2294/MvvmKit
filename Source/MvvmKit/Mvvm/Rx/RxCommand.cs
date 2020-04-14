@@ -13,8 +13,8 @@ namespace MvvmKit
     {
         private Subject<TParam> _subject = new Subject<TParam>();
         private Func<TParam, TCanExecute, bool> _canExecuteFunc = (res, cx) => true;
-        private TCanExecute _latestCanExecuteValue = default;
-        private IObservable<TCanExecute> _canExecuteObservable = Observable.Return<TCanExecute>(default);
+        private TCanExecute _latestCanExecuteValue = default(TCanExecute);
+        private IObservable<TCanExecute> _canExecuteObservable = Observable.Return<TCanExecute>(default(TCanExecute));
 
         internal RxCommand(
             IObservable<TCanExecute> canExecuteObservable = null, 

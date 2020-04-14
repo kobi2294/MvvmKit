@@ -8,6 +8,8 @@ namespace MvvmKit
 {
     public static partial class Disposables
     {
+        public static IDisposable Empty { get; } = Disposables.Call(() => { });
+
         public static BaseDisposableWithData<T> WithData<T>(T data)
         {
             return new BaseDisposableWithData<T>(data);

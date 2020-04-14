@@ -9,5 +9,7 @@ namespace MvvmKit
     public interface INotifyDisposable: IDisposable
     {
         event EventHandler Disposing;
+
+        bool IsDisposed { get; }
     }
 }

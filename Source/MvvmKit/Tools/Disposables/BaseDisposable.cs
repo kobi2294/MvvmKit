@@ -36,6 +36,7 @@ namespace MvvmKit
             IsDisposed = true;
             OnDisposed();
             Disposing?.Invoke(this, EventArgs.Empty);
+            Disposing = null;
         }
     }
 }
