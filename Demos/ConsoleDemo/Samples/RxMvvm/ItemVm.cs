@@ -24,20 +24,38 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         #endregion
 
+        #region Commands
+
+        public IRxCommand<int> DoMath { get; }
+
+        #endregion
+
+        public ItemVm()
+        {
+            DoMath = MvvmRx.CreateCommand<int>(this);
+        }
+
         public ItemVm ReadModel(ItemModel model)
         {
             _model = model;
             Uid = model.Uid;
             DisplayName = model.DisplayName;
             Category = model.Category;
-            Console.WriteLine($"updated model. uid: {Uid}, displayName: {DisplayName}, category: {Category}");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"updated ItemVM. uid: {Uid}, displayName: {DisplayName}, category: {Category}");
             return this;
         }
 
-        public void BeforeRemove()
+
+        protected override void OnDisposed()
         {
-            Console.WriteLine($"Removing item uid: {Uid}");
+            base.OnDisposed();
+            Console.WriteLine($"Disposing ItemVm uid: {Uid}");
         }
 
+        public override string ToString()
+        {
+            return $"ItemVm {Uid}";
+        }
     }
 }

@@ -9,8 +9,6 @@ namespace MvvmKit
 {
     public class ComponentBase : BindableBase
     {
-        private List<WeakAction> _whenClearing = new List<WeakAction>();
-
         public IResolver Resolver { get; private set; }
 
         protected NavigationService Navigation { get; private set; }
@@ -49,16 +47,8 @@ namespace MvvmKit
         internal async Task Clear()
         {
             await OnClearing();
-            foreach (var action in _whenClearing)
-            {
-                action.Execute();
-            }
             RegionService = null;
-        }
-
-        internal void WhenClearing(Action action)
-        {
-            _whenClearing.Add(action.ToWeak(this));   
+            Dispose();
         }
 
         [InjectionMethod]

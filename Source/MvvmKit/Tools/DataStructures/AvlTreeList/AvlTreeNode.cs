@@ -8,7 +8,7 @@ namespace MvvmKit
 {
     public sealed class AvlTreeNode<T>
     {
-        internal T _item = default;
+        internal T _item = default(T);
         internal AvlTree<T> _tree = null;
 
         public int Height { get; internal set; }

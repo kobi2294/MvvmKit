@@ -22,6 +22,15 @@ namespace MvvmKit
             yield return obj;
         }
 
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var item in source)
+            {
+                action(item);
+            }
+            return source;
+        }
+
         public static IEnumerable<(int index, T item)> Enumerated<T>(this IEnumerable<T> source)
         {
             return source.Select((t, i) => (i, t)).ToArray();

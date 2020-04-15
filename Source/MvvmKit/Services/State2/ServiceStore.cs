@@ -96,7 +96,7 @@ namespace MvvmKit
         {
             AccessInterceptor inter = null;
             T proxy = default(T);
-            K res = default;
+            K res = default(K);
 
 
             using (await _lock.ReaderLock())

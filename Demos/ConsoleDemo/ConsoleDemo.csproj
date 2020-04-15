@@ -82,6 +82,9 @@
     <Compile Include="Samples\IoC\IoCTest.cs" />
     <Compile Include="Samples\IoC\ServiceClass.cs" />
     <Compile Include="Samples\LazyDictionaryDemo.cs" />
+    <Compile Include="Samples\LinqProvider\Main.cs" />
+    <Compile Include="Samples\LinqProvider\MyType.cs" />
+    <Compile Include="Samples\LinqProvider\MyTypeExtensions.cs" />
     <Compile Include="Samples\Lis\LisTest.cs" />
     <Compile Include="Samples\Observables\ObservablesDemo.cs" />
     <Compile Include="Samples\Permute\Main.cs" />
