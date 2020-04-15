@@ -20,6 +20,7 @@ namespace MvvmKit
         public static IEnumerable<(K key, int counter, T item)> Distinctify<T, K>(this IEnumerable<T> source, Func<T, K> trackBy) 
         {
             var counters = new Dictionary<K, int>();
+            if (source == null) source = Enumerable.Empty<T>();
 
             foreach (var item in source)
             {
