@@ -16,7 +16,7 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
-        public static void LinkProperty<TVm, TProperty>(this IObservable<TProperty> source,
+        public static void ApplyOnProperty<TVm, TProperty>(this IObservable<TProperty> source,
             TVm vm,
             Expression<Func<TVm, TProperty>> property)
             where TVm : BindableBase
@@ -26,7 +26,7 @@ namespace MvvmKit
                 .DisposedBy(vm);
         }
 
-        public static void LinkCollection<TOwner, TModel, TItem, TKey>(this IObservable<ImmutableList<TModel>> source,
+        public static void ApplyOnCollection<TOwner, TModel, TItem, TKey>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
             Func<TItem> factory,
@@ -50,7 +50,7 @@ namespace MvvmKit
         }
 
 
-        public static TOwner LinkCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
+        public static TOwner ApplyOnCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
             Func<TItem> factory,
@@ -111,7 +111,7 @@ namespace MvvmKit
                 .DisposedBy(owner);
         }
 
-        public static IObservable<TProp> PropertyValues<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+        public static IObservable<TProp> ObservePropertyValues<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
             where TBindable : BindableBase
         {
             var propInfo = property.GetProperty();
@@ -123,10 +123,10 @@ namespace MvvmKit
             return subject.AsObservable();
         }
 
-        public static IObservable<(TProp oldValue, TProp newValue)> PropertyChanges<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+        public static IObservable<(TProp oldValue, TProp newValue)> ObservePropertyChanges<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
             where TBindable : BindableBase
         {
-            var values = PropertyValues(owner, property);
+            var values = ObservePropertyValues(owner, property);
             var changes = values
                 .Buffer(2, 1)
                 .Where(list => list.Count == 2)
@@ -136,7 +136,7 @@ namespace MvvmKit
 
 
         public static IObservable<(ImmutableList<T> values, NotifyCollectionChangedEventArgs args)>
-            CollectionChanges<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            ObserveCollectionChanges<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable : INotifyDisposable
         {
             var obs = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(
@@ -149,20 +149,20 @@ namespace MvvmKit
         }
 
         public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> 
-            CollectionChangesExtended<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            ObserveCollectionChangesExtended<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable: INotifyDisposable
         {
-            return CollectionChanges(owner, collection)
+            return ObserveCollectionChanges(owner, collection)
                .Buffer(2, 1)
                .Where(list => list.Count == 2)
                .Select(pair => (oldValue: pair[0].values, newValue: pair[1].values, args: pair[1].args));
         }
 
         public static IObservable<ImmutableList<T>> 
-            CollectionValues<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
+            ObserveCollectionValues<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable: INotifyDisposable
         {
-            return CollectionChanges(owner, collection)
+            return ObserveCollectionChanges(owner, collection)
                 .Select(pair => pair.values);
         }
 
@@ -211,7 +211,7 @@ namespace MvvmKit
             where TBindable : INotifyDisposable
         {
             var subscriptions = new Dictionary<TItem, IDisposable>();
-            var mainSubscription = CollectionChanges(owner, collection)
+            var mainSubscription = ObserveCollectionChanges(owner, collection)
                     .Synchronize()
                     .Subscribe(pair =>
                     {
@@ -255,7 +255,7 @@ namespace MvvmKit
 
         }
 
-        public static IObservable<T> CollectMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection, 
+        public static IObservable<T> ObserveMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection, 
             Func<TItem, IObservable<TObservable>> selector, 
             Func<TItem, TObservable, T> value)
             where TBindable: INotifyDisposable
@@ -263,6 +263,18 @@ namespace MvvmKit
             return Observable
                 .Create((IObserver<T> observer) => _subscribeCollectMany(owner, collection, selector, value, observer))
                 .CompletedBy(owner);
+        }
+
+        public static IDisposable SubscribeAsync<T>(this IObservable<T> source, Func<T, Task> action)
+        {
+            return source
+                .SelectMany(async t =>
+                {
+                    await action(t);
+                    return Unit.Default;
+                })
+                .Subscribe();
+                
         }
     }
 }

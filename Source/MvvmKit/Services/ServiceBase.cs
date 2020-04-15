@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public class ServiceBase
+    public class ServiceBase: BaseDisposable
     {
         private readonly AsyncContextRunner _runner;
         private readonly TaskScheduler _scheduler;
@@ -36,7 +36,11 @@ namespace MvvmKit
 
         private Task _shutDown()
         {
-            return _runner.Run(OnShutDown);
+            return _runner.Run(async () =>
+            {
+                await OnShutDown();
+                Dispose();
+            });
         }
 
         public Task ShutDown()
