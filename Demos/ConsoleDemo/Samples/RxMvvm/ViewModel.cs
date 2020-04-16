@@ -41,7 +41,7 @@ namespace ConsoleDemo.Samples.RxMvvm
 
         public void Initialize(IObservable<ImmutableList<ItemModel>> param)
         {
-            param.LinkCollection(this, Items,
+            param.ApplyOnCollection(this, Items,
                 factory: () => Resolver.Resolve<ItemVm>(),
                 syncer: (model, vm) => vm.ReadModel(model),
                 trackBy: model => model.Uid, 

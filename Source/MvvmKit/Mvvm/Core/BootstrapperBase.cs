@@ -15,7 +15,7 @@ namespace MvvmKit
     /// A skiny copy of Prism's Unity Bootstrapper that provides a basic bootstrapping sequence
     /// which creates a <see cref="UnityContainer"/>, a shell, and starts registering all the container services
     /// </summary>
-    public abstract class BootstrapperBase
+    public abstract class BootstrapperBase: BaseDisposable
     {
         #region Static Access to Bootstrappers
 
@@ -153,6 +153,8 @@ namespace MvvmKit
             await servicesShutdownTasks.WhenAll();
 
             await BeforeShutDownOverride();
+
+            this.Dispose();
 
             Application.Current.Shutdown();
         }

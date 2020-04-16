@@ -1,0 +1,145 @@
+﻿<UserControl 
+    x:Class="MvvmKit.Mvvm.Rx.StoreHistory.StoreHistoryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:t="clr-namespace:MvvmKit"
+    xmlns:local="clr-namespace:MvvmKit.Mvvm.Rx.StoreHistory"
+    xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+    mc:Ignorable="d" 
+    d:DesignHeight="600" d:DesignWidth="600"
+    d:DataContext="{StaticResource dt.StoreHistory.StoreHistoryVm}"
+    >
+    <UserControl.Resources>
+        <t:SelectiveResources>
+            <ResourceDictionary.MergedDictionaries>
+                <t:DesignTimeResource Source="DtStoreHistory.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <local:MethodToValueConverter x:Key="MethodToValueConverter"/>
+            <local:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
+            <local:JValueConverter x:Key="JValueConverter"/>
+            <local:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
+            <local:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
+            <local:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" : "/>
+                    <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" : "/>
+                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
+
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                    <TextBlock Text=" : "/>
+                    <TextBlock Text="  "/>
+
+                    <TextBlock  Width="300" 
+                           TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
+                           Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
+                </StackPanel>
+            </DataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <StackPanel Orientation="Horizontal" Margin="1">
+                    <TextBlock Text=" "/>
+                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+                </StackPanel>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <TextBlock Text="Constructor">
+                </TextBlock>
+            </HierarchicalDataTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+                <TextBlock Text="Raw">
+                </TextBlock>
+            </HierarchicalDataTemplate>
+            <local:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
+                                             ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
+                                             ObjectPropertyTemplate="{StaticResource ObjectPropertyTemplate}"
+                                             PrimitivePropertyTemplate ="{StaticResource PrimitivePropertyTemplate}"/>
+
+            <DataTemplate DataType="{x:Type jlinq:JValue}">
+                <TextBlock Width="300" 
+                           TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
+                           Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
+            </DataTemplate>
+
+        </t:SelectiveResources>
+    </UserControl.Resources>
+    <DockPanel>
+        <ListBox 
+            ItemsSource="{Binding Records}" DockPanel.Dock="Left"
+            Width="400" Background="#FF2E333D" Foreground="#FFD6D7D9"
+            SelectedIndex="{Binding SelectedItem}"
+            >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Background" Value="#2A2F3A"/>
+                    <Setter Property="Foreground" Value="#D6D7D9"/>
+                    <Setter Property="Padding" Value="8"/>
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:HistoryRecordVm}">
+                    <DockPanel>
+                        <TextBlock 
+                            Text="{Binding Date, Mode=Default, StringFormat=\{0:HH:mm:ss:ffff\}}" 
+                            DockPanel.Dock="Right"
+                            Opacity="0.7"/>
+                        <TextBlock Text="{Binding Caption}" FontWeight="SemiBold"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <DockPanel>
+            <GroupBox Header="Action" DockPanel.Dock="Top" Height="300">
+                <TreeView Padding="20" Margin="3" 
+                          IsTextSearchEnabled="True" 
+                          ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
+                          DockPanel.Dock="Bottom" BorderThickness="0"
+                          ItemsSource="{Binding Action}"
+                          >
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}" >
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </GroupBox>
+            <GroupBox Header="State">
+                <TreeView Padding="20" Margin="3"  
+                          IsTextSearchEnabled="True" 
+                          ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
+                          DockPanel.Dock="Bottom" BorderThickness="0"
+                          ItemsSource="{Binding State}"
+                          >
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}" >
+                            <Setter Property="IsExpanded" Value="True" />
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </GroupBox>
+
+        </DockPanel>
+    </DockPanel>
+</UserControl>

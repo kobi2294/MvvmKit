@@ -81,8 +81,8 @@ namespace ConsoleDemo.Samples.RxMvvm
         {
             var owner = new BindableBase();
             var oc = new ObservableCollection<string>();
-            var obsc = MvvmRx.CollectionChanges(owner, oc);
-            var values = MvvmRx.CollectionValues(owner, oc);
+            var obsc = MvvmRx.ObserveCollectionChanges(owner, oc);
+            var values = MvvmRx.ObserveCollectionValues(owner, oc);
             obsc.Subscribe(val =>
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -116,7 +116,7 @@ namespace ConsoleDemo.Samples.RxMvvm
                 Console.WriteLine($"Collection Changed: {e.AsString()}");
             };
 
-            MvvmRx.CollectMany(_vm, _vm.Items, item => item.DoMath, (item, number) => $"item: {item.Uid}, number: {number}")
+            MvvmRx.ObserveMany(_vm, _vm.Items, item => item.DoMath, (item, number) => $"item: {item.Uid}, number: {number}")
                 .Subscribe(val =>
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -187,7 +187,7 @@ namespace ConsoleDemo.Samples.RxMvvm
             _vm.AddItem.Execute(null);
             _vm.RemoveItem.Execute("4");
 
-            MvvmRx.PropertyChanges(_vm, x => x.Caption)
+            MvvmRx.ObservePropertyChanges(_vm, x => x.Caption)
                 .Subscribe(x => Console.WriteLine($"Property Caption changed from {x.oldValue} to {x.newValue}"),
                 () => Console.WriteLine("Property observer completed"));
 

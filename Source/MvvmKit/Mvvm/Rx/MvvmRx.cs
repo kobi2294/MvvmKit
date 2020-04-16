@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MvvmKit.Mvvm.Rx.StoreHistory;
+using ReduxSimple;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -273,8 +275,25 @@ namespace MvvmKit
                     await action(t);
                     return Unit.Default;
                 })
-                .Subscribe();
-                
+                .Subscribe();                
+        }
+
+        public static async Task<IDisposable> OpenHistoryBrowser<T>(this ReduxStore<T> store, NavigationService navigation)
+            where T: class, IImmutable, new()
+        {
+            var region = new Region()
+                .WithName("Store Browser")
+                .Add(new OpenWindowRegionBehavior());
+
+            await navigation.RegisterRegion(region);
+            var vm = await navigation.NavigateTo<StoreHistoryVm>(region);
+            vm.ConnectToStore(store);
+
+            return Disposables.Call(async () =>
+            {
+                await navigation.Clear(region);
+                await navigation.UnregisterRegion(region);
+            });
         }
     }
 }

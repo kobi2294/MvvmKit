@@ -109,10 +109,10 @@
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable">
-      <Version>1.7.0</Version>
+      <Version>5.0.0-preview.2.20160.6</Version>
     </PackageReference>
     <PackageReference Include="System.Reactive">
-      <Version>4.3.2</Version>
+      <Version>4.4.1</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>4.7.0</Version>
