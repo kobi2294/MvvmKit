@@ -32,6 +32,15 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         public List<JToken> State { get { return _State; } set { SetProperty(ref _State, value); } }
 
 
+        private string _OldState;
+        public string OldState { get { return _OldState; } set { SetProperty(ref _OldState, value); } }
+
+
+        private string _NewState;
+        public string NewState { get { return _NewState; } set { SetProperty(ref _NewState, value); } }
+
+
+
         #endregion
 
         public StoreHistoryVm()
@@ -91,6 +100,8 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
             var record = records[index];
             Action = _createJsonHierarchy(record.Action);
             State = _createJsonHierarchy(record.NextState);
+            OldState = record.PreviousState.ToJson();
+            NewState = record.NextState.ToJson();
         }
 
         public void ConnectToStore<T>(ReduxStore<T> store)

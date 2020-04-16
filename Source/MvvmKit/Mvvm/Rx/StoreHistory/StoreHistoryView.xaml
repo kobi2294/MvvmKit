@@ -7,6 +7,7 @@
     xmlns:t="clr-namespace:MvvmKit"
     xmlns:local="clr-namespace:MvvmKit.Mvvm.Rx.StoreHistory"
     xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
+    xmlns:diff="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="600"
     d:DataContext="{StaticResource dt.StoreHistory.StoreHistoryVm}"
@@ -79,6 +80,49 @@
                            TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
             </DataTemplate>
+            <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
+                <Setter Property="Foreground" Value="#2A2F3A"/>
+                <Setter Property="Background" Value="#D6D7D9"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                <Setter Property="Template" Value="{DynamicResource ListBoxItemControlTemplate1}"/>
+            </Style>
+            <ControlTemplate x:Key="ListBoxItemControlTemplate1" TargetType="{x:Type ListBoxItem}">
+                <Border x:Name="Bd" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}" 
+                        Background="{TemplateBinding Background}" 
+                        Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                    <ContentPresenter 
+                        ContentTemplate="{TemplateBinding ContentTemplate}" 
+                        Content="{TemplateBinding Content}" 
+                        ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver" Value="True"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" TargetName="Bd" Value="#1FC9D6DC"/>
+                        <Setter Property="BorderBrush" TargetName="Bd" Value="#A8D1D1D1"/>
+                    </MultiTrigger>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsSelected" Value="True"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="Background" TargetName="Bd" Value="#3D84C176"/>
+                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FFDADADA"/>
+                    </MultiTrigger>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
 
         </t:SelectiveResources>
     </UserControl.Resources>
@@ -86,18 +130,9 @@
         <ListBox 
             ItemsSource="{Binding Records}" DockPanel.Dock="Left"
             Width="400" Background="#FF2E333D" Foreground="#FFD6D7D9"
-            SelectedIndex="{Binding SelectedItem}"
+            SelectedIndex="{Binding SelectedItem}" 
+            ItemContainerStyle="{DynamicResource ListBoxItemStyle1}"            
             >
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListBoxItem}">
-                    <Setter Property="Background" Value="#2A2F3A"/>
-                    <Setter Property="Foreground" Value="#D6D7D9"/>
-                    <Setter Property="Padding" Value="8"/>
-                    <Setter Property="FontSize" Value="16"/>
-                    <Setter Property="Margin" Value="0"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:HistoryRecordVm}">
                     <DockPanel>
@@ -110,8 +145,13 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <DockPanel>
-            <GroupBox Header="Action" DockPanel.Dock="Top" Height="300">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <GroupBox Header="Action" Grid.Row="0">
                 <TreeView Padding="20" Margin="3" 
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
@@ -125,7 +165,7 @@
                     </TreeView.ItemContainerStyle>
                 </TreeView>
             </GroupBox>
-            <GroupBox Header="State">
+            <GroupBox Header="State" Grid.Row="1">
                 <TreeView Padding="20" Margin="3"  
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
@@ -139,7 +179,29 @@
                     </TreeView.ItemContainerStyle>
                 </TreeView>
             </GroupBox>
+            <GroupBox Header="Diff" Grid.Row="2">
+                <diff:DiffViewer
+                    
+                    OldTextHeader="Before"
+                    NewTextHeader="After"
+                    OldText="{Binding OldState}"
+                    NewText="{Binding NewState}"
+                    
+                    ></diff:DiffViewer>
+            </GroupBox>
 
-        </DockPanel>
+            <GridSplitter Grid.Row="0" 
+                          VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
+                          ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"   
+                          HorizontalAlignment="Stretch" Margin="1"
+                          />
+
+            <GridSplitter Grid.Row="1" 
+                          VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
+                          ResizeBehavior="CurrentAndNext" ResizeDirection="Rows" 
+                          HorizontalAlignment="Stretch" Margin="1"                
+                          />
+
+        </Grid>
     </DockPanel>
 </UserControl>
