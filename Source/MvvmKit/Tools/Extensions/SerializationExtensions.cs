@@ -17,6 +17,7 @@ namespace MvvmKit
         {
             _settings = new JsonSerializerSettings();
             _settings.Converters.Add(new StringEnumConverter());
+            _settings.TypeNameHandling = TypeNameHandling.Auto;
         }
 
         public static string ToJson(this object source)
@@ -30,6 +31,7 @@ namespace MvvmKit
         {
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new StringEnumConverter());
+            serializer.TypeNameHandling = TypeNameHandling.Auto;
             var res = JToken.FromObject(source, serializer);
             return res;
         }
@@ -40,7 +42,7 @@ namespace MvvmKit
 
         public static T FromJson<T>(this string source)
         {
-            return JsonConvert.DeserializeObject<T>(source);
+            return JsonConvert.DeserializeObject<T>(source, _settings);
         }
     }
 }
