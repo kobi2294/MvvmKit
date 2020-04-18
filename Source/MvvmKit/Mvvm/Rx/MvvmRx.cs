@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -18,6 +19,138 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
+        #region Adapters for Service State V2
+
+        /// <summary>
+        /// Converts stream of collection changes to stream of DiffResult. Note that each IChange is converted to 
+        /// A single DiffResult so the stream of DiffResult is a flattened collection of collection of changes. We use
+        /// Scheduler.Immediate to make sure that a set of DiffResult is completed before the next one begins, even if 
+        /// 2 CollectionChanges arrive at the same time
+        /// </summary>
+        public static IObservable<DiffResults<T>> ToDiffResult<T>(this IObservable<CollectionChanges<T>> source)
+        {
+            return source.SelectMany(changes =>
+                changes.Select(change => change.ToDiffResult())
+                .ToObservable(Scheduler.Immediate));
+        }
+
+        /// <summary>
+        /// Converts a single CollectionChanges struct to an observable of DiffResult records. Note that each 
+        /// CollectionChanges instance is converted into a collection of DiffResult instances, and they are fired
+        /// using the Immediate scheduler, to make sure they all run at the original order even when concatinated to 
+        /// other DiffResults
+        /// </summary>
+        public static IObservable<DiffResults<T>> ToDiffResult<T>(this CollectionChanges<T> source)
+        {
+            return source
+                .Select(change => change.ToDiffResult())
+                .ToObservable(Scheduler.Immediate);
+        }
+
+        /// <summary>
+        /// Subscribes to an IStatePropertyReader and exposes it as Observable
+        /// </summary>
+        public static IObservable<T> ObserveValue<T, TOwner>(this IStatePropertyReader<T> source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return Observable.Create<T>(async observer =>
+            {
+                Func<T, Task> handler = val =>
+                {
+                    observer.OnNext(val);
+                    return Task.CompletedTask;
+                };
+
+                await source.Changed.Subscribe(owner, handler);
+                return Disposables.Call(() =>
+                {
+                    source.Changed.Unsubscribe(owner, handler);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Subscribes to an IStateCollectionReader and exposes it as Observable of CollectionChanges
+        /// </summary>
+        public static IObservable<CollectionChanges<T>> ObserveChanges<T, TOwner>(this IStateCollectionReader<T> source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return Observable.Create<CollectionChanges<T>>(async observer =>
+            {
+                Func<CollectionChanges<T>, Task> handler = val =>
+                {
+                    observer.OnNext(val);
+                    return Task.CompletedTask;
+                };
+
+                await source.Changed.Subscribe(owner, handler);
+                return Disposables.Call(() =>
+                {
+                    source.Changed.Unsubscribe(owner, handler);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Subscribes to a StateCollectionReader and exposes it as collection of (immuable) list values
+        /// </summary>
+        public static IObservable<ImmutableList<T>> ObserveValues<T, TOwner>(this IStateCollectionReader<T> source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return source.ObserveChanges(owner).Select(changeSet => changeSet.NewValues.ToImmutableList());
+        }
+
+        /// <summary>
+        /// Subscribes to a StateCollectionReader and exposes it as an observable of DiffResult. Note that each IChange
+        /// is converted into a single DiffResult, so one StateCollectionReader Change event may yield many DiffResult instances.
+        /// You can use the result of this method to apply changes onto an observable collection
+        /// </summary>
+        public static IObservable<DiffResults<T>> ObserveDiffs<T, TOwner>(this IStateCollectionReader<T> source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return source.ObserveChanges(owner).ToDiffResult();
+        }
+
+        #endregion
+
+        #region Collection Observable => Diff Converters
+
+        /// <summary>
+        /// Use this method to convert an observable of collection values, to observable of diffs. The result observable
+        /// Performs Diff algorithm between each 2 consecutive collections and yields DiffResult instance with all their differences
+        /// This DiffResult may be applied onto an observable collection
+        /// </summary>
+        public static IObservable<DiffResults<T>> ObserveDiff<T>(this IObservable<ImmutableList<T>> source)
+        {
+            var res = source.Scan((state: ImmutableList<T>.Empty, diff: DiffResults<T>.Empty),
+                (acc, newList) => (state: newList, diff: acc.state.Diff(newList)))
+                .Select(pair => pair.diff)
+                .Skip(1);
+            return res;
+        }
+
+        /// <summary>
+        /// Use this method to convert an observable of collection values, to observable of diffs. The result observable
+        /// Performs Diff algorithm between each 2 consecutive collections and yields DiffResult instance with all their differences
+        /// This DiffResult may be applied onto an observable collection
+        /// </summary>
+        public static IObservable<DiffResults<T>> ObserveDiff<T, TKey>(this IObservable<ImmutableList<T>> source,
+            Func<T, TKey> trackBy)
+        {
+            var res = source.Scan((state: ImmutableList<T>.Empty, diff: DiffResults<T>.Empty),
+                (acc, newList) => (state: newList, diff: acc.state.Diff(newList, trackBy)))
+                .Select(pair => pair.diff)
+                .Skip(1);
+            return res;
+        }
+
+        #endregion
+
+        #region Observable => Apply on View Model methods
+
+        /// <summary>
+        /// Applies an Observable of values onto a view model property. 
+        /// </summary>
         public static void ApplyOnProperty<TVm, TProperty>(this IObservable<TProperty> source,
             TVm vm,
             Expression<Func<TVm, TProperty>> property)
@@ -28,6 +161,37 @@ namespace MvvmKit
                 .DisposedBy(vm);
         }
 
+        /// <summary>
+        /// Applies Observable of DiffResults onto view model ObservableCollection
+        /// </summary>
+        public static void ApplyOnCollection<TOwner, TModel, TItem>(this IObservable<DiffResults<TModel>> diffs,
+            TOwner owner,
+            ObservableCollection<TItem> targetCollection,
+            Func<TItem> factory,
+            Func<TModel, TItem, TItem> syncer,
+            Action<TItem> onRemove = null)
+                    where TOwner : BindableBase
+        {
+            diffs.Subscribe(diff =>
+            {
+                targetCollection.ApplyDiff(diff,
+                    onAdd: (index, model) => syncer(model, factory()),
+                    onModify: (index, oldModel, newModel, item) => syncer(newModel, item),
+                    onRemove: (index, model, vm) => onRemove?.Invoke(vm)
+                    );
+            }).DisposedBy(owner);
+        }
+
+
+        /// <summary>
+        /// Applies observable of list values onto view model observable collection. Note that this method will
+        /// Perform diff between each consecutive lists, in order to calculate the smallest set of changes needed to be performed 
+        /// the observable collection (using Diff algorithm and DiffResult instances)
+        /// </summary>
+        /// <param name="factory">A method to be used as item instance factory</param>
+        /// <param name="syncer">A method to be used to apply changes in model on item</param>
+        /// <param name="trackBy">A method to be used as key selector, so the diff algorithm can recognize changed items</param>
+        /// <param name="onRemove">A method to be used before removing an item of the target collection</param>
         public static void ApplyOnCollection<TOwner, TModel, TItem, TKey>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
@@ -52,6 +216,14 @@ namespace MvvmKit
         }
 
 
+        /// <summary>
+        /// Applies observable of list values onto view model observable collection. Note that this method will
+        /// Perform diff between each consecutive lists, in order to calculate the smallest set of changes needed to be performed 
+        /// the observable collection (using Diff algorithm and DiffResult instances)
+        /// </summary>
+        /// <param name="factory">A method to be used as item instance factory</param>
+        /// <param name="syncer">A method to be used to apply changes in model on item</param>
+        /// <param name="onRemove">A method to be used before removing an item of the target collection</param>
         public static TOwner ApplyOnCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
@@ -75,45 +247,37 @@ namespace MvvmKit
             return owner;
         }
 
-        public static IRxCommand CreateCommand(BindableBase owner)
+        #endregion
+
+        #region ViewModel members creators
+
+        /// <summary>
+        /// Creates a RxCommand, which is exposed as an observable, and may consume a CanExecute observable
+        /// </summary>
+        public static IRxCommand CreateCommand(this BindableBase owner)
         {
             return new RxCommand()
                 .DisposedBy(owner);
         }
 
-        public static IRxCommand CreateCommand(BindableBase owner, IObservable<bool> canExecute)
+        /// <summary>
+        /// Creates a RxCommand of T, which is exposed as an observable, and may consume a CanExecute observable
+        /// </summary>
+        public static IRxCommand<T> CreateCommand<T>(this BindableBase owner)
         {
-            return new RxCommand<bool>(canExecute, t => t)
+            return new RxCommand<T>()
                 .DisposedBy(owner);
         }
 
-        public static IRxCommand CreateCommand<TCanExecute>(BindableBase owner,
-            IObservable<TCanExecute> canExecuteObservable, Func<TCanExecute, bool> canExecuteFunc)
-        {
-            return new RxCommand<TCanExecute>(canExecuteObservable, canExecuteFunc)
-                .DisposedBy(owner);
-        }
+        #endregion
 
-        public static IRxCommand<T> CreateCommand<T>(BindableBase owner)
-        {
-            return new RxCommand<T, bool>()
-                .DisposedBy(owner);
-        }
+        #region View Model members => Observable Operators
 
-        public static IRxCommand<T> CreateCommand<T>(BindableBase owner, IObservable<bool> canExecute)
-        {
-            return new RxCommand<T, bool>(canExecute, (t, cx) => cx)
-                .DisposedBy(owner);
-        }
-
-        public static IRxCommand<T> CreateCommand<T, TCanExecute>(BindableBase owner,
-            IObservable<TCanExecute> canExecuteObservable, Func<T, TCanExecute, bool> canExecuteFunc)
-        {
-            return new RxCommand<T, TCanExecute>(canExecuteObservable, (t, cx) => canExecuteFunc(t, cx))
-                .DisposedBy(owner);
-        }
-
-        public static IObservable<TProp> ObservePropertyValues<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+        /// <summary>
+        /// Creates an observable that yields an event when the property value changes. The event payload is the new
+        /// property value.
+        /// </summary>
+        public static IObservable<TProp> ObservePropertyValues<TBindable, TProp>(this TBindable owner, Expression<Func<TBindable, TProp>> property)
             where TBindable : BindableBase
         {
             var propInfo = property.GetProperty();
@@ -125,7 +289,11 @@ namespace MvvmKit
             return subject.AsObservable();
         }
 
-        public static IObservable<(TProp oldValue, TProp newValue)> ObservePropertyChanges<TBindable, TProp>(TBindable owner, Expression<Func<TBindable, TProp>> property)
+        /// <summary>
+        /// Creates an observable that yields an event when the property value changes. The event payload is a
+        /// tupple with the old value and the new value
+        /// </summary>
+        public static IObservable<(TProp oldValue, TProp newValue)> ObservePropertyChanges<TBindable, TProp>(this TBindable owner, Expression<Func<TBindable, TProp>> property)
             where TBindable : BindableBase
         {
             var values = ObservePropertyValues(owner, property);
@@ -137,6 +305,10 @@ namespace MvvmKit
         }
 
 
+        /// <summary>
+        /// Creates an observerable that yields an event when the observable collection changes. The event payload is
+        /// a tupple, holding the new values (as an immutable list) and the collection changed event args
+        /// </summary>
         public static IObservable<(ImmutableList<T> values, NotifyCollectionChangedEventArgs args)>
             ObserveCollectionChanges<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable : INotifyDisposable
@@ -150,6 +322,11 @@ namespace MvvmKit
                .CompletedBy(owner);
         }
 
+        /// <summary>
+        /// Creates an observerable that yields an event when the observable collection changes. The event payload is
+        /// a tupple, holding the new values (as an immutable list), the old values (also as an immutable list)
+        /// and the collection changed event args
+        /// </summary>
         public static IObservable<(ImmutableList<T> oldValue, ImmutableList<T> newValue, NotifyCollectionChangedEventArgs args)> 
             ObserveCollectionChangesExtended<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable: INotifyDisposable
@@ -160,6 +337,10 @@ namespace MvvmKit
                .Select(pair => (oldValue: pair[0].values, newValue: pair[1].values, args: pair[1].args));
         }
 
+        /// <summary>
+        /// Creates an observerable that yields an event when the observable collection changes. The event payload is
+        /// a an immutable list of the collection values
+        /// </summary>
         public static IObservable<ImmutableList<T>> 
             ObserveCollectionValues<TBindable, T>(TBindable owner, ObservableCollection<T> collection)
             where TBindable: INotifyDisposable
@@ -168,10 +349,16 @@ namespace MvvmKit
                 .Select(pair => pair.values);
         }
 
-        private static void _subscribeToNewItems<TItem, TObservable, T>(IEnumerable<TItem> items, 
-            Func<TItem, IObservable<TObservable>> selector, 
-            Func<TItem, TObservable, T> value, 
-            Dictionary<TItem, IDisposable> subscriptions, 
+
+        #region Privates
+        /// <summary>
+        /// For each item in the items list, extracts the selected observable and subscribes to it, while 
+        /// adding the subscription to the dictionary
+        /// </summary>
+        private static void _subscribeToNewItems<TItem, TObservable, T>(IEnumerable<TItem> items,
+            Func<TItem, IObservable<TObservable>> selector,
+            Func<TItem, TObservable, T> value,
+            Dictionary<TItem, IDisposable> subscriptions,
             IObserver<T> observer)
         {
             foreach (var item in items)
@@ -186,6 +373,9 @@ namespace MvvmKit
             }
         }
 
+        /// <summary>
+        /// Loops through the items as keys. Disposes their IDisposable values, and removes them from the dictionary
+        /// </summary>
         private static void _unsubscribeFromItems<TItem>(IEnumerable<TItem> items, Dictionary<TItem, IDisposable> subscriptions)
         {
             foreach (var item in items)
@@ -196,6 +386,9 @@ namespace MvvmKit
             }
         }
 
+        /// <summary>
+        /// Loops through all the items in the dictionary, and disposes them. Finally, clears the dictionary
+        /// </summary>
         private static void _clearSubscriptions<TItem>(Dictionary<TItem, IDisposable> subscriptions)
         {
             foreach (var pair in subscriptions)
@@ -206,9 +399,16 @@ namespace MvvmKit
             subscriptions.Clear();
         }
 
-        private static IDisposable _subscribeCollectMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection,
+        /// <summary>
+        /// Subscribes to the observable collection changes, and responds to each action type by subscribing and unsubscribing
+        /// to their selected observables. Returns a disposable to triggers unsubscription and disposal of all 
+        /// sub-subscriptions
+        /// </summary>
+        private static IDisposable _subscribeCollectMany<TBindable, TItem, TObservable, T>(
+            TBindable owner, 
+            ObservableCollection<TItem> collection,
             Func<TItem, IObservable<TObservable>> selector,
-            Func<TItem, TObservable, T> value, 
+            Func<TItem, TObservable, T> value,
             IObserver<T> observer)
             where TBindable : INotifyDisposable
         {
@@ -256,7 +456,12 @@ namespace MvvmKit
 
 
         }
+        #endregion
 
+        /// <summary>
+        /// For each item in an observable collection, select an observable, and merge all their notifications into 
+        /// a single observable
+        /// </summary>
         public static IObservable<T> ObserveMany<TBindable, TItem, TObservable, T>(TBindable owner, ObservableCollection<TItem> collection, 
             Func<TItem, IObservable<TObservable>> selector, 
             Func<TItem, TObservable, T> value)
@@ -267,6 +472,13 @@ namespace MvvmKit
                 .CompletedBy(owner);
         }
 
+        #endregion
+
+        #region Helpers and Utilities
+
+        /// <summary>
+        /// Subscribes an asynchronous observer to an observable
+        /// </summary>
         public static IDisposable SubscribeAsync<T>(this IObservable<T> source, Func<T, Task> action)
         {
             return source
@@ -275,11 +487,14 @@ namespace MvvmKit
                     await action(t);
                     return Unit.Default;
                 })
-                .Subscribe();                
+                .Subscribe();
         }
 
+        /// <summary>
+        /// Opens the Redux Store History browser window
+        /// </summary>
         public static async Task<IDisposable> OpenHistoryBrowser<T>(this ReduxStore<T> store, NavigationService navigation)
-            where T: class, IImmutable, new()
+            where T : class, IImmutable, new()
         {
             var region = new Region()
                 .WithName("Store Browser")
@@ -295,5 +510,8 @@ namespace MvvmKit
                 await navigation.UnregisterRegion(region);
             });
         }
+
+        #endregion
+
     }
 }

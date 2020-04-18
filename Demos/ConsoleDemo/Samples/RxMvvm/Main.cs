@@ -128,6 +128,13 @@ namespace ConsoleDemo.Samples.RxMvvm
             _subj = new BehaviorSubject<ImmutableList<ItemModel>>(ImmutableList<ItemModel>.Empty);
             _vm.Initialize(_subj);
 
+            _subj.ObserveDiff(m => m.Uid)
+                .Subscribe(diff =>
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine(diff.ToJson());
+                }).DisposedBy(_vm);
+
             _do(ImmutableList.Create(
                 new ItemModel("1", "First", "Odd"),
                 new ItemModel("2", "Second", "Even"),

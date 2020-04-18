@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Text;
@@ -9,31 +10,41 @@ using System.Windows.Input;
 
 namespace MvvmKit
 {
-    internal class RxCommand<TParam, TCanExecute> : BaseDisposable, IRxCommand<TParam>
+    internal class RxCommand<TParam> : BaseDisposable, IRxCommand<TParam>
     {
         private Subject<TParam> _subject = new Subject<TParam>();
-        private Func<TParam, TCanExecute, bool> _canExecuteFunc = (res, cx) => true;
-        private TCanExecute _latestCanExecuteValue = default(TCanExecute);
-        private IObservable<TCanExecute> _canExecuteObservable = Observable.Return<TCanExecute>(default(TCanExecute));
+        private Func<TParam, bool> _canExecute = p => true;
+        private IDisposable _canExecuteSubscription;
 
-        internal RxCommand(
-            IObservable<TCanExecute> canExecuteObservable = null, 
-            Func<TParam, TCanExecute, bool> canExecuteFunc = null
+        public IRxCommand<TParam> WithCanExecute<TCanExecute>(
+            IObservable<TCanExecute> canExecuteObservable,
+            Func<TParam, TCanExecute, bool> canExecuteSelector
             )
         {
-            if (canExecuteObservable != null) _canExecuteObservable = canExecuteObservable;
-            if (canExecuteFunc != null) _canExecuteFunc = canExecuteFunc;
-
-            _canExecuteObservable.Subscribe(val =>
+            _canExecuteSubscription?.Dispose();
+            _canExecuteSubscription = canExecuteObservable.Subscribe(val =>
             {
-                _latestCanExecuteValue = val;
+                _canExecute = p => canExecuteSelector(p, val);
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-            }).DisposedBy(this);
+            });
+            return this;
+        }
+
+        public IRxCommand<TParam> WithCanExecute(IObservable<bool> canExecuteObservable)
+        {
+            _canExecuteSubscription?.Dispose();
+            _canExecuteSubscription = canExecuteObservable.Subscribe(val =>
+            {
+                _canExecute = p => val;
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            });
+            return this;
         }
 
         protected override void OnDisposed()
         {
             base.OnDisposed();
+            _canExecuteSubscription?.Dispose();
             _subject.Dispose();
         }
 
@@ -43,15 +54,20 @@ namespace MvvmKit
 
         public bool CanExecute(object parameter)
         {
-            var res = (TParam)parameter;
-            var canExecute = _canExecuteFunc(res, _latestCanExecuteValue);
+            TParam prm = (parameter != null)
+                ? (TParam)parameter
+                : default;
+
+            var canExecute = _canExecute(prm);
             return canExecute;
         }
 
         public void Execute(object parameter)
         {
-            var res = (TParam)parameter;
-            _subject.OnNext(res);
+            TParam prm = (parameter != null)
+                ? (TParam)parameter
+                : default;
+            _subject.OnNext(prm);
         }
 
         #endregion
@@ -65,24 +81,25 @@ namespace MvvmKit
         #endregion
     }
 
-    internal class RxCommand<TCanExecute>: RxCommand<object, TCanExecute>, IRxCommand
+    internal class RxCommand : RxCommand<Unit>, IRxCommand
     {
-        internal RxCommand(
-            IObservable<TCanExecute> canExecuteObservable = null,
-            Func<TCanExecute, bool> canExecuteFunc = null
-            )
-            :base(
-                 canExecuteObservable, 
-                 (obj, cx) => canExecuteFunc != null ? canExecuteFunc(cx) : true
-                 )
+        IRxCommand IRxCommand.WithCanExecute<TCanExecute>(
+            IObservable<TCanExecute> canExecuteObservable, 
+            Func<TCanExecute, bool> canExecuteSelector)
         {
+            return base.WithCanExecute(canExecuteObservable, (u, ce) => canExecuteSelector(ce)) as IRxCommand;
         }
-    }
 
-    internal class RxCommand: RxCommand<object>
-    {
-        internal RxCommand()
-            :base(null, null)
-        { }
+        IRxCommand IRxCommand.WithCanExecute<TCanExecute>(
+            IObservable<TCanExecute> canExecuteObservable, 
+            Func<Unit, TCanExecute, bool> canExecuteSelector)
+        {
+            return base.WithCanExecute(canExecuteObservable, canExecuteSelector) as IRxCommand;
+        }
+
+        IRxCommand IRxCommand.WithCanExecute(IObservable<bool> canExecuteObservable)
+        {
+            return base.WithCanExecute(canExecuteObservable) as IRxCommand;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmKit.CollectionChangeEvents;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -108,28 +109,41 @@ namespace MvvmKit
             Action<int, int, K> onMove = null, 
             Action<int, T, T, K> onModify = null)
         {
-            foreach (var remove in diff.Removed)
+            if (diff.Reset)
             {
-                onRemove?.Invoke(remove.from, remove.item, source[remove.from]);
-                source.RemoveAt(remove.from);
+                source.Clear();
+                foreach (var add in diff.Added)
+                {
+                    var newItem = onAdd(add.to, add.item);
+                    source.Insert(add.to, newItem);
+                }
+            }
+            else
+            {
+                foreach (var remove in diff.Removed)
+                {
+                    onRemove?.Invoke(remove.from, remove.item, source[remove.from]);
+                    source.RemoveAt(remove.from);
+                }
+
+                foreach (var move in diff.Moved)
+                {
+                    source.Move(move.from, move.to);
+                    onMove?.Invoke(move.from, move.to, source[move.to]);
+                }
+
+                foreach (var add in diff.Added)
+                {
+                    var newItem = onAdd(add.to, add.item);
+                    source.Insert(add.to, newItem);
+                }
+
+                foreach (var modify in diff.Modified)
+                {
+                    onModify?.Invoke(modify.at, modify.old, modify.@new, source[modify.at]);
+                }
             }
 
-            foreach (var move in diff.Moved)
-            {
-                source.Move(move.from, move.to);
-                onMove?.Invoke(move.from, move.to, source[move.to]);
-            }
-
-            foreach (var add in diff.Added)
-            {
-                var newItem = onAdd(add.to, add.item);
-                source.Insert(add.to, newItem);
-            }
-
-            foreach (var modify in diff.Modified)
-            {
-                onModify?.Invoke(modify.at, modify.old, modify.@new, source[modify.at]);
-            }
         }
 
         public static void ApplyDiff<T, K>(this IList<K> source,
@@ -139,81 +153,135 @@ namespace MvvmKit
             Action<int, int, K> onMove = null,
             Action<int, T, T, K> onModify = null)
         {
-            foreach (var remove in diff.Removed)
+            if (diff.Reset)
             {
-                onRemove?.Invoke(remove.from, remove.item, source[remove.from]);
-                source.RemoveAt(remove.from);
+                source.Clear();
+                foreach (var add in diff.Added)
+                {
+                    var newItem = onAdd(add.to, add.item);
+                    source.Insert(add.to, newItem);
+                }
+            }
+            else
+            {
+                foreach (var remove in diff.Removed)
+                {
+                    onRemove?.Invoke(remove.from, remove.item, source[remove.from]);
+                    source.RemoveAt(remove.from);
+                }
+
+                foreach (var move in diff.Moved)
+                {
+                    var item = source[move.from];
+                    source.RemoveAt(move.from);
+                    source.Insert(move.to, item);
+                    onMove?.Invoke(move.from, move.to, source[move.to]);
+                }
+
+                foreach (var add in diff.Added)
+                {
+                    var newItem = onAdd(add.to, add.item);
+                    source.Insert(add.to, newItem);
+                }
+
+                foreach (var modify in diff.Modified)
+                {
+                    onModify?.Invoke(modify.at, modify.old, modify.@new, source[modify.at]);
+                }
             }
 
-            foreach (var move in diff.Moved)
-            {
-                var item = source[move.from];
-                source.RemoveAt(move.from);
-                source.Insert(move.to, item);
-                onMove?.Invoke(move.from, move.to, source[move.to]);
-            }
-
-            foreach (var add in diff.Added)
-            {
-                var newItem = onAdd(add.to, add.item);
-                source.Insert(add.to, newItem);
-            }
-
-            foreach (var modify in diff.Modified)
-            {
-                onModify?.Invoke(modify.at, modify.old, modify.@new, source[modify.at]);
-            }
         }
 
         public static void ApplyDiff<T>(this ObservableCollection<T> source, DiffResults<T> diff)
         {
-            foreach (var remove in diff.Removed)
+            if (diff.Reset)
             {
-                source.RemoveAt(remove.from);
+                source.Clear();
+                foreach (var add in diff.Added)
+                {
+                    source.Insert(add.to, add.item);
+                }
+            }
+            else
+            {
+                foreach (var remove in diff.Removed)
+                {
+                    source.RemoveAt(remove.from);
+                }
+
+                foreach (var move in diff.Moved)
+                {
+                    source.Move(move.from, move.to);
+                }
+
+                foreach (var add in diff.Added)
+                {
+                    source.Insert(add.to, add.item);
+                }
+
+                foreach (var modify in diff.Modified)
+                {
+                    source[modify.at] = modify.@new;
+                }
             }
 
-            foreach (var move in diff.Moved)
-            {
-                source.Move(move.from, move.to);
-            }
-
-            foreach (var add in diff.Added)
-            {
-                source.Insert(add.to, add.item);
-            }
-
-            foreach (var modify in diff.Modified)
-            {
-                source[modify.at] = modify.@new;
-            }
         }
-
 
         public static void ApplyDiff<T>(this IList<T> source, DiffResults<T> diff)
         {
-            foreach (var remove in diff.Removed)
+            if (diff.Reset)
             {
-                source.RemoveAt(remove.from);
+                source.Clear();
+                foreach (var add in diff.Added)
+                {
+                    source.Insert(add.to, add.item);
+                }
             }
-
-            foreach (var move in diff.Moved)
+            else
             {
-                var item = source[move.from];
-                source.RemoveAt(move.from);
-                source.Insert(move.to, item);
-            }
+                foreach (var remove in diff.Removed)
+                {
+                    source.RemoveAt(remove.from);
+                }
 
-            foreach (var add in diff.Added)
-            {
-                source.Insert(add.to, add.item);
-            }
+                foreach (var move in diff.Moved)
+                {
+                    var item = source[move.from];
+                    source.RemoveAt(move.from);
+                    source.Insert(move.to, item);
+                }
 
-            foreach (var modify in diff.Modified)
-            {
-                source[modify.at] = modify.@new;
+                foreach (var add in diff.Added)
+                {
+                    source.Insert(add.to, add.item);
+                }
+
+                foreach (var modify in diff.Modified)
+                {
+                    source[modify.at] = modify.@new;
+                }
             }
         }
 
-
+        public static DiffResults<T> ToDiffResult<T>(this IChange<T> change)
+        {
+            switch (change)
+            {
+                case ItemAdded<T> ia:
+                    return new DiffResults<T>(added: ImmutableList.Create((at: ia.Index, item: ia.Item)));
+                case ItemRemoved<T> ir:
+                    return new DiffResults<T>(removed: ImmutableList.Create((from: ir.Index, item: ir.Item)));
+                case ItemMoved<T> im:
+                    return new DiffResults<T>(moved: ImmutableList.Create((from: im.FromIndex, to: im.ToIndex)));
+                case ItemReplaced<T> ir:
+                    return new DiffResults<T>(modified: ImmutableList.Create((at: ir.Index, old: ir.FromItem, @new: ir.ToItem)));
+                case Cleared<T> c:
+                    return new DiffResults<T>(reset: true);
+                case Reset<T> r:
+                    var newItems = r.Items.Select((item, at) => (at, item)).ToImmutableList();
+                    return new DiffResults<T>(reset: true, newItems);
+            }
+            return DiffResults<T>.Empty;
+        }
     }
 }

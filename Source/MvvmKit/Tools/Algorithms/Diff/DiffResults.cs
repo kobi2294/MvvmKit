@@ -9,6 +9,11 @@ namespace MvvmKit
 {
     public class DiffResults<T>: IImmutable
     {
+        public static DiffResults<T> Empty { get; } = new DiffResults<T>();
+
+        // when true - ignore Moved, Removed, and Modified, just clear the collection and add the Added items
+        public bool Reset { get; }
+
         public ImmutableList<(int from, T item)> Removed { get; }
 
         public ImmutableList<(int from, int to)> Moved { get; }
@@ -18,12 +23,14 @@ namespace MvvmKit
         public ImmutableList<(int at, T old, T @new)> Modified { get; }
 
         public DiffResults(
+            bool reset = false, 
             ImmutableList<(int from, T item)> removed = null,
             ImmutableList<(int from, int to)> moved = null,
             ImmutableList<(int at, T item)> added = null,
             ImmutableList<(int at, T old, T @new)> modified = null
             )
         {
+            Reset = reset;
             Removed = removed ?? ImmutableList<(int from, T item)>.Empty;
             Moved = moved ?? ImmutableList<(int from, int to)>.Empty;
             Added = added ?? ImmutableList<(int to, T item)>.Empty;

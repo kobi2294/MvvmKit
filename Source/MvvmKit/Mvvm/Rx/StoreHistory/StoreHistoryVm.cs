@@ -84,7 +84,7 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
 
             try
             {
-                var token = JToken.FromObject(obj);
+                var token = obj.ToJsonToken();
                 if (token != null) res.Add(token);
             }
             catch { }
