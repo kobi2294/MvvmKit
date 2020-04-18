@@ -19,7 +19,7 @@ namespace MvvmKit
 {
     public static class MvvmRx
     {
-        #region Adapters for Service State V2
+        #region Observable<CollectionChanges> => Observable<Diff>
 
         /// <summary>
         /// Converts stream of collection changes to stream of DiffResult. Note that each IChange is converted to 
@@ -46,6 +46,10 @@ namespace MvvmKit
                 .Select(change => change.ToDiffResult())
                 .ToObservable(Scheduler.Immediate);
         }
+
+        #endregion
+
+        #region IStateReader => Observable
 
         /// <summary>
         /// Subscribes to an IStatePropertyReader and exposes it as Observable
@@ -113,7 +117,7 @@ namespace MvvmKit
 
         #endregion
 
-        #region Collection Observable => Diff Converters
+        #region Observable<Collection> => Observable<Diff>
 
         /// <summary>
         /// Use this method to convert an observable of collection values, to observable of diffs. The result observable
@@ -146,7 +150,7 @@ namespace MvvmKit
 
         #endregion
 
-        #region Observable => Apply on View Model methods
+        #region Observable => Apply on View Model members
 
         /// <summary>
         /// Applies an Observable of values onto a view model property. 
@@ -249,7 +253,7 @@ namespace MvvmKit
 
         #endregion
 
-        #region ViewModel members creators
+        #region Create Rx Command
 
         /// <summary>
         /// Creates a RxCommand, which is exposed as an observable, and may consume a CanExecute observable
@@ -271,7 +275,7 @@ namespace MvvmKit
 
         #endregion
 
-        #region View Model members => Observable Operators
+        #region View Model members (property, collection) => Observable
 
         /// <summary>
         /// Creates an observable that yields an event when the property value changes. The event payload is the new
