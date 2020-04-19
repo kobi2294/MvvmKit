@@ -279,7 +279,7 @@ namespace MvvmKit
                     return new DiffResults<T>(reset: true);
                 case Reset<T> r:
                     var newItems = r.Items.Select((item, at) => (at, item)).ToImmutableList();
-                    return new DiffResults<T>(reset: true, newItems);
+                    return new DiffResults<T>(reset: true, added: newItems);
             }
             return DiffResults<T>.Empty;
         }
