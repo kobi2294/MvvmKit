@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive;
@@ -157,11 +158,25 @@ namespace MvvmKit
         /// </summary>
         public static void ApplyOnProperty<TVm, TProperty>(this IObservable<TProperty> source,
             TVm vm,
-            Expression<Func<TVm, TProperty>> property)
+            Expression<Func<TVm, TProperty>> property,
+            Action<TProperty> onOldValue = null)
             where TVm : BindableBase
         {
             var setter = property.GetProperty().ToSetter<TVm, TProperty>();
-            source.Subscribe(val => setter(vm, val))
+            Action beforeChange = null;
+            if (onOldValue != null)
+            {
+                var getter = property.GetProperty().ToGetter<TVm, TProperty>();
+                beforeChange = () => onOldValue(getter(vm));
+            }
+
+            source
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
+            {
+                beforeChange?.Invoke();
+                setter(vm, val);
+            })
                 .DisposedBy(vm);
         }
 
@@ -176,7 +191,9 @@ namespace MvvmKit
             Action<TItem> onRemove = null)
                     where TOwner : BindableBase
         {
-            diffs.Subscribe(diff =>
+            diffs
+                .ObserveOnDispatcher()
+                .Subscribe(diff =>
             {
                 targetCollection.ApplyDiff(diff,
                     onAdd: (index, model) => syncer(model, factory()),
@@ -207,7 +224,9 @@ namespace MvvmKit
         where TOwner : BindableBase
         {
             var latestModel = ImmutableList<TModel>.Empty;
-            source.Subscribe(val =>
+            source
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
             {
                 var diff = latestModel.Diff(val, trackBy);
                 latestModel = val;
@@ -238,7 +257,9 @@ namespace MvvmKit
             where TOwner : BindableBase
         {
             var latestModel = ImmutableList<TModel>.Empty;
-            source.Subscribe(val =>
+            source
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
             {
                 var diff = latestModel.Diff(val);
                 latestModel = val;
@@ -270,7 +291,7 @@ namespace MvvmKit
         public static IRxCommand<T> CreateCommand<T>(this BindableBase owner)
         {
             return new RxCommand<T>()
-                .DisposedBy(owner);
+                .DisposedBy(owner);                
         }
 
         #endregion
@@ -287,10 +308,19 @@ namespace MvvmKit
             var propInfo = property.GetProperty();
             var getter = propInfo.ToGetter<TBindable, TProp>();
             var value = getter(owner);
-            var subject = new BehaviorSubject<TProp>(value);
-            owner.Observe<TProp>(propInfo.Name, val => subject.OnNext(val));
-            owner.Disposing += (s, e) => subject.OnCompleted();
-            return subject.AsObservable();
+            return Observable.Create<TProp>(observer =>
+            {
+                owner.Observe<TProp>(propInfo.Name, val => observer.OnNext(val));
+
+                EventHandler handler = (s, e) => observer.OnCompleted();
+                owner.Disposing += handler;
+
+                return Disposables.Call(() =>
+                {
+                    owner.Unobserve(propInfo.Name, owner);
+                    owner.Disposing -= handler;
+                });
+            }).ObserveOnDispatcher();
         }
 
         /// <summary>
@@ -323,7 +353,8 @@ namespace MvvmKit
 
             return obs.Select(x => (values: (x.Sender as ObservableCollection<T>).ToImmutableList(), args: x.EventArgs))
                .StartWith((values: collection.ToImmutableList(), args: new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)))
-               .CompletedBy(owner);
+               .CompletedBy(owner)
+               .ObserveOnDispatcher();
         }
 
         /// <summary>
@@ -513,6 +544,16 @@ namespace MvvmKit
                 await navigation.Clear(region);
                 await navigation.UnregisterRegion(region);
             });
+        }
+
+        public static IObservable<T> WhenDifferentFrom<T>(this IObservable<T> source, IObservable<T> controller)
+        {
+            var res = source
+                .WithLatestFrom(controller, (src, ctrl) => (src, ctrl))
+                .Where(pair => !Equals(pair.src, pair.ctrl))
+                .Select(pair => pair.src);
+
+            return res;
         }
 
         #endregion

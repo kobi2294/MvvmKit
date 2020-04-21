@@ -46,7 +46,7 @@ namespace MvvmKit
 
         public void Dispose()
         {
-            Validate();
+            if (IsDisposed) return;
             IsDisposed = true;
             OnDisposed();
             Disposing?.Invoke(this, EventArgs.Empty);

@@ -76,7 +76,9 @@ namespace MvvmKit
 
         public IDisposable Subscribe(IObserver<TParam> observer)
         {
-            return _subject.Subscribe(observer);
+            return _subject
+                .ObserveOnDispatcher()
+                .Subscribe(observer);
         }
         #endregion
     }

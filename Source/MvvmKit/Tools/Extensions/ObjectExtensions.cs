@@ -8,7 +8,7 @@ namespace MvvmKit
 {
     public static class ObjectExtensions
     {
-        public static T Do<T>(this T source, Action<T> action)
+        public static T Apply<T>(this T source, Action<T> action)
         {
             action(source);
             return source;
