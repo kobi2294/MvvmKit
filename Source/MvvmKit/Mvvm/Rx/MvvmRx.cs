@@ -180,6 +180,7 @@ namespace MvvmKit
                 .DisposedBy(vm);
         }
 
+
         /// <summary>
         /// Applies Observable of DiffResults onto view model ObservableCollection
         /// </summary>

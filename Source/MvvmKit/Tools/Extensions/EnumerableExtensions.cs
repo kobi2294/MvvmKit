@@ -204,5 +204,24 @@ namespace MvvmKit
             return Enumerable.Repeat(padding, padNum).Concat(source);
         }
 
+        public static IEnumerable<T> VerifyCount<T>(this IEnumerable<T> source, int count, Func<T> factory = null)
+        {
+            var counter = 0;
+            foreach (var item in source)
+            {
+                if (counter >= count) yield break;
+                yield return item;
+                counter++;
+            }
+
+            if (factory == null) factory = () => default;
+
+            while (counter < count)
+            {
+                yield return factory();
+                counter++;
+            }
+        }
+
     }
 }

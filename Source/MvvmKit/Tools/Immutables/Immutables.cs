@@ -3,8 +3,10 @@ using Remutable;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,17 +17,41 @@ namespace MvvmKit
         private static HashSet<Type> _verified = new HashSet<Type>();
         private static Remute _remute;
         private static ActivationConfiguration _config;
+        private static Dictionary<Type, ConstructorInfo> _ctors = new Dictionary<Type, ConstructorInfo>();
+        private static object _mutex = new object();
 
         private static void _verifyRemute<T>()
         {
-            if (_verified.Contains(typeof(T))) return;
+            lock(_mutex)
+            {
+                if (_verified.Contains(typeof(T))) return;
+                _verified.Add(typeof(T));
 
-            var ctor = typeof(T).GetConstructors()
-                .OrderByDescending(xtor => xtor.GetParameters().Length)
-                .First();
+                var ctor = typeof(T).GetConstructors()
+                    .OrderByDescending(xtor => xtor.GetParameters().Length)
+                    .First();
 
-            _config.Configure(ctor);
+                _config.Configure(ctor);
+                _ctors.Add(typeof(T), ctor);
+            }
         }
+
+        private static void _verifyRemute(Type type)
+        {
+            lock (_mutex)
+            {
+                if (_verified.Contains(type)) return;
+                _verified.Add(type);
+
+                var ctor = type.GetConstructors()
+                    .OrderByDescending(xtor => xtor.GetParameters().Length)
+                    .First();
+
+                _config.Configure(ctor);
+                _ctors.Add(type, ctor);
+            }
+        }
+
 
         static Immutables()
         {
@@ -83,6 +109,32 @@ namespace MvvmKit
             var wrapper = new RootWrapper<TRoot>(source);
             wrapper.Target.Set(expression, valueFunc);
             return wrapper.Target;
+        }
+
+        /// <summary>
+        /// Creates an instance of an immutable type using reflection.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static IImmutable Create(Type type)
+        {
+            _verifyRemute(type);
+            ConstructorInfo ctor = null;
+            lock(_mutex)
+            {
+                ctor = _ctors[type];
+            }
+
+            var paramsCount = ctor.GetParameters().Length;
+            var prms = Enumerable.Repeat(Type.Missing, paramsCount).ToArray();
+
+            var value = ctor.Invoke(
+                BindingFlags.OptionalParamBinding |
+                BindingFlags.InvokeMethod |
+                BindingFlags.CreateInstance 
+                , null, prms , CultureInfo.CurrentCulture) as IImmutable;
+
+            return value;
         }
     }
 }
