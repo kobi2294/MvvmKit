@@ -50,13 +50,18 @@ namespace MvvmKit
 
         #endregion
 
-        #region IStateReader => Observable
-
+        #region ASyncEvent => Observable
         /// <summary>
-        /// Subscribes to an IStatePropertyReader and exposes it as Observable
+        /// Converts an AsyncEvent<typeparamref name="T"/> to IObservable<typeparamref name="T"/>. Using the 
+        /// owner to control the weak action lifespan and unsubscribe when observer is disposed
         /// </summary>
-        public static IObservable<T> ObserveValue<T, TOwner>(this IStatePropertyReader<T> source, TOwner owner)
-            where TOwner : INotifyDisposable
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TOwner"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        public static IObservable<T> ToObservable<T, TOwner>(this AsyncEvent<T> source, TOwner owner)
+            where TOwner: INotifyDisposable
         {
             return Observable.Create<T>(async observer =>
             {
@@ -66,12 +71,53 @@ namespace MvvmKit
                     return Task.CompletedTask;
                 };
 
-                await source.Changed.Subscribe(owner, handler);
+                await source.Subscribe(owner, handler);
                 return Disposables.Call(() =>
                 {
-                    source.Changed.Unsubscribe(owner, handler);
+                    source.Unsubscribe(owner, handler);
                 });
             });
+        }
+
+        /// <summary>
+        /// Converts an AsyncEvent to IObservable of Unit (since there is not IObservable of void. Using the 
+        /// owner to control the weak action lifespan and unsubscribe when observer is disposed
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TOwner"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="owner"></param>
+        /// <returns></returns>
+        public static IObservable<Unit> ToObservable<TOwner>(this AsyncEvent source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return Observable.Create<Unit>(async observer =>
+            {
+                Func<Task> handler = () =>
+                {
+                    observer.OnNext(Unit.Default);
+                    return Task.CompletedTask;
+                };
+
+                await source.Subscribe(owner, handler);
+                return Disposables.Call(() =>
+                {
+                    source.Unsubscribe(owner, handler);
+                });
+            });
+        }
+
+        #endregion
+
+        #region IStateReader => Observable
+
+        /// <summary>
+        /// Subscribes to an IStatePropertyReader and exposes it as Observable
+        /// </summary>
+        public static IObservable<T> ObserveValue<T, TOwner>(this IStatePropertyReader<T> source, TOwner owner)
+            where TOwner : INotifyDisposable
+        {
+            return source.Changed.ToObservable(owner);
         }
 
         /// <summary>
