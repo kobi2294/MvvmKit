@@ -1,0 +1,11 @@
+﻿<SelectManyDemoVm 
+    xmlns="clr-namespace:SelectiveResourcesDemo.SelectManyDemo">
+    <SelectManyDemoVm.Items>
+        <ItemVm Uid="1" DisplayName="First"/>
+        <ItemVm Uid="2" DisplayName="Second"/>
+        <ItemVm Uid="3" DisplayName="Third"/>
+        <ItemVm Uid="4" DisplayName="Fourth"/>
+        <ItemVm Uid="5" DisplayName="Fifth"/>
+        <ItemVm Uid="6" DisplayName="Sixth"/>
+    </SelectManyDemoVm.Items>
+</SelectManyDemoVm>

@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="SelectiveResourcesDemo.SelectManyDemo.SelectManyDemoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SelectiveResourcesDemo.SelectManyDemo"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignData Source=DesignData.xaml}"
+             >
+        <DockPanel>
+        <ListBox ItemsSource="{Binding Items}"
+                 SelectionMode="Extended"
+                 local:SelectedItemsBahavior2.SelectedItems="{Binding SelectedIds}"
+                 DockPanel.Dock="Left"
+                 >
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ItemVm}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Uid}"/>
+                        <TextBlock Text="{Binding DisplayName}" FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <ItemsControl ItemsSource="{Binding SelectedIds}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ItemVm}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Uid}"/>
+                        <TextBlock Text="{Binding DisplayName}" FontWeight="Bold"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DockPanel>
+</UserControl>

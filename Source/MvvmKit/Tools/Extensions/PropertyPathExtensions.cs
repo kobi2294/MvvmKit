@@ -45,5 +45,28 @@ namespace MvvmKit
 
             return res;
         }
+
+        public static object Evaluate(this PropertyPath path, object source)
+        {
+            object res = null;
+            try
+            {
+                var binding = new Binding();
+                binding.FallbackValue = null;
+                binding.Source = source;
+                binding.Path = path;
+                binding.Mode = BindingMode.OneTime;
+
+                var eval = new BindingEvaluator();
+                BindingOperations.SetBinding(eval, BindingEvaluator.TargetProperty, binding);
+
+                res = eval.Target;
+            }
+            catch { }
+
+            return res;
+
+
+        }
     }
 }

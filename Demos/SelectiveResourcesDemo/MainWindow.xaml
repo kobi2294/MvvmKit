@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SelectiveResourcesDemo"
         xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
+        xmlns:sm="clr-namespace:SelectiveResourcesDemo.SelectManyDemo"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
@@ -15,9 +16,14 @@
         </t:SelectiveResources>
     </Window.Resources>
     <Grid>
-        <Rectangle Width="{StaticResource myWidth}" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center"
+        <!--<Rectangle Width="{StaticResource myWidth}" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Fill="{StaticResource MyFavoriteBg}"
-                   />
+                   />-->
+        <sm:SelectManyDemoView>
+            <sm:SelectManyDemoView.DataContext>
+                <sm:SelectManyDemoVm/>
+            </sm:SelectManyDemoView.DataContext>
+        </sm:SelectManyDemoView>
 
     </Grid>
 </Window>
