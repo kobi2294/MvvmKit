@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,15 @@ namespace MvvmKit
                 default:
                     return "";
             }
+        }
+
+        public static ObservableCollection<T> AddRange<T>(this ObservableCollection<T> source, IEnumerable<T> items)
+        {
+            foreach (var item in items.ToList())
+            {
+                source.Add(item);
+            }
+            return source;
         }
     }
 }

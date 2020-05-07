@@ -307,8 +307,11 @@
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Animations\LinearMatrixAnimation.cs" />
+    <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelper.cs" />
+    <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelperBehavior.cs" />
     <Compile Include="Ui\Controls\Design Time Support\DesignTimeResource.cs" />
     <Compile Include="Ui\Controls\Design Time Support\SelectiveResources.cs" />
+    <Compile Include="Ui\Controls\FasterMultiSelectListBox.cs" />
     <Compile Include="Ui\Controls\Navigator.cs" />
     <Compile Include="Ui\Controls\NavigatorItem.cs" />
     <Compile Include="Ui\Controls\PopupEx.cs" />

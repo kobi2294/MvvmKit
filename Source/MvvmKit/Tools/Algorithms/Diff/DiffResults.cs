@@ -11,6 +11,13 @@ namespace MvvmKit
     {
         public static DiffResults<T> Empty { get; } = new DiffResults<T>();
 
+        public static DiffResults<T> ResetTo(ImmutableList<T> values)
+        {
+            return new DiffResults<T>(
+                reset: true,
+                added: values.Select((t, i) => (at: i, item: t)).ToImmutableList());
+        }
+
         // when true - ignore Moved, Removed, and Modified, just clear the collection and add the Added items
         public bool Reset { get; }
 

@@ -75,48 +75,104 @@ namespace MvvmKit
             return delegateType.GetRuntimeMethods().First(mi => mi.Name == "Invoke");
         }
 
-        private static DelegateType _createDelegateByExpression<DelegateType>(MethodInfo method)
+        public static DelegateType _createDelegateByExpression<DelegateType>(MethodInfo method, params object[] missingParamValues)
         {
-            MethodInfo delegateInfo = _methodInfoFromDelegateType(typeof(DelegateType));
+            var queueMissingParams = new Queue<object>(missingParamValues);
 
-            var delegateParameterInfos = delegateInfo.GetParameters().ToArray();
+            var dgtMi = typeof(DelegateType).GetMethod("Invoke");
+            var dgtRet = dgtMi.ReturnType;
+            var dgtParams = dgtMi.GetParameters();
 
-            ParameterExpression[] delegateParameterExpressions = delegateInfo.GetParameters()
-                                                         .Select(m => Expression.Parameter(m.ParameterType, m.Name))
-                                                         .ToArray();
-
-            Type[] methodParamTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
-
-            Expression[] argumentExpressions = delegateParameterExpressions
-                .Skip(1)
-                .Zip(methodParamTypes, (param, typ) => (param.Type == typ) ? (Expression)param : (Expression)Expression.Convert(param, typ))
+            var paramsOfDelegate = dgtParams
+                .Select(tp => Expression.Parameter(tp.ParameterType, tp.Name))
                 .ToArray();
 
-            Expression instanceExp = null;
+            var methodParams = method.GetParameters();
 
-            if (!method.IsStatic)
+            if (method.IsStatic)
             {
-                instanceExp = delegateParameterExpressions[0];
-                if (instanceExp.Type != method.DeclaringType)
-                {
-                    instanceExp = (Expression)Expression.Convert(instanceExp, method.DeclaringType);
-                }
+                var paramsToPass = methodParams
+                    .Select((p, i) => CreateParam(paramsOfDelegate, i, p, queueMissingParams))
+                    .ToArray();
+
+                var expr = Expression.Lambda<DelegateType>(
+                    Expression.Call(method, paramsToPass),
+                    paramsOfDelegate);
+
+                return expr.Compile();
             }
-
-
-            Expression methodCall = Expression.Call(instanceExp, method, argumentExpressions);
-
-            // check if result type requires conversion
-            if (method.ReturnType != delegateInfo.ReturnType)
+            else
             {
-                methodCall = Expression.Convert(methodCall, delegateInfo.ReturnType);
+                var paramThis = Expression.Convert(paramsOfDelegate[0], method.DeclaringType);
+
+                var paramsToPass = methodParams
+                    .Select((p, i) => CreateParam(paramsOfDelegate, i + 1, p, queueMissingParams))
+                    .ToArray();
+
+                var expr = Expression.Lambda<DelegateType>(
+                    Expression.Call(paramThis, method, paramsToPass),
+                    paramsOfDelegate);
+
+                return expr.Compile();
             }
-
-            var res = Expression.Lambda<DelegateType>(methodCall, delegateParameterExpressions)
-                                .Compile();
-
-            return res;
         }
+
+        private static Expression CreateParam(ParameterExpression[] paramsOfDelegate, int i, ParameterInfo callParamType, Queue<object> queueMissingParams)
+        {
+            if (i < paramsOfDelegate.Length)
+                return Expression.Convert(paramsOfDelegate[i], callParamType.ParameterType);
+
+            if (queueMissingParams.Count > 0)
+                return Expression.Constant(queueMissingParams.Dequeue());
+
+            if (callParamType.ParameterType.IsValueType)
+                return Expression.Constant(Activator.CreateInstance(callParamType.ParameterType));
+
+            return Expression.Constant(null);
+        }
+
+        //private static DelegateType _createDelegateByExpression<DelegateType>(MethodInfo method)
+        //{
+        //    MethodInfo delegateInfo = _methodInfoFromDelegateType(typeof(DelegateType));
+
+        //    var delegateParameterInfos = delegateInfo.GetParameters().ToArray();
+
+        //    ParameterExpression[] delegateParameterExpressions = delegateInfo.GetParameters()
+        //                                                 .Select(m => Expression.Parameter(m.ParameterType, m.Name))
+        //                                                 .ToArray();
+
+        //    Type[] methodParamTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
+
+        //    Expression[] argumentExpressions = delegateParameterExpressions
+        //        .Skip(1)
+        //        .Zip(methodParamTypes, (param, typ) => (param.Type == typ) ? (Expression)param : (Expression)Expression.Convert(param, typ))
+        //        .ToArray();
+
+        //    Expression instanceExp = null;
+
+        //    if (!method.IsStatic)
+        //    {
+        //        instanceExp = delegateParameterExpressions[0];
+        //        if (instanceExp.Type != method.DeclaringType)
+        //        {
+        //            instanceExp = (Expression)Expression.Convert(instanceExp, method.DeclaringType);
+        //        }
+        //    }
+
+
+        //    Expression methodCall = Expression.Call(instanceExp, method, argumentExpressions);
+
+        //    // check if result type requires conversion
+        //    if (method.ReturnType != delegateInfo.ReturnType)
+        //    {
+        //        methodCall = Expression.Convert(methodCall, delegateInfo.ReturnType);
+        //    }
+
+        //    var res = Expression.Lambda<DelegateType>(methodCall, delegateParameterExpressions)
+        //                        .Compile();
+
+        //    return res;
+        //}
 
         private static Func<TEntity, TField> _createFieldGetterByExpression<TEntity, TField>(FieldInfo field)
         {

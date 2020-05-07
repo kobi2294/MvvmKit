@@ -4,14 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SelectiveResourcesDemo.SelectManyDemo"
+             xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignData Source=DesignData.xaml}"
+             d:DataContext="{d:DesignInstance Type=local:SelectManyDemoVm, IsDesignTimeCreatable=True}"
              >
         <DockPanel>
-        <ListBox ItemsSource="{Binding Items}"
+        <t:FasterMultiSelectListBox ItemsSource="{Binding Items}"
                  SelectionMode="Extended"
-                 local:SelectedItemsBahavior2.SelectedItems="{Binding SelectedIds}"
+                 t:SelectionHelper.ItemsSource="{Binding Items}"
+                 t:SelectionHelper.SelectedValues="{Binding SelectedIds}"
+                 t:SelectionHelper.Command="{Binding SelectionCommand}"
+                 t:SelectionHelper.SelectedValuePath="Uid"
                  DockPanel.Dock="Left"
                  >
             <ListBox.ItemTemplate>
@@ -22,16 +26,20 @@
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
-        <ItemsControl ItemsSource="{Binding SelectedIds}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type local:ItemVm}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Uid}"/>
-                        <TextBlock Text="{Binding DisplayName}" FontWeight="Bold"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        </t:FasterMultiSelectListBox>
+
+        <StackPanel DockPanel.Dock="Right">
+            <Button Padding="4" Margin="4" Command="{Binding RandomFiveCommand}">Add Random 5</Button>
+            <Button Padding="4" Margin="4" Command="{Binding RemoveSelected}" 
+                    CommandParameter="{Binding ElementName=ids, Path=SelectedItems}" >Remove Selected</Button>
+            <Button Padding="4" Margin="4" Command="{Binding ResetCommand}">Random Reset</Button>
+        </StackPanel>
+                     
+        <ListBox  
+            x:Name="ids"
+            ItemsSource="{Binding SelectedIds}"
+            SelectionMode="Extended"
+            />
+
     </DockPanel>
 </UserControl>

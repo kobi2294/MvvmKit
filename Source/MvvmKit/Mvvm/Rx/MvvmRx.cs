@@ -250,6 +250,22 @@ namespace MvvmKit
             }).DisposedBy(owner);
         }
 
+        /// <summary>
+        /// Applies Observable of DiffResults onto ObservableCollection of the same type
+        /// </summary>
+        public static void ApplyOnCollection<TOwner, TModel>(this IObservable<DiffResults<TModel>> diffs,
+            TOwner owner,
+            ObservableCollection<TModel> targetCollection)
+            where TOwner : BindableBase
+        {
+            diffs
+                .ObserveOnDispatcher()
+                .Subscribe(diff =>
+                {
+                    targetCollection.ApplyDiff(diff);
+                }).DisposedBy(owner);
+        }
+
 
         /// <summary>
         /// Applies observable of list values onto view model observable collection. Note that this method will
@@ -294,7 +310,7 @@ namespace MvvmKit
         /// <param name="factory">A method to be used as item instance factory</param>
         /// <param name="syncer">A method to be used to apply changes in model on item</param>
         /// <param name="onRemove">A method to be used before removing an item of the target collection</param>
-        public static TOwner ApplyOnCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
+        public static void ApplyOnCollection<TOwner, TModel, TItem>(this IObservable<ImmutableList<TModel>> source,
             TOwner owner,
             ObservableCollection<TItem> targetCollection,
             Func<TItem> factory,
@@ -315,9 +331,28 @@ namespace MvvmKit
                     onModify: (i, oldModel, newModel, vm) => syncer(newModel, vm),
                     onRemove: (i, model, vm) => onRemove?.Invoke(vm));
             }).DisposedBy(owner);
-
-            return owner;
         }
+
+        /// <summary>
+        /// Applies observable of list values onto view model observable collection of the same type. Note that this method will
+        /// Perform diff between each consecutive lists, in order to calculate the smallest set of changes needed to be performed 
+        /// the observable collection (using Diff algorithm and DiffResult instances)
+        /// </summary>
+        public static void ApplyOnCollection<TOwner, TModel>(this IObservable<ImmutableList<TModel>> source, 
+            TOwner owner, 
+            ObservableCollection<TModel> targetCollection)
+            where TOwner : BindableBase
+        {
+            source
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
+                {
+                    var diff = targetCollection.Diff(val);
+                    targetCollection.ApplyDiff(diff);
+                }).DisposedBy(owner);
+        }
+
+
 
         #endregion
 
