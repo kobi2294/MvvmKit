@@ -204,6 +204,26 @@ namespace MvvmKit
             return Enumerable.Repeat(padding, padNum).Concat(source);
         }
 
+        public static bool HasSameElementsAs<T>(this IEnumerable<T> source, IEnumerable<T> target)
+        {
+            var sourceMap = source
+                        .GroupBy(x => x)
+                        .ToDictionary(x => x.Key, x => x.Count());
+            var targetMap = target
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+            var sourceIncludesTarget =
+                sourceMap.Keys.All(x =>
+                    targetMap.Keys.Contains(x) && sourceMap[x] == targetMap[x]);
+
+            var targetIncludesSource =
+                targetMap.Keys.All(x =>
+                    sourceMap.Keys.Contains(x) && sourceMap[x] == targetMap[x]);
+
+            return sourceIncludesTarget && targetIncludesSource;
+        }
+
         public static IEnumerable<T> VerifyCount<T>(this IEnumerable<T> source, int count, Func<T> factory = null)
         {
             var counter = 0;

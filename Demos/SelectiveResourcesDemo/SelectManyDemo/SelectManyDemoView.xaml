@@ -33,6 +33,7 @@
             <Button Padding="4" Margin="4" Command="{Binding RemoveSelected}" 
                     CommandParameter="{Binding ElementName=ids, Path=SelectedItems}" >Remove Selected</Button>
             <Button Padding="4" Margin="4" Command="{Binding ResetCommand}">Random Reset</Button>
+            <Button Padding="4" Margin="4" Command="{Binding ClearCommand}">Clear</Button>
         </StackPanel>
                      
         <ListBox  

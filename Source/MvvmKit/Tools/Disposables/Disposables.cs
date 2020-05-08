@@ -19,7 +19,7 @@ namespace MvvmKit
         public static T DisposedBy<T>(this T child, INotifyDisposable disposer)
             where T : IDisposable
         {
-            disposer.Disposing += (s, e) => child.Dispose();
+            disposer.Disposing += (s, e) => child?.Dispose();
             return child;
         }
 

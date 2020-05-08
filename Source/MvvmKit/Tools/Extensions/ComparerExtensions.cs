@@ -29,6 +29,14 @@ namespace MvvmKit
             return new FuncComparer<string>(compareInfo.Compare);
         }
 
+        public static IEqualityComparer<IEnumerable<T>> SameElementsComparer<T>()
+        {
+            Func<IEnumerable<T>, IEnumerable<T>, bool> compareFunc = 
+                (first, second) => first.HasSameElementsAs(second);
+
+            return compareFunc.ToEqualityComparer();            
+        }
+
         #region Private
 
         private class FuncComparer<T> : IComparer<T>

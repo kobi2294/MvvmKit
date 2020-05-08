@@ -313,7 +313,9 @@ namespace MvvmKit
             {
                 _dettachFromListBox();
 
-                if (_listBox is FasterMultiSelectListBox mlb)
+                // improvisation to make sure we call the bulk update only if there is a bulk of changes, and the listbox supports it
+                if ((_listBox is FasterMultiSelectListBox mlb) && 
+                    ((diff.Added.Count > 20) || (diff.Removed.Count > 20)))
                 {
                     mlb.SetSelectedItems(selectedItems);
                 } else
@@ -398,11 +400,21 @@ namespace MvvmKit
                     break;
 
                 case NotifyCollectionChangedAction.Reset:
-                    foreach (var item in _itemToKey.Keys.ToArray())
+                    var oldItems = _itemToKey.Keys.ToArray();
+                    var newItems = _itemsSource.Cast<object>().ToArray();
+                    var diff = oldItems.Diff(newItems);
+
+                    foreach (var item in diff.Removed.Select(x => x.item))
                     {
                         _removeItemFromLookups(item);
                     }
-                    _applyOnListBox();
+                    foreach (var item in diff.Added.Select(x => x.item))
+                    {
+                        _addItemToLookups(item);
+                    }
+
+                    if ((diff.Added.Count > 0) || (diff.Removed.Count > 0))
+                        _applyOnListBox();
                     break;
                 default:
                     break;
@@ -451,7 +463,10 @@ namespace MvvmKit
         // D2. ListBox.SelectedItems - Collection Changed Event
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _applyOnCommand();
+            if (_listBox.IsLoaded)
+            {
+                _applyOnCommand();
+            }
         }
 
         // D3. ListBox - Unloaded

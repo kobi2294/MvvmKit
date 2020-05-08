@@ -37,6 +37,8 @@ namespace SelectiveResourcesDemo.SelectManyDemo
 
         public IRxCommand ResetCommand { get; }
 
+        public IRxCommand ClearCommand { get; }
+
         #endregion
 
         public SelectManyDemoVm()
@@ -48,6 +50,7 @@ namespace SelectiveResourcesDemo.SelectManyDemo
             RandomFiveCommand = MvvmRx.CreateCommand(this);
             RemoveSelected = MvvmRx.CreateCommand<IEnumerable>(this);
             ResetCommand = MvvmRx.CreateCommand(this);
+            ClearCommand = MvvmRx.CreateCommand(this);
 
             SelectionCommand.Select(ienum => ienum.ToObservableCollection()).ApplyOnProperty(this, x => x.SelectedIds);
             RandomFiveCommand.Subscribe(_ =>
@@ -71,7 +74,12 @@ namespace SelectiveResourcesDemo.SelectManyDemo
                 var rnd = new Random();
                 var ids = Items.Select(x => x.Uid).Where(x => rnd.Next(40) < 2).ToObservableCollection();
                 SelectedIds = ids;
-            });
+            }).DisposedBy(this);
+
+            ClearCommand.Subscribe(_ =>
+            {
+                Items.Clear();
+            }).DisposedBy(this);
             
         }
 
