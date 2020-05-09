@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -47,6 +48,48 @@ namespace MvvmKit
             return
                 type.IsGenericType
                 && type.GetGenericTypeDefinition() == genericDefinition;
+        }
+
+        /// <summary>
+        /// Check if this type implements IEnumerable<T> and if so returns (true, T)
+        /// If not, checks if the type implements IEnumerable and if so returns (true, object)
+        /// otherwise returns (false, null)
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool TryIsEnumerable(this Type type, out Type elementType)
+        {
+            var interfaces = type.GetInterfaces();
+
+            var ienumerableT = interfaces
+                .FirstOrDefault(intr => (intr.IsGenericType)
+                                     && (intr.GetGenericTypeDefinition() == typeof(IEnumerable<>)));
+
+            if (ienumerableT != null)
+            {
+                elementType = ienumerableT.GetGenericArguments()[0];
+                return true;
+            }
+
+            var ienumerable = interfaces
+                .FirstOrDefault(intr => intr == typeof(IEnumerable));
+
+            if (ienumerable != null)
+            {
+                elementType = typeof(object);
+                return true;
+            }
+
+            elementType = null;
+            return false;
+        }
+
+        /// <summary>
+        /// returns true if the subType is inherited from suprt type either as class inheritance or interface implementation
+        /// </summary>
+        public static bool IsInheritedFrom(this Type subType, Type superType)
+        {
+            return superType.IsAssignableFrom(subType);
         }
     }
 }

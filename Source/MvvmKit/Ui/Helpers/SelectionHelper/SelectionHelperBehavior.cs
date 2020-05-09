@@ -66,7 +66,7 @@ namespace MvvmKit
     public class SelectionHelperBehavior
     {
 
-        private ListBox _listBox = null;
+        private FasterMultiSelectListBox _listBox = null;
 
         private IEnumerable _itemsSource = null;
         private IEnumerable _selectedValues = null;
@@ -79,7 +79,7 @@ namespace MvvmKit
         Dictionary<object, object> _itemToKey;
 
 
-        public SelectionHelperBehavior(ListBox listBox)
+        public SelectionHelperBehavior(FasterMultiSelectListBox listBox)
         {
             _listBox = listBox;
 
@@ -315,7 +315,7 @@ namespace MvvmKit
 
                 // improvisation to make sure we call the bulk update only if there is a bulk of changes, and the listbox supports it
                 if ((_listBox is FasterMultiSelectListBox mlb) && 
-                    ((diff.Added.Count > 20) || (diff.Removed.Count > 20)))
+                    ((diff.Added.Count > 1) || (diff.Removed.Count > 1)))
                 {
                     mlb.SetSelectedItems(selectedItems);
                 } else

@@ -94,6 +94,14 @@ namespace MvvmKit
             return memberExpression;
         }
 
+        public static LambdaExpression ToFuncExpression(this PropertyInfo propInfo)
+        {
+            var parameter = Expression.Parameter(propInfo.DeclaringType, "x");
+            var property = Expression.Property(parameter, propInfo);
+            var lambda = Expression.Lambda(property, parameter);
+
+            return lambda;
+        }
 
         public static String GetName<T>(this Expression<Func<T>> source)
         {

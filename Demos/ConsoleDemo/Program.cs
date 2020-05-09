@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            ConsoleDemo.Samples.ToGetter.Main.Run();
+            ConsoleDemo.Samples.Remute.Main.Run();
             Console.ReadLine();
         }
     }

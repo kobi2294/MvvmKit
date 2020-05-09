@@ -1,6 +1,7 @@
 ﻿using MvvmKit.Tools.Immutables.Fluent;
 using Remutable;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -63,15 +64,41 @@ namespace MvvmKit
         public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, TVal value)
             where T : IImmutable
         {
-            _verifyRemute<T>();
+            if (instance == null) return default;
+            _verifyRemute(instance.GetType());
             return _remute.With(instance, expression, value);
         }
 
         public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, Func<T, TVal> value)
             where T : IImmutable
         {
-            _verifyRemute<T>();
+            if (instance == null) return default;
+            _verifyRemute(instance.GetType());
             return _remute.With(instance, expression, value(instance));
+        }
+
+        public static IImmutable With(this IImmutable instance, PropertyInfo prop, object value)
+        {
+            if (instance == null) return null;
+            if (prop == null) throw new ArgumentNullException(nameof(prop));
+
+            var instanceType = instance.GetType();
+            _verifyRemute(instanceType);
+
+
+            var propType = prop.PropertyType;
+
+            var propertyExpression = prop.ToFuncExpression();
+            var withGenericMethod = typeof(Remute).GetMethods()
+                .Single(m => (m.Name == nameof(With))
+                            && (m.IsGenericMethodDefinition)
+                            && (m.GetParameters().Length == 3));
+
+            var withMethodInfo = withGenericMethod.MakeGenericMethod(instanceType, propType);
+            var withFunc = withMethodInfo.ToFunc<Remute, object, LambdaExpression, object, object>();
+
+            var res = withFunc(_remute, instance, propertyExpression, value);
+            return res as IImmutable;
         }
 
         public static VersionedList<T> ToVersionedList<T>(this IEnumerable<T> source)
@@ -136,5 +163,131 @@ namespace MvvmKit
 
             return value;
         }
+
+
+        private static IEnumerable<IImmutable> _getAllSubOjectsInProperty(IImmutable obj, PropertyInfo prop)
+        {
+            if (prop.PropertyType.IsImmutableType())
+            {
+                var subOjb = prop.GetValue(obj) as IImmutable;
+                return subOjb.GetAllSubObjects();
+            }
+
+            if (prop.PropertyType.IsEnumreableOfImmutables())
+            {
+                var list = prop.GetValue(obj) as IEnumerable;
+                if (list != null)
+                {
+                    return list.Cast<IImmutable>();
+                }
+            }
+
+            return Enumerable.Empty<IImmutable>();
+        }
+
+        /// <summary>
+        /// Returns a flatten tree of all the immutable objects under the source object, including itself
+        /// </summary>
+        public static IEnumerable<IImmutable> GetAllSubObjects(this IImmutable source)
+        {
+            if (source == null) return Enumerable.Empty<IImmutable>();
+
+            var type = source.GetType();
+            var props = type.GetAllProperties();
+            var allSubObjects = props.SelectMany(prop => _getAllSubOjectsInProperty(source, prop));
+
+            return source.Yield()
+                .Concat(allSubObjects);
+        }
+
+        /// <summary>
+        /// Reflection helper that returns true if the type implements IImmutable
+        /// </summary>
+        public static bool IsImmutableType(this Type type)
+        {
+            return type.GetInterfaces().Contains(typeof(IImmutable));
+        }
+
+        /// <summary>
+        /// Reflection helper that returns true if the type implements IEnumerable of T where T implements IImmutable
+        /// </summary>
+        public static bool IsEnumreableOfImmutables(this Type type)
+        {
+            return type.TryIsEnumerable(out var elementType)
+                && elementType.IsImmutableType();
+        }
+
+        /// <summary>
+        /// takes a collection of items and returns a an ImmutableList of them
+        /// expectedType is the type of object the caller expects to get, probably ImmutableList of T
+        /// </summary>
+        private static object _toImmutableList(IEnumerable<IImmutable> items, Type expectedType)
+        {
+            if (expectedType == null) return new ArgumentNullException(nameof(expectedType));
+            if (items == null) return new ArgumentNullException(nameof(items));
+
+            if (!expectedType.IsGenericType) 
+                throw new ArgumentException("Generic collection type expected", nameof(expectedType));
+
+            if (expectedType.GetGenericTypeDefinition() == typeof(ImmutableList<>))
+            {
+                var typeArgument = expectedType.GetGenericArguments()[0];
+                var castMethod = typeof(Enumerable).GetMethod("Cast");
+                var castTMethod = castMethod.MakeGenericMethod(typeArgument);
+
+                var toImmutableListMethod = typeof(ImmutableList).GetMethod("CreateRange");
+                var toImmutableListTMethod = toImmutableListMethod.MakeGenericMethod(typeArgument);
+
+                var casted = castTMethod.Invoke(null, new object[] { items });
+                var newList = toImmutableListTMethod.Invoke(null, new object[] { casted });
+                return newList;
+            }
+
+            throw new ArgumentException("Expecting ImmutableList of T");
+        }
+
+        private static IImmutable _modifyRecusively(IImmutable source, Func<IImmutable, IImmutable> modifier, Type type)
+        {
+            if (source == null) return null;
+
+            // first check if the source is of the modifiable type and if so apply the modifier on it
+            var sourceType = source.GetType();
+            if (sourceType.IsInheritedFrom(type))
+            {
+                source = modifier(source);
+            }
+
+            var properties = sourceType.GetAllProperties();
+
+            // now search for all properties that are immutable and apply recursively on them as well
+            foreach (var prop in properties)
+            {
+                if (prop.PropertyType.IsImmutableType())
+                {
+                    var subObj = prop.GetValue(source) as IImmutable;
+                    subObj = _modifyRecusively(subObj, modifier, type);
+                    source = source.With(prop, subObj);
+                } else if (prop.PropertyType.IsEnumreableOfImmutables())
+                {
+                    var list = prop.GetValue(source) as IEnumerable;
+                    var modified = list
+                        .Cast<IImmutable>()
+                        .Select(imm => _modifyRecusively(imm, modifier, type));
+
+                    var newList = _toImmutableList(modified, list.GetType());
+                    source = source.With(prop, newList);
+                }
+            }
+
+            return source;
+        }
+
+        public static T ModifyRecusively<T, K>(this T source, Func<K, K> modifier)
+            where T : IImmutable
+            where K : IImmutable
+        {
+            return (T)_modifyRecusively(source, (IImmutable imm) => modifier((K)imm), typeof(K));
+        }
+
     }
 }

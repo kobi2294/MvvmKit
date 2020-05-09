@@ -216,7 +216,7 @@ namespace MvvmKit
 
                 foreach (var add in diff.Added)
                 {
-                    source.Insert(add.to, add.item);
+                    source.Add(add.item);
                 }
 
                 foreach (var modify in diff.Modified)

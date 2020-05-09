@@ -14,12 +14,12 @@ namespace MvvmKit
     {
         #region ItemsSource property
 
-        public static IEnumerable GetItemsSource(ListBox obj)
+        public static IEnumerable GetItemsSource(FasterMultiSelectListBox obj)
         {
             return (IEnumerable)obj.GetValue(ItemsSourceProperty);
         }
 
-        public static void SetItemsSource(ListBox obj, IEnumerable value)
+        public static void SetItemsSource(FasterMultiSelectListBox obj, IEnumerable value)
         {
             obj.SetValue(ItemsSourceProperty, value);
         }
@@ -33,7 +33,7 @@ namespace MvvmKit
 
         private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var lb = d as ListBox;
+            var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetItemsSource(e.NewValue as IEnumerable);
         }
 
@@ -41,12 +41,12 @@ namespace MvvmKit
 
         #region SelectedValues property
 
-        public static IEnumerable GetSelectedValues(ListBox obj)
+        public static IEnumerable GetSelectedValues(FasterMultiSelectListBox obj)
         {
             return (IEnumerable)obj.GetValue(SelectedValuesProperty);
         }
 
-        public static void SetSelectedValues(ListBox obj, IEnumerable value)
+        public static void SetSelectedValues(FasterMultiSelectListBox obj, IEnumerable value)
         {
             obj.SetValue(SelectedValuesProperty, value);
         }
@@ -60,7 +60,7 @@ namespace MvvmKit
 
         private static void OnSelectedValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var lb = d as ListBox;
+            var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetSelectedValues(e.NewValue as IEnumerable);
         }
 
@@ -68,12 +68,12 @@ namespace MvvmKit
 
         #region Command property
 
-        public static ICommand GetCommand(ListBox obj)
+        public static ICommand GetCommand(FasterMultiSelectListBox obj)
         {
             return (ICommand)obj.GetValue(CommandProperty);
         }
 
-        public static void SetCommand(ListBox obj, ICommand value)
+        public static void SetCommand(FasterMultiSelectListBox obj, ICommand value)
         {
             obj.SetValue(CommandProperty, value);
         }
@@ -87,7 +87,7 @@ namespace MvvmKit
 
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var lb = d as ListBox;
+            var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetCommand(e.NewValue as ICommand);
         }
 
@@ -95,12 +95,12 @@ namespace MvvmKit
 
         #region SelectedValuePath property
 
-        public static PropertyPath GetSelectedValuePath(ListBox obj)
+        public static PropertyPath GetSelectedValuePath(FasterMultiSelectListBox obj)
         {
             return (PropertyPath)obj.GetValue(SelectedValuePathProperty);
         }
 
-        public static void SetSelectedValuePath(ListBox obj, PropertyPath value)
+        public static void SetSelectedValuePath(FasterMultiSelectListBox obj, PropertyPath value)
         {
             obj.SetValue(SelectedValuePathProperty, value);
         }
@@ -114,14 +114,14 @@ namespace MvvmKit
 
         private static void OnSelectedValuePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var lb = d as ListBox;
+            var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetSelectedValuePath(e.NewValue as PropertyPath);
         }
 
         #endregion
 
 
-        private static SelectionHelperBehavior GetBehavior(ListBox obj)
+        private static SelectionHelperBehavior GetBehavior(FasterMultiSelectListBox obj)
         {
             var res = (SelectionHelperBehavior)obj.GetValue(BehaviorProperty);
             if (res == null)
@@ -132,7 +132,7 @@ namespace MvvmKit
             return res;
         }
 
-        private static void SetBehavior(ListBox obj, SelectionHelperBehavior value)
+        private static void SetBehavior(FasterMultiSelectListBox obj, SelectionHelperBehavior value)
         {
             obj.SetValue(BehaviorProperty, value);
         }
