@@ -44,12 +44,21 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return this;
         }
 
+        public override ImmutableListWrapper<TRoot, T> AddRange(IEnumerable<T> items)
+        {
+            var modifier = new ListAddModifier<T>(items.ToArray());
+            _modifiers.Add(modifier);
+            return this;
+        }
+
+
         public override ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates)
         {
             var modifier = new ListRemoveModifier<T>(predicates);
             _modifiers.Add(modifier);
             return this;
         }
+
 
         public override TRoot Go()
         {

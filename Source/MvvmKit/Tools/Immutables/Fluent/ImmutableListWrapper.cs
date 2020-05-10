@@ -15,5 +15,7 @@ namespace MvvmKit
         public abstract ImmutableListWrapper<TRoot, T> Add(params T[] items);
 
         public abstract ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates);
+
+        public abstract ImmutableListWrapper<TRoot, T> AddRange(IEnumerable<T> items);
     }
 }
