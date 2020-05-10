@@ -178,7 +178,7 @@ namespace MvvmKit
                 var list = prop.GetValue(obj) as IEnumerable;
                 if (list != null)
                 {
-                    return list.Cast<IImmutable>();
+                    return list.Cast<IImmutable>().SelectMany(imm => imm.GetAllSubObjects());
                 }
             }
 
@@ -246,7 +246,7 @@ namespace MvvmKit
             throw new ArgumentException("Expecting ImmutableList of T");
         }
 
-        private static IImmutable _modifyRecusively(IImmutable source, Func<IImmutable, IImmutable> modifier, Type type)
+        public static IImmutable ModifyRecusively(this IImmutable source, Func<IImmutable, IImmutable> modifier, Type type)
         {
             if (source == null) return null;
 
@@ -265,14 +265,14 @@ namespace MvvmKit
                 if (prop.PropertyType.IsImmutableType())
                 {
                     var subObj = prop.GetValue(source) as IImmutable;
-                    subObj = _modifyRecusively(subObj, modifier, type);
+                    subObj = ModifyRecusively(subObj, modifier, type);
                     source = source.With(prop, subObj);
                 } else if (prop.PropertyType.IsEnumreableOfImmutables())
                 {
                     var list = prop.GetValue(source) as IEnumerable;
                     var modified = list
                         .Cast<IImmutable>()
-                        .Select(imm => _modifyRecusively(imm, modifier, type));
+                        .Select(imm => ModifyRecusively(imm, modifier, type));
 
                     var newList = _toImmutableList(modified, list.GetType());
                     source = source.With(prop, newList);
@@ -286,7 +286,7 @@ namespace MvvmKit
             where T : IImmutable
             where K : IImmutable
         {
-            return (T)_modifyRecusively(source, (IImmutable imm) => modifier((K)imm), typeof(K));
+            return (T)ModifyRecusively(source, (IImmutable imm) => modifier((K)imm), typeof(K));
         }
 
     }
