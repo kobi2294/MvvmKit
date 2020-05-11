@@ -384,7 +384,10 @@ namespace MvvmKit
         /// Creates an observable that yields an event when the property value changes. The event payload is the new
         /// property value.
         /// </summary>
-        public static IObservable<TProp> ObservePropertyValues<TBindable, TProp>(this TBindable owner, Expression<Func<TBindable, TProp>> property)
+        public static IObservable<TProp> ObservePropertyValues<TBindable, TProp>(
+            this TBindable owner,
+            Expression<Func<TBindable, TProp>> property
+            )
             where TBindable : BindableBase
         {
             var propInfo = property.GetProperty();
@@ -396,6 +399,7 @@ namespace MvvmKit
 
                 EventHandler handler = (s, e) => observer.OnCompleted();
                 owner.Disposing += handler;
+                observer.OnNext(getter(owner));
 
                 return Disposables.Call(() =>
                 {
