@@ -202,7 +202,7 @@ namespace MvvmKit
         /// <summary>
         /// Applies an Observable of values onto a view model property. 
         /// </summary>
-        public static void ApplyOnProperty<TVm, TProperty>(this IObservable<TProperty> source,
+        public static IObservable<TProperty> ApplyOnProperty<TVm, TProperty>(this IObservable<TProperty> source,
             TVm vm,
             Expression<Func<TVm, TProperty>> property,
             Action<TProperty> onOldValue = null)
@@ -224,6 +224,8 @@ namespace MvvmKit
                 setter(vm, val);
             })
                 .DisposedBy(vm);
+
+            return source;
         }
 
 
