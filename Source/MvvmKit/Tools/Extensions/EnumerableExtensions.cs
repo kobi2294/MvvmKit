@@ -243,5 +243,11 @@ namespace MvvmKit
             }
         }
 
+        public static bool SequenceEqual<T>(this IEnumerable<T> source, IEnumerable<T> target, Func<T, T, bool> isEqual)
+        {
+            var comparer = isEqual.ToEqualityComparer();
+            return source.SequenceEqual(target, comparer);
+        }
+
     }
 }

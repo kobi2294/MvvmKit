@@ -160,6 +160,7 @@
     <Compile Include="Tools\Extensions\ImmutableExtensions.cs" />
     <Compile Include="Tools\Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="Tools\Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Tools\Extensions\RxExtensions.cs" />
     <Compile Include="Tools\Extensions\SerializationExtensions.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />

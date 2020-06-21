@@ -19,6 +19,11 @@ namespace MvvmKit
         public static T DisposedBy<T>(this T child, INotifyDisposable disposer)
             where T : IDisposable
         {
+            if (child is Task)
+            {
+                throw new ArgumentException("Can not register Task for late disposal", nameof(child));
+            }
+
             disposer.Disposing += (s, e) => child?.Dispose();
             return child;
         }

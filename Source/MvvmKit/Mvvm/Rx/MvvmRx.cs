@@ -634,33 +634,6 @@ namespace MvvmKit
             });
         }
 
-        public static IObservable<T> WhenDifferentFrom<T>(this IObservable<T> source, IObservable<T> controller)
-        {
-            var res = source
-                .WithLatestFrom(controller, (src, ctrl) => (src, ctrl))
-                .Where(pair => !Equals(pair.src, pair.ctrl))
-                .Select(pair => pair.src);
-
-            return res;
-        }
-
-        public static IObservable<E> WhenHasDifferentElementsFrom<E, T>(this IObservable<E> source, IObservable<IEnumerable<T>> controller)
-            where E: IEnumerable<T>
-        {
-            var res = source
-                .WithLatestFrom(controller, (src, ctrl) => (src, ctrl))
-                .Where(pair => !pair.src.HasSameElementsAs(pair.ctrl))
-                .Select(pair => pair.src);
-
-            return res;
-        }
-
-        public static IObservable<IEnumerable<T>> DistinctUntilDifferentElements<T>(this IObservable<IEnumerable<T>> source)
-        {
-            return source
-                .DistinctUntilChanged(ComparerExtensions.SameElementsComparer<T>());
-        }
-
         #endregion
 
     }
