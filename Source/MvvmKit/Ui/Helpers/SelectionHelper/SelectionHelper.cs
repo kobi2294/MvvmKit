@@ -6,32 +6,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace MvvmKit
 {
     public static class SelectionHelper
     {
-        #region ItemsSource property
+        #region _itemsSource property
 
-        public static IEnumerable GetItemsSource(FasterMultiSelectListBox obj)
+        private static IEnumerable _getItemsSource(FasterMultiSelectListBox obj)
         {
-            return (IEnumerable)obj.GetValue(ItemsSourceProperty);
+            return (IEnumerable)obj.GetValue(_itemsSourceProperty);
         }
 
-        public static void SetItemsSource(FasterMultiSelectListBox obj, IEnumerable value)
+        private static void _setItemsSource(FasterMultiSelectListBox obj, IEnumerable value)
         {
-            obj.SetValue(ItemsSourceProperty, value);
+            obj.SetValue(_itemsSourceProperty, value);
         }
 
-        public static readonly DependencyProperty ItemsSourceProperty =
+        private static readonly DependencyProperty _itemsSourceProperty =
             DependencyProperty.RegisterAttached(
-                "ItemsSource",
+                "_itemsSource",
                 typeof(IEnumerable),
                 typeof(SelectionHelper),
-                new PropertyMetadata(null, OnItemsSourceChanged));
+                new PropertyMetadata(null, _onItemsSourceChanged));
 
-        private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void _onItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetItemsSource(e.NewValue as IEnumerable);
@@ -93,26 +95,26 @@ namespace MvvmKit
 
         #endregion
 
-        #region SelectedValuePath property
+        #region _selectedValuePath property
 
-        public static PropertyPath GetSelectedValuePath(FasterMultiSelectListBox obj)
+        private static PropertyPath _getSelectedValuePath(FasterMultiSelectListBox obj)
         {
-            return (PropertyPath)obj.GetValue(SelectedValuePathProperty);
+            return (PropertyPath)obj.GetValue(_selectedValuePathProperty);
         }
 
-        public static void SetSelectedValuePath(FasterMultiSelectListBox obj, PropertyPath value)
+        private static void _setSelectedValuePath(FasterMultiSelectListBox obj, PropertyPath value)
         {
-            obj.SetValue(SelectedValuePathProperty, value);
+            obj.SetValue(_selectedValuePathProperty, value);
         }
 
-        public static readonly DependencyProperty SelectedValuePathProperty =
+        private static readonly DependencyProperty _selectedValuePathProperty =
             DependencyProperty.RegisterAttached(
-                "SelectedValuePath",
+                "_selectedValuePath",
                 typeof(PropertyPath),
                 typeof(SelectionHelper),
-                new PropertyMetadata(null, OnSelectedValuePathChanged));
+                new PropertyMetadata(null, _onSelectedValuePathChanged));
 
-        private static void OnSelectedValuePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void _onSelectedValuePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var lb = d as FasterMultiSelectListBox;
             GetBehavior(lb).SetSelectedValuePath(e.NewValue as PropertyPath);
@@ -128,6 +130,25 @@ namespace MvvmKit
             {
                 res = new SelectionHelperBehavior(obj);
                 SetBehavior(obj, res);
+
+                var b1 = new Binding()
+                {
+                    Path = new PropertyPath(ItemsControl.ItemsSourceProperty),
+                    Mode = BindingMode.OneWay,
+                    Source = obj
+                };
+
+                obj.SetBinding(_itemsSourceProperty, b1);
+
+                var b2 = new Binding()
+                {
+                    Path = new PropertyPath(Selector.SelectedValuePathProperty),
+                    Mode = BindingMode.OneWay,
+                    Source = obj
+                };
+
+                obj.SetBinding(_selectedValuePathProperty, b2);
+
             }
             return res;
         }

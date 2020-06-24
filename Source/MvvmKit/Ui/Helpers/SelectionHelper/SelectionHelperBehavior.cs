@@ -266,7 +266,9 @@ namespace MvvmKit
             {
                 _removeItemFromLookups(item);
             }
-            foreach (var item in _itemToKey.Keys.ToArray())
+
+            var all = _itemsSource.Cast<object>().ToArray();
+            foreach (var item in all)
             {
                 _addItemToLookups(item);
             }

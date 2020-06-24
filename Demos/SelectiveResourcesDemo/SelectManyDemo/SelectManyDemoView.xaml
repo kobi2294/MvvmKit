@@ -10,12 +10,12 @@
              d:DataContext="{d:DesignInstance Type=local:SelectManyDemoVm, IsDesignTimeCreatable=True}"
              >
         <DockPanel>
-        <t:FasterMultiSelectListBox ItemsSource="{Binding Items}"
+        <t:FasterMultiSelectListBox 
+                 ItemsSource="{Binding Items}"
+                 SelectedValuePath="Uid"
                  SelectionMode="Extended"
-                 t:SelectionHelper.ItemsSource="{Binding Items}"
                  t:SelectionHelper.SelectedValues="{Binding SelectedIds}"
                  t:SelectionHelper.Command="{Binding SelectionCommand}"
-                 t:SelectionHelper.SelectedValuePath="Uid"
                  DockPanel.Dock="Left"
                  >
             <ListBox.ItemTemplate>
