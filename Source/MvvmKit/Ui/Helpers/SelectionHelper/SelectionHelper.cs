@@ -14,32 +14,6 @@ namespace MvvmKit
 {
     public static class SelectionHelper
     {
-        #region _itemsSource property
-
-        private static IEnumerable _getItemsSource(FasterMultiSelectListBox obj)
-        {
-            return (IEnumerable)obj.GetValue(_itemsSourceProperty);
-        }
-
-        private static void _setItemsSource(FasterMultiSelectListBox obj, IEnumerable value)
-        {
-            obj.SetValue(_itemsSourceProperty, value);
-        }
-
-        private static readonly DependencyProperty _itemsSourceProperty =
-            DependencyProperty.RegisterAttached(
-                "_itemsSource",
-                typeof(IEnumerable),
-                typeof(SelectionHelper),
-                new PropertyMetadata(null, _onItemsSourceChanged));
-
-        private static void _onItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var lb = d as FasterMultiSelectListBox;
-            GetBehavior(lb).SetItemsSource(e.NewValue as IEnumerable);
-        }
-
-        #endregion
 
         #region SelectedValues property
 
@@ -63,7 +37,7 @@ namespace MvvmKit
         private static void OnSelectedValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var lb = d as FasterMultiSelectListBox;
-            GetBehavior(lb).SetSelectedValues(e.NewValue as IEnumerable);
+            _getBehavior(lb).SetSelectedValues(e.NewValue as IEnumerable);
         }
 
         #endregion
@@ -90,7 +64,34 @@ namespace MvvmKit
         private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var lb = d as FasterMultiSelectListBox;
-            GetBehavior(lb).SetCommand(e.NewValue as ICommand);
+            _getBehavior(lb).SetCommand(e.NewValue as ICommand);
+        }
+
+        #endregion
+
+        #region _itemsSource property
+
+        private static IEnumerable _getItemsSource(FasterMultiSelectListBox obj)
+        {
+            return (IEnumerable)obj.GetValue(_itemsSourceProperty);
+        }
+
+        private static void _setItemsSource(FasterMultiSelectListBox obj, IEnumerable value)
+        {
+            obj.SetValue(_itemsSourceProperty, value);
+        }
+
+        private static readonly DependencyProperty _itemsSourceProperty =
+            DependencyProperty.RegisterAttached(
+                "_itemsSource",
+                typeof(IEnumerable),
+                typeof(SelectionHelper),
+                new PropertyMetadata(null, _onItemsSourceChanged));
+
+        private static void _onItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var lb = d as FasterMultiSelectListBox;
+            _getBehavior(lb).SetItemsSource(e.NewValue as IEnumerable);
         }
 
         #endregion
@@ -117,19 +118,20 @@ namespace MvvmKit
         private static void _onSelectedValuePathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var lb = d as FasterMultiSelectListBox;
-            GetBehavior(lb).SetSelectedValuePath(e.NewValue as PropertyPath);
+            _getBehavior(lb).SetSelectedValuePath(e.NewValue as PropertyPath);
         }
 
         #endregion
 
+        #region _behavior property
 
-        private static SelectionHelperBehavior GetBehavior(FasterMultiSelectListBox obj)
+        private static SelectionHelperBehavior _getBehavior(FasterMultiSelectListBox obj)
         {
-            var res = (SelectionHelperBehavior)obj.GetValue(BehaviorProperty);
+            var res = (SelectionHelperBehavior)obj.GetValue(_behaviorProperty);
             if (res == null)
             {
                 res = new SelectionHelperBehavior(obj);
-                SetBehavior(obj, res);
+                _setBehavior(obj, res);
 
                 var b1 = new Binding()
                 {
@@ -149,21 +151,28 @@ namespace MvvmKit
 
                 obj.SetBinding(_selectedValuePathProperty, b2);
 
+                res.SetOnCleanup(() =>
+                {
+                    obj.ClearValue(_itemsSourceProperty);
+                    obj.ClearValue(_selectedValuePathProperty);
+                    obj.ClearValue(_behaviorProperty);
+                });
+
             }
             return res;
         }
 
-        private static void SetBehavior(FasterMultiSelectListBox obj, SelectionHelperBehavior value)
+        private static void _setBehavior(FasterMultiSelectListBox obj, SelectionHelperBehavior value)
         {
-            obj.SetValue(BehaviorProperty, value);
+            obj.SetValue(_behaviorProperty, value);
         }
 
         // Using a DependencyProperty as the backing store for Behavior.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty BehaviorProperty =
-            DependencyProperty.RegisterAttached("_Behavior", 
-                typeof(SelectionHelperBehavior), 
+        public static readonly DependencyProperty _behaviorProperty =
+            DependencyProperty.RegisterAttached("_behavior",
+                typeof(SelectionHelperBehavior),
                 typeof(SelectionHelper), new PropertyMetadata(null));
-
+        #endregion
 
     }
 }

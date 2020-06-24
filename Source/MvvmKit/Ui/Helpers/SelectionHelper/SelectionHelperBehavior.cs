@@ -72,12 +72,12 @@ namespace MvvmKit
         private IEnumerable _selectedValues = null;
         private PropertyPath _selectedValuePath = null;
         private ICommand _command = null;
+        private Action _onCleanup;
         private Func<IEnumerable, object> _cmdCast = null;
 
         Dictionary<object, BindingNotifyier> _itemToNotifier;
         EditableLookup<object, object> _keyToItems;
         Dictionary<object, object> _itemToKey;
-
 
         public SelectionHelperBehavior(FasterMultiSelectListBox listBox)
         {
@@ -141,6 +141,11 @@ namespace MvvmKit
             var castMethod = typeof(Enumerable).GetMethod("Cast", BindingFlags.Static | BindingFlags.Public);
             var castGenericMethod = castMethod.MakeGenericMethod(new Type[] { cmdTypeArg });
             _cmdCast = castGenericMethod.ToFunc<IEnumerable, object>();
+        }
+
+        public void SetOnCleanup(Action action)
+        {
+            _onCleanup = action;
         }
 
         #endregion
@@ -266,6 +271,8 @@ namespace MvvmKit
             {
                 _removeItemFromLookups(item);
             }
+
+            if (_itemsSource == null) return;
 
             var all = _itemsSource.Cast<object>().ToArray();
             foreach (var item in all)
@@ -475,6 +482,7 @@ namespace MvvmKit
         private void ListBox_Unloaded(object sender, RoutedEventArgs e)
         {
             _dettachFromListBox();
+            _onCleanup?.Invoke();
         }
 
 
