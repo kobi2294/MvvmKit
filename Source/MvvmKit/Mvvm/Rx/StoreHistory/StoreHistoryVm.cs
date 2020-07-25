@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity;
 
@@ -41,11 +42,16 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
 
 
 
+        private string _Uid;
+        public string Uid { get { return _Uid; } set { SetProperty(ref _Uid, value); } }
+
         #endregion
 
         public StoreHistoryVm()
         {
+            Uid = Guid.NewGuid().ToString();
             Records = new ObservableCollection<HistoryRecordVm>();
+            var t = Thread.CurrentThread.ManagedThreadId;
         }
 
         [InjectionMethod]
@@ -102,6 +108,8 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
             State = _createJsonHierarchy(record.NextState);
             OldState = record.PreviousState.ToJson();
             NewState = record.NextState.ToJson();
+            Uid = Guid.NewGuid().ToString();
+            var t = Thread.CurrentThread.ManagedThreadId;
         }
 
         public void ConnectToStore<T>(ReduxStore<T> store)

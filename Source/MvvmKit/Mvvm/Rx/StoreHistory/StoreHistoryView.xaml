@@ -10,128 +10,122 @@
     xmlns:diff="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="600"
-    d:DataContext="{StaticResource dt.StoreHistory.StoreHistoryVm}"
+    d:DataContext="{d:DesignData Source=DtStoreHistory.xaml}"
     >
     <UserControl.Resources>
-        <t:SelectiveResources>
-            <ResourceDictionary.MergedDictionaries>
-                <t:DesignTimeResource Source="DtStoreHistory.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            <local:MethodToValueConverter x:Key="MethodToValueConverter"/>
-            <local:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
-            <local:JValueConverter x:Key="JValueConverter"/>
-            <local:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
-            <local:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
-            <local:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
-            <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-                <StackPanel Orientation="Horizontal" Margin="1">
-                    <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
-                </StackPanel>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
-                <StackPanel Orientation="Horizontal" Margin="1">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                    <TextBlock Text=" : "/>
-                    <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
-                    <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
-                </StackPanel>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
-                <StackPanel Orientation="Horizontal" Margin="1">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                    <TextBlock Text=" : "/>
-                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
-                </StackPanel>
-            </HierarchicalDataTemplate>
-            <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
+        <local:MethodToValueConverter x:Key="MethodToValueConverter"/>
+        <local:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
+        <local:JValueConverter x:Key="JValueConverter"/>
+        <local:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
+        <local:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
+        <local:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text=" : "/>
+                <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
+                <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text=" : "/>
+                <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
 
-                <StackPanel Orientation="Horizontal" Margin="1">
-                    <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
-                    <TextBlock Text=" : "/>
-                    <TextBlock Text="  "/>
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text=" : "/>
+                <TextBlock Text="  "/>
 
-                    <TextBlock  Width="300" 
+                <TextBlock  Width="300" 
                            TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
-                </StackPanel>
-            </DataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-                <StackPanel Orientation="Horizontal" Margin="1">
-                    <TextBlock Text=" "/>
-                    <TextBlock Text="{}{ }" Foreground="#729fcf"/>
-                </StackPanel>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-                <TextBlock Text="Constructor">
-                </TextBlock>
-            </HierarchicalDataTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-                <TextBlock Text="Raw">
-                </TextBlock>
-            </HierarchicalDataTemplate>
-            <local:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
+            </StackPanel>
+        </DataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <StackPanel Orientation="Horizontal" Margin="1">
+                <TextBlock Text=" "/>
+                <TextBlock Text="{}{ }" Foreground="#729fcf"/>
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <TextBlock Text="Constructor">
+            </TextBlock>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+            <TextBlock Text="Raw">
+            </TextBlock>
+        </HierarchicalDataTemplate>
+        <local:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
                                              ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
                                              ObjectPropertyTemplate="{StaticResource ObjectPropertyTemplate}"
                                              PrimitivePropertyTemplate ="{StaticResource PrimitivePropertyTemplate}"/>
-
-            <DataTemplate DataType="{x:Type jlinq:JValue}">
-                <TextBlock Width="300" 
+        <DataTemplate DataType="{x:Type jlinq:JValue}">
+            <TextBlock Width="300" 
                            TextWrapping="Wrap" Text="{Binding Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JValueTypeToColorConverter}}" />
-            </DataTemplate>
-            <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
-                <Setter Property="Foreground" Value="#2A2F3A"/>
-                <Setter Property="Background" Value="#D6D7D9"/>
-                <Setter Property="Padding" Value="8"/>
-                <Setter Property="FontSize" Value="16"/>
-                <Setter Property="Margin" Value="0"/>
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="Template" Value="{DynamicResource ListBoxItemControlTemplate1}"/>
-            </Style>
-            <ControlTemplate x:Key="ListBoxItemControlTemplate1" TargetType="{x:Type ListBoxItem}">
-                <Border x:Name="Bd" 
+        </DataTemplate>
+        <Style x:Key="ListBoxItemStyle1" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Foreground" Value="#2A2F3A"/>
+            <Setter Property="Background" Value="#D6D7D9"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Template" Value="{DynamicResource ListBoxItemControlTemplate1}"/>
+        </Style>
+        <ControlTemplate x:Key="ListBoxItemControlTemplate1" TargetType="{x:Type ListBoxItem}">
+            <Border x:Name="Bd" 
                         BorderBrush="{TemplateBinding BorderBrush}" 
                         BorderThickness="{TemplateBinding BorderThickness}" 
                         Background="{TemplateBinding Background}" 
                         Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                    <ContentPresenter 
+                <ContentPresenter 
                         ContentTemplate="{TemplateBinding ContentTemplate}" 
                         Content="{TemplateBinding Content}" 
                         ContentStringFormat="{TemplateBinding ContentStringFormat}" 
                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                </Border>
-                <ControlTemplate.Triggers>
-                    <MultiTrigger>
-                        <MultiTrigger.Conditions>
-                            <Condition Property="IsMouseOver" Value="True"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="Background" TargetName="Bd" Value="#1FC9D6DC"/>
-                        <Setter Property="BorderBrush" TargetName="Bd" Value="#A8D1D1D1"/>
-                    </MultiTrigger>
-                    <MultiTrigger>
-                        <MultiTrigger.Conditions>
-                            <Condition Property="IsSelected" Value="True"/>
-                        </MultiTrigger.Conditions>
-                        <Setter Property="Background" TargetName="Bd" Value="#3D84C176"/>
-                        <Setter Property="BorderBrush" TargetName="Bd" Value="#FFDADADA"/>
-                    </MultiTrigger>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
-
-        </t:SelectiveResources>
+            </Border>
+            <ControlTemplate.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" TargetName="Bd" Value="#1FC9D6DC"/>
+                    <Setter Property="BorderBrush" TargetName="Bd" Value="#A8D1D1D1"/>
+                </MultiTrigger>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsSelected" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background" TargetName="Bd" Value="#3D84C176"/>
+                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FFDADADA"/>
+                </MultiTrigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="TextElement.Foreground" TargetName="Bd" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
     </UserControl.Resources>
     <DockPanel>
         <ListBox 
             ItemsSource="{Binding Records}" DockPanel.Dock="Left"
             Width="400" Background="#FF2E333D" Foreground="#FFD6D7D9"
             SelectedIndex="{Binding SelectedItem}" 
-            ItemContainerStyle="{DynamicResource ListBoxItemStyle1}"            
+            ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" 
+            x:Name="lstbox"
             >
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type local:HistoryRecordVm}">
@@ -145,11 +139,13 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <GroupBox Header="Action" Grid.Row="0">
                 <TreeView Padding="20" Margin="3" 
@@ -180,8 +176,7 @@
                 </TreeView>
             </GroupBox>
             <GroupBox Header="Diff" Grid.Row="2">
-                <diff:DiffViewer
-                    
+                <diff:DiffViewer                    
                     OldTextHeader="Before"
                     NewTextHeader="After"
                     OldText="{Binding OldState}"
@@ -189,6 +184,10 @@
                     
                     ></diff:DiffViewer>
             </GroupBox>
+            <TextBlock Grid.Row="3" Foreground="Red" 
+                       Text="{Binding Uid, Mode=TwoWay}"
+                       />
+
 
             <GridSplitter Grid.Row="0" 
                           VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
