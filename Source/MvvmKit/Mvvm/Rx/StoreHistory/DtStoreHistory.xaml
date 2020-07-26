@@ -1,7 +1,9 @@
 ﻿<StoreHistoryVm xmlns="clr-namespace:MvvmKit.Mvvm.Rx.StoreHistory"
         SelectedItem="2"
-        OldState="A B C D E F G" NewState="A B D C F I K"
-                >
+        >
+    <StoreHistoryVm.DiffContent>
+        <DiffContentVm OldState="A B C D E F G" NewState="A B D C F I K"/>
+    </StoreHistoryVm.DiffContent>
     <StoreHistoryVm.Records>
         <HistoryRecordVm Caption="Action 1" ActionDetails="[12, 15, 80]"/>
         <HistoryRecordVm Caption="Action 2" ActionDetails="[12, 15, 80]"/>

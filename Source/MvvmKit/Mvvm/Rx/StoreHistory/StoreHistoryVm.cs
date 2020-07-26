@@ -24,34 +24,20 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         private int _SelectedItem;
         public int SelectedItem { get { return _SelectedItem; } set { SetProperty(ref _SelectedItem, value); } }
 
-
         private List<JToken> _Action;
         public List<JToken> Action { get { return _Action; } set { SetProperty(ref _Action, value); } }
-
 
         private List<JToken> _State;
         public List<JToken> State { get { return _State; } set { SetProperty(ref _State, value); } }
 
-
-        private string _OldState;
-        public string OldState { get { return _OldState; } set { SetProperty(ref _OldState, value); } }
-
-
-        private string _NewState;
-        public string NewState { get { return _NewState; } set { SetProperty(ref _NewState, value); } }
-
-
-
-        private string _Uid;
-        public string Uid { get { return _Uid; } set { SetProperty(ref _Uid, value); } }
+        private DiffContentVm _DiffContent;
+        public DiffContentVm DiffContent { get { return _DiffContent; } set { SetProperty(ref _DiffContent, value); } }
 
         #endregion
 
         public StoreHistoryVm()
         {
-            Uid = Guid.NewGuid().ToString();
             Records = new ObservableCollection<HistoryRecordVm>();
-            var t = Thread.CurrentThread.ManagedThreadId;
         }
 
         [InjectionMethod]
@@ -106,11 +92,13 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
             var record = records[index];
             Action = _createJsonHierarchy(record.Action);
             State = _createJsonHierarchy(record.NextState);
-            OldState = record.PreviousState.ToJson();
-            NewState = record.NextState.ToJson();
-            Uid = Guid.NewGuid().ToString();
-            var t = Thread.CurrentThread.ManagedThreadId;
-        }
+
+            DiffContent = new DiffContentVm
+            {
+                OldState = record.PreviousState.ToJson(),
+                NewState = record.NextState.ToJson()
+            };
+    }
 
         public void ConnectToStore<T>(ReduxStore<T> store)
             where T: class, IImmutable, new()
