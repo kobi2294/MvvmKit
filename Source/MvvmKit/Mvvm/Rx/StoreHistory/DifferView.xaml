@@ -1,0 +1,86 @@
+﻿<UserControl x:Class="MvvmKit.Mvvm.Rx.StoreHistory.DifferView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MvvmKit.Mvvm.Rx.StoreHistory"
+             xmlns:t="clr-namespace:MvvmKit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignData DtDiffer.xaml}"  
+             FontFamily="Consolas"
+             >
+    <UserControl.Resources>
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        </Style>
+        <local:ChangeTypeToBrushConverter 
+            x:Key="textBgConverter"
+            Unchanged="Transparent"
+            Inserted="#FFA7DEA7" Deleted="#FFFBC9C9" 
+            Modified="#FFF6FFCC"
+            />
+        <local:ChangeTypeToBrushConverter 
+            x:Key="rowBgConverter"
+            Imaginary="#FFE2EAEC"
+            />
+        <DataTemplate DataType="{x:Type local:DifferLineVm}">
+            <DockPanel Background="{Binding ChangeType, Converter={StaticResource rowBgConverter}}">
+                <TextBlock 
+                    Foreground="Navy" DockPanel.Dock="Left" 
+                    Text="{Binding Position}"
+                    Width="40"
+                    />
+                <Border 
+                    Background="{Binding ChangeType, Converter={StaticResource textBgConverter}}"                    
+                    >
+                    <TextBlock Text="{Binding Text}"/>
+                </Border>
+            </DockPanel>
+        </DataTemplate>
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Padding" Value="4,1"/>
+            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Bd" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}" 
+                                SnapsToDevicePixels="true">
+                            <ContentPresenter 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type ScrollViewer}">
+                <Setter Property="t:ScrollSync.Group" Value="diff"/>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox Grid.Column="0" 
+                 ItemsSource="{Binding OldLines}"
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                 />
+        <ListBox Grid.Column="1" 
+                 ItemsSource="{Binding NewLines}"/>
+    </Grid>
+</UserControl>

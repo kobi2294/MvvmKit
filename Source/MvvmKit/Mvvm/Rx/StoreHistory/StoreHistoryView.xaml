@@ -9,7 +9,7 @@
     xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
     xmlns:diff="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
     mc:Ignorable="d" 
-    d:DesignHeight="600" d:DesignWidth="600"
+    d:DesignHeight="874" d:DesignWidth="884"
     d:DataContext="{d:DesignData Source=DtStoreHistory.xaml}"
     >
     <UserControl.Resources>
@@ -139,7 +139,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -176,12 +176,7 @@
                 </TreeView>
             </GroupBox>
             <GroupBox Header="Diff" Grid.Row="2">
-                <diff:DiffViewer                    
-                    OldTextHeader="Before"
-                    NewTextHeader="After"
-                    OldText="{Binding DiffContent.OldState}"
-                    NewText="{Binding DiffContent.NewState}"                    
-                    ></diff:DiffViewer>
+                <local:DifferView DataContext="{Binding Differ}"/>
             </GroupBox>
             <TextBlock Grid.Row="3" Foreground="Red" 
                        Text="{Binding Uid, Mode=TwoWay}"

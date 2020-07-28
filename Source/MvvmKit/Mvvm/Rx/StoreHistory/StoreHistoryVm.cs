@@ -30,14 +30,15 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         private List<JToken> _State;
         public List<JToken> State { get { return _State; } set { SetProperty(ref _State, value); } }
 
-        private DiffContentVm _DiffContent;
-        public DiffContentVm DiffContent { get { return _DiffContent; } set { SetProperty(ref _DiffContent, value); } }
+        private DifferVm _Differ;
+        public DifferVm Differ { get { return _Differ; } set { SetProperty(ref _Differ, value); } }
 
         #endregion
 
         public StoreHistoryVm()
         {
             Records = new ObservableCollection<HistoryRecordVm>();
+            Differ = new DifferVm();
         }
 
         [InjectionMethod]
@@ -93,11 +94,7 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
             Action = _createJsonHierarchy(record.Action);
             State = _createJsonHierarchy(record.NextState);
 
-            DiffContent = new DiffContentVm
-            {
-                OldState = record.PreviousState.ToJson(),
-                NewState = record.NextState.ToJson()
-            };
+            Differ.ReadModel(record.PreviousState.ToJson(), record.NextState.ToJson());
     }
 
         public void ConnectToStore<T>(ReduxStore<T> store)

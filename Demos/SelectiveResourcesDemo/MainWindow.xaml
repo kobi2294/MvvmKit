@@ -7,7 +7,8 @@
         xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
         xmlns:sm="clr-namespace:SelectiveResourcesDemo.SelectManyDemo"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" FontFamily="Consolas"
+        >
     <Window.Resources>
         <t:SelectiveResources>
             <t:SelectiveResources.MergedDictionaries>
@@ -24,6 +25,6 @@
                 <sm:SelectManyDemoVm/>
             </sm:SelectManyDemoView.DataContext>
         </sm:SelectManyDemoView>
-
+                
     </Grid>
 </Window>

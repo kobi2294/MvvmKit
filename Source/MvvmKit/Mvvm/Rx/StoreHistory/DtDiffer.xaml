@@ -1,0 +1,14 @@
+﻿<DifferVm xmlns="clr-namespace:MvvmKit.Mvvm.Rx.StoreHistory">
+    <DifferVm.OldLines>
+        <DifferLineVm ChangeType="Deleted" Position="1" Text="This is a deleted line"/>
+        <DifferLineVm ChangeType="Unchanged" Position="2" Text="This is unchanged"/>
+        <DifferLineVm ChangeType="Imaginary" Position=" " Text=""/>
+        <DifferLineVm ChangeType="Modified" Position="3" Text="This is modified"/>
+    </DifferVm.OldLines>
+    <DifferVm.NewLines>
+        <DifferLineVm ChangeType="Imaginary" Position=" " Text=""/>
+        <DifferLineVm ChangeType="Unchanged" Position="1" Text="This is unchanged"/>
+        <DifferLineVm ChangeType="Inserted" Position="2" Text="This is inserted"/>
+        <DifferLineVm ChangeType="Modified" Position="3" Text="This is slightly modified"/>
+    </DifferVm.NewLines>
+</DifferVm>

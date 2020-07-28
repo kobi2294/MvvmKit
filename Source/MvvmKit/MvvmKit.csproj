@@ -62,6 +62,14 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Mvvm\Rx\StoreHistory\DifferView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Mvvm\Rx\StoreHistory\DtDiffer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Mvvm\Rx\StoreHistory\DtStoreHistory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,7 +125,12 @@
     <Compile Include="Mvvm\Rx\IRxCommand.cs" />
     <Compile Include="Mvvm\Rx\MvvmRx.cs" />
     <Compile Include="Mvvm\Rx\RxCommand.cs" />
-    <Compile Include="Mvvm\Rx\StoreHistory\DiffContentVm.cs" />
+    <Compile Include="Mvvm\Rx\StoreHistory\ChangeTypeToBrushConverter.cs" />
+    <Compile Include="Mvvm\Rx\StoreHistory\DifferLineVm.cs" />
+    <Compile Include="Mvvm\Rx\StoreHistory\DifferView.xaml.cs">
+      <DependentUpon>DifferView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Mvvm\Rx\StoreHistory\DifferVm.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\HistoryRecord.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\HistoryRecordVm.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\StoreHistoryView.xaml.cs">
@@ -309,6 +322,7 @@
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Animations\LinearMatrixAnimation.cs" />
+    <Compile Include="Ui\Helpers\ScrollSync\ScrollSync.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelper.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelperBehavior.cs" />
     <Compile Include="Ui\Controls\Design Time Support\DesignTimeResource.cs" />

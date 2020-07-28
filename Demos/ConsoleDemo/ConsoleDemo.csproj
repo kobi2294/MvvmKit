@@ -60,11 +60,18 @@
     <Compile Include="ObjectFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Samples\AsyncEvent\Main.cs" />
     <Compile Include="Samples\AsyncLocal\AsyncLocalDemo.cs" />
     <Compile Include="Samples\AvlList\Main.cs" />
     <Compile Include="Samples\AvlTrees\Main.cs" />
     <Compile Include="Samples\Bindable\Observe.cs" />
+    <Compile Include="Samples\Diffplex\JsonDiff.cs" />
+    <Compile Include="Samples\Diffplex\Main.cs" />
     <Compile Include="Samples\Diff\Main.cs" />
     <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
     <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
@@ -109,6 +116,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Samples\Diffplex\oldState.json" />
+    <None Include="Samples\Diffplex\newState.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net">
@@ -147,6 +156,12 @@
       <Project>{1a0cf5e1-fca7-48c2-b227-faf5d6ec59bc}</Project>
       <Name>MvvmKit</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

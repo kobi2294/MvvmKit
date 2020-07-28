@@ -1,0 +1,362 @@
+{
+  "Displays": [
+    {
+      "Uid": "b9bb34dd-159e-47ad-9ec6-2fdd9b3953c1",
+      "ScreenName": "\\\\.\\DISPLAY3",
+      "IsMain": true,
+      "Dashboards": [
+        {
+          "Uid": "c71c0d44-97f5-47a1-b22f-9ed027421c58",
+          "Name": "op",
+          "IsRemoveable": true,
+          "DashboardType": "Operational",
+          "IconName": "OpenedMap",
+          "Layout": {
+            "$type": "Magal.FortisX.Client.Model.Store.DockLayout, Magal.FortisX.Client",
+            "GridColumns": 2,
+            "GridRows": 4
+          },
+          "Widgets": [
+            {
+              "Uid": "4bbb7676-d1c2-4ad6-8879-ca370ebc02ff",
+              "Title": "",
+              "WidgetType": "EventsPanel",
+              "State": {
+                "$type": "Magal.FortisX.Client.Components.Store.Widgets.EventsPanel.EventsPanelWidgetState, Magal.FortisX.Client",
+                "IsDetailsPanelOpen": false,
+                "IsDetailsPanelExpanded": false,
+                "DetailsPanelEventId": "",
+                "FilterEventsByPriority1IsChecked": false,
+                "FilterEventsByPriority2IsChecked": false,
+                "FilterEventsByPriority3IsChecked": false,
+                "FilterEventsByPriority4IsChecked": false,
+                "FilterEventsByLocationIsChecked": false,
+                "SearchText": "",
+                "ShowOnlyPinned": false,
+                "ShowOnlyNewest": false,
+                "SelectedSortOption": ""
+              },
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Left",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "9f2d94d2-0a84-4624-a8ed-ec7213f50d0d",
+              "Title": "",
+              "WidgetType": "Map",
+              "State": {
+                "$type": "Magal.FortisX.Client.Components.Store.Widgets.Map.MapWidgetState, Magal.FortisX.Client",
+                "PictureMapMode": "GisMap",
+                "HiddenMapsIds": [],
+                "HiddenDataLayerIds": [],
+                "PictureItemId": null,
+                "GeoItemSelectedId": null,
+                "GisExtent": {
+                  "CenterX": 3885321.62282646,
+                  "CenterY": 3766444.2230737214,
+                  "Scale": 109756978.14365482,
+                  "Wkid": 3857,
+                  "WkidVertical": 0
+                },
+                "PictureItemExtent": null,
+                "IsMapNavigationOpen": false,
+                "MapNavTabType": "Maps"
+              },
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Top",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "b6b0e28b-504d-453c-8c38-e6eadbb137de",
+              "Title": "",
+              "WidgetType": "Timeline",
+              "State": {
+                "$type": "Magal.FortisX.Client.Components.Store.Widgets.Timeline.TimelineWidgetState, Magal.FortisX.Client",
+                "IsExtendedMode": false,
+                "VisibleStartDateTicks": 0,
+                "VisibleEndDateTicks": 0
+              },
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Bottom",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "871deefe-4a05-441a-b0fb-a89c44e5c064",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Main",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "987434ac-1dbf-4a29-b4b3-07a68dcfb6de",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "GridTop",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "c86f0487-1645-4416-8ec6-c6db9bfe3067",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "4c6002d1-e786-4118-9b02-8f7e982717f8",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "3f74b97b-634f-410f-8e2e-b185fa077dcb",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "7e1ef4a6-a519-4c82-b819-116c92b1cf37",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "83ac60cf-7ad0-4658-a615-80278f87fa1c",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "cda8ed5e-68a7-47a8-882c-6add092e462e",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "613e1187-e8c1-4b87-b2da-5662533ee7a0",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            },
+            {
+              "Uid": "e795fc05-1ef1-45d5-b0ca-dc59069a12b7",
+              "Title": "",
+              "WidgetType": "Empty",
+              "State": null,
+              "LayoutItem": {
+                "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+                "Position": "Grid",
+                "Order": 0,
+                "IsExpanded": true
+              }
+            }
+          ],
+          "State": {}
+        }
+      ],
+      "SelectedDashboardId": "c71c0d44-97f5-47a1-b22f-9ed027421c58"
+    }
+  ],
+  "Templates": [
+    {
+      "Name": "User Dashboard",
+      "IsCustomTemplate": false,
+      "Dashboard": {
+        "Uid": "00000000-0000-0000-0000-000000000000",
+        "Name": "",
+        "IsRemoveable": true,
+        "DashboardType": "UserDashboard",
+        "IconName": "FourEmptySquares",
+        "Layout": {
+          "$type": "Magal.FortisX.Client.Model.Store.GridLayout, Magal.FortisX.Client",
+          "Columns": 2,
+          "Rows": 2
+        },
+        "Widgets": [],
+        "State": {}
+      }
+    },
+    {
+      "Name": "Home",
+      "IsCustomTemplate": false,
+      "Dashboard": {
+        "Uid": "00000000-0000-0000-0000-000000000000",
+        "Name": "",
+        "IsRemoveable": true,
+        "DashboardType": "Dashboard",
+        "IconName": "HomeOutline",
+        "Layout": {
+          "$type": "Magal.FortisX.Client.Model.Store.GridLayout, Magal.FortisX.Client",
+          "Columns": 3,
+          "Rows": 3
+        },
+        "Widgets": [],
+        "State": {}
+      }
+    },
+    {
+      "Name": "Video",
+      "IsCustomTemplate": false,
+      "Dashboard": {
+        "Uid": "00000000-0000-0000-0000-000000000000",
+        "Name": "",
+        "IsRemoveable": true,
+        "DashboardType": "Video",
+        "IconName": "MapNavCamera",
+        "Layout": {
+          "$type": "Magal.FortisX.Client.Model.Store.GridLayout, Magal.FortisX.Client",
+          "Columns": 3,
+          "Rows": 3
+        },
+        "Widgets": [],
+        "State": {}
+      }
+    },
+    {
+      "Name": "Report",
+      "IsCustomTemplate": false,
+      "Dashboard": {
+        "Uid": "00000000-0000-0000-0000-000000000000",
+        "Name": "",
+        "IsRemoveable": true,
+        "DashboardType": "Report",
+        "IconName": "Report",
+        "Layout": {
+          "$type": "Magal.FortisX.Client.Model.Store.GridLayout, Magal.FortisX.Client",
+          "Columns": 1,
+          "Rows": 1
+        },
+        "Widgets": [],
+        "State": {}
+      }
+    },
+    {
+      "Name": "Operational",
+      "IsCustomTemplate": false,
+      "Dashboard": {
+        "Uid": "00000000-0000-0000-0000-000000000000",
+        "Name": "",
+        "IsRemoveable": true,
+        "DashboardType": "Operational",
+        "IconName": "OpenedMap",
+        "Layout": {
+          "$type": "Magal.FortisX.Client.Model.Store.DockLayout, Magal.FortisX.Client",
+          "GridColumns": 2,
+          "GridRows": 4
+        },
+        "Widgets": [
+          {
+            "Uid": "00000000-0000-0000-0000-000000000000",
+            "Title": "",
+            "WidgetType": "EventsPanel",
+            "State": null,
+            "LayoutItem": {
+              "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+              "Position": "Left",
+              "Order": 0,
+              "IsExpanded": true
+            }
+          },
+          {
+            "Uid": "00000000-0000-0000-0000-000000000000",
+            "Title": "",
+            "WidgetType": "Map",
+            "State": null,
+            "LayoutItem": {
+              "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+              "Position": "Main",
+              "Order": 0,
+              "IsExpanded": true
+            }
+          },
+          {
+            "Uid": "00000000-0000-0000-0000-000000000000",
+            "Title": "",
+            "WidgetType": "SlarryWall",
+            "State": null,
+            "LayoutItem": {
+              "$type": "Magal.FortisX.Client.Model.Store.DockLayoutItem, Magal.FortisX.Client",
+              "Position": "Bottom",
+              "Order": 0,
+              "IsExpanded": true
+            }
+          }
+        ],
+        "State": {}
+      }
+    }
+  ],
+  "GlobalState": {
+    "SelectedEventsIds": [
+      "00000000-0000-0000-0000-100000001002",
+      "00000000-0000-0000-0000-100000001003",
+      "00000000-0000-0000-0000-100000001004",
+      "00000000-0000-0000-0000-100000001005",
+      "00000000-0000-0000-0000-100000001006",
+      "00000000-0000-0000-0000-100000001007",
+      "00000000-0000-0000-0000-100000001008",
+      "00000000-0000-0000-0000-100000001009"
+    ],
+    "PinnedEventsIds": [],
+    "IsAutomaticMode": false
+  }
+}
