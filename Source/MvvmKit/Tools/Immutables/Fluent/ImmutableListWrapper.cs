@@ -12,9 +12,13 @@ namespace MvvmKit
     {
         public abstract ImmutableInstanceWrapper<TRoot, T> Find(Predicate<T> predicate);
 
+        public abstract ImmutableInstanceWrapper<TRoot, T> At(int index);
+
         public abstract ImmutableListWrapper<TRoot, T> Add(params T[] items);
 
         public abstract ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates);
+
+        public abstract ImmutableListWrapper<TRoot, T> Remove(Func<T, int, bool> predicate);
 
         public abstract ImmutableListWrapper<TRoot, T> AddRange(IEnumerable<T> items);
     }

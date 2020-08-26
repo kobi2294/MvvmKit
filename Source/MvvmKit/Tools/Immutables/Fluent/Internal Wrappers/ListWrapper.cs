@@ -37,6 +37,14 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return modifier.Target;
         }
 
+        public override ImmutableInstanceWrapper<TRoot, T> At(int index)
+        {
+            var modifier = new ListAtInstanceModifier<TRoot, T>(_root, index);
+            _modifiers.Add(modifier);
+            return modifier.Target;
+        }
+
+
         public override ImmutableListWrapper<TRoot, T> Add(params T[] items)
         {
             var modifier = new ListAddModifier<T>(items);
@@ -55,6 +63,13 @@ namespace MvvmKit.Tools.Immutables.Fluent
         public override ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates)
         {
             var modifier = new ListRemoveModifier<T>(predicates);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
+        public override ImmutableListWrapper<TRoot, T> Remove(Func<T, int, bool> predicate)
+        {
+            var modifier = new ListRemoveModifier<T>(predicate);
             _modifiers.Add(modifier);
             return this;
         }

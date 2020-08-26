@@ -183,6 +183,7 @@
     <Compile Include="Tools\Immutables\Fluent\Internal Interfaces\IInstanceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceSetterModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListAddModifier.cs" />
+    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListAtInstanceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListFindInstanceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithListModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithInstanceModifier.cs" />
