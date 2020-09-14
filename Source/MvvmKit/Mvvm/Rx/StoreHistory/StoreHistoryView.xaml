@@ -162,8 +162,13 @@
                      >
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:EnsureItemVm}">
-                        <TextBlock FontFamily="Consolas">
+                        <TextBlock FontFamily="Consolas" ToolTipService.ShowDuration="100000">
                             <Run Text="{Binding EntityType, Mode=OneWay}" Foreground="#2B91AF"/><Run Text="{Binding Caption, Mode=OneWay, StringFormat=.\{0\}}"/>
+                            <TextBlock.ToolTip>
+                                <TextBlock FontFamily="Consolas" FontSize="16">
+                                    <Run Text="{Binding EntityType, Mode=OneWay}" Foreground="#2B91AF"/><Run Text="{Binding Caption, Mode=OneWay, StringFormat=.\{0\}}"/>
+                                </TextBlock>
+                            </TextBlock.ToolTip>
                         </TextBlock>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

@@ -24,7 +24,7 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         public EnsureItemVm ReadModel(EnsureHistoryItem model)
         {
             Caption = model.EnsureMethod;
-            EntityType = model.Context.Entity.GetType().Name;
+            EntityType = model.Context.Entity.GetType().GetTypeName();
             return this;
         }
     }

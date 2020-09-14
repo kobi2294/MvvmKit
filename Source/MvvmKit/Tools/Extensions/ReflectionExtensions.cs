@@ -98,5 +98,23 @@ namespace MvvmKit
             var attributes = mi.GetCustomAttributes<T>();
             return attributes.Any();
         }
+
+        public static string GetTypeName(this Type type)
+        {
+            if (!type.IsGenericType)
+                return type.Name;
+
+            string genericTypeName = type
+                .GetGenericTypeDefinition()
+                .Name
+                .SubstringUntil('`');
+
+            var argNames = type
+                .GetGenericArguments()
+                .Select(ta => ta.GetTypeName())
+                .Join(", ");
+
+            return $"{genericTypeName}<{argNames}>";
+        }
     }
 }

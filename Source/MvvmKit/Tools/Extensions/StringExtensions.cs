@@ -17,5 +17,25 @@ namespace MvvmKit
         {
             return string.IsNullOrWhiteSpace(source);
         }
+
+        public static string SubstringUntil(this string source, string postfix)
+        {
+            var index = source.IndexOf(postfix);
+            if (index < 0) return source;
+            return source.Substring(0, index);
+        }
+
+        public static string SubstringUntil(this string source, char postfix)
+        {
+            var index = source.IndexOf(postfix);
+            if (index < 0) return source;
+            return source.Substring(0, index);
+        }
+
+        public static string Join(this IEnumerable<string> source, string seperator)
+        {
+            return string.Join(seperator, source);
+        }
+
     }
 }
