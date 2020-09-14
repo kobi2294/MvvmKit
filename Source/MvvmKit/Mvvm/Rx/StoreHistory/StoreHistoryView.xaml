@@ -151,105 +151,104 @@
                   >Show Ensure Fixes</CheckBox>
 
         <!-- Ensurers -->
-        <DockPanel 
+        <Grid>
+            <DockPanel 
                    Visibility="{Binding IsChecked, Converter={t:BooleanToVisibility}, ElementName=chkEnsurers}"
                    >
-            <ListBox DockPanel.Dock="Left" 
+                <ListBox DockPanel.Dock="Left" 
                      Width="400"
                      ItemsSource="{Binding EnsureItems}"
                      ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" 
                      SelectedIndex="{Binding SelectedEnsureItem}"
                      >
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type local:EnsureItemVm}">
-                        <TextBlock FontFamily="Consolas" ToolTipService.ShowDuration="100000">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:EnsureItemVm}">
+                            <TextBlock FontFamily="Consolas" ToolTipService.ShowDuration="100000">
                             <Run Text="{Binding EntityType, Mode=OneWay}" Foreground="#2B91AF"/><Run Text="{Binding Caption, Mode=OneWay, StringFormat=.\{0\}}"/>
-                            <TextBlock.ToolTip>
-                                <TextBlock FontFamily="Consolas" FontSize="16">
+                                <TextBlock.ToolTip>
+                                    <TextBlock FontFamily="Consolas" FontSize="16">
                                     <Run Text="{Binding EntityType, Mode=OneWay}" Foreground="#2B91AF"/><Run Text="{Binding Caption, Mode=OneWay, StringFormat=.\{0\}}"/>
-                                </TextBlock>
-                            </TextBlock.ToolTip>
+                                    </TextBlock>
+                                </TextBlock.ToolTip>
                         </TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-                
-            </ListBox>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
 
-            <GroupBox Header="State" DockPanel.Dock="Top" Height="400">
-                <TreeView Padding="20" Margin="3" 
+                </ListBox>
+
+                <GroupBox Header="State" DockPanel.Dock="Top" Height="400">
+                    <TreeView Padding="20" Margin="3" 
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
                           BorderThickness="0"
                           ItemsSource="{Binding EnsureItemState}"
                           >
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}" >
-                            <Setter Property="IsExpanded" Value="False"/>
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                </TreeView>
-            </GroupBox>
-            <GroupBox Header="Diff">
-                <local:DifferView DataContext="{Binding EnsureDiffer}"/>
-            </GroupBox>
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}" >
+                                <Setter Property="IsExpanded" Value="False"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </GroupBox>
+                <GroupBox Header="Diff">
+                    <local:DifferView DataContext="{Binding EnsureDiffer}"/>
+                </GroupBox>
 
 
-        </DockPanel>
+            </DockPanel>
+            <Grid Visibility="{Binding IsChecked, Converter={t:BooleanToVisibility IsInverted=true}, ElementName=chkEnsurers}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-
-
-        <Grid Visibility="{Binding IsChecked, Converter={t:BooleanToVisibility IsInverted=true}, ElementName=chkEnsurers}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            
-            <GroupBox Header="Action" Grid.Row="1">
-                <TreeView Padding="20" Margin="3" 
+                <GroupBox Header="Action" Grid.Row="1">
+                    <TreeView Padding="20" Margin="3" 
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
                           DockPanel.Dock="Bottom" BorderThickness="0"
                           ItemsSource="{Binding Action}"
                           >
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}" >
-                            <Setter Property="IsExpanded" Value="True" />
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                </TreeView>
-            </GroupBox>
-            <GroupBox Header="State" Grid.Row="2">
-                <TreeView Padding="20" Margin="3"  
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}" >
+                                <Setter Property="IsExpanded" Value="True" />
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </GroupBox>
+                <GroupBox Header="State" Grid.Row="2">
+                    <TreeView Padding="20" Margin="3"  
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
                           DockPanel.Dock="Bottom" BorderThickness="0"
                           ItemsSource="{Binding State}"
                           >
-                    <TreeView.ItemContainerStyle>
-                        <Style TargetType="{x:Type TreeViewItem}" >
-                            <Setter Property="IsExpanded" Value="False"/>
-                        </Style>
-                    </TreeView.ItemContainerStyle>
-                </TreeView>
-            </GroupBox>
-            <GroupBox Header="Diff" Grid.Row="3">
-                <local:DifferView DataContext="{Binding Differ}"/>
-            </GroupBox>
+                        <TreeView.ItemContainerStyle>
+                            <Style TargetType="{x:Type TreeViewItem}" >
+                                <Setter Property="IsExpanded" Value="False"/>
+                            </Style>
+                        </TreeView.ItemContainerStyle>
+                    </TreeView>
+                </GroupBox>
+                <GroupBox Header="Diff" Grid.Row="3">
+                    <local:DifferView DataContext="{Binding Differ}"/>
+                </GroupBox>
 
-            <GridSplitter Grid.Row="1" 
+                <GridSplitter Grid.Row="1" 
                           VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
                           ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"   
                           HorizontalAlignment="Stretch" Margin="1"
                           />
 
-            <GridSplitter Grid.Row="2" 
+                <GridSplitter Grid.Row="2" 
                           VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
                           ResizeBehavior="CurrentAndNext" ResizeDirection="Rows" 
                           HorizontalAlignment="Stretch" Margin="1"                
                           />
 
+            </Grid>
         </Grid>
     </DockPanel>
 </UserControl>
