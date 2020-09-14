@@ -133,7 +133,7 @@ namespace MvvmKit
             return source.GetName().Equals(name);
         }
 
-        public static Expression<Action<T, K>> ToSetter<T, K>(this Expression<Func<T, K>> getter)
+        public static Expression<Action<T, K>> ToSetterExpression<T, K>(this Expression<Func<T, K>> getter)
         {
             var memberExpr = (MemberExpression)getter.Body;
             var @this = Expression.Parameter(typeof(T), "$this");

@@ -91,5 +91,12 @@ namespace MvvmKit
         {
             return superType.IsAssignableFrom(subType);
         }
+
+        public static bool HasAttribute<T>(this MethodInfo mi)
+            where T: Attribute
+        {
+            var attributes = mi.GetCustomAttributes<T>();
+            return attributes.Any();
+        }
     }
 }

@@ -122,6 +122,12 @@
     <Compile Include="Mvvm\Navigation\Entries\RouteEntry.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceBindable.cs" />
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\CommonEnsurers.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureAttribute.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureContext.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureManager.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureSessionHistory.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureHistoryItem.cs" />
     <Compile Include="Mvvm\Rx\IRxCommand.cs" />
     <Compile Include="Mvvm\Rx\MvvmRx.cs" />
     <Compile Include="Mvvm\Rx\RxCommand.cs" />
@@ -131,6 +137,7 @@
       <DependentUpon>DifferView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Mvvm\Rx\StoreHistory\DifferVm.cs" />
+    <Compile Include="Mvvm\Rx\StoreHistory\EnsureItemVm.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\HistoryRecord.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\HistoryRecordVm.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\StoreHistoryView.xaml.cs">
@@ -344,6 +351,7 @@
     <Compile Include="Mvvm\Rx\StoreHistory\ValueConverters\JValueConverter.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\ValueConverters\JValueTypeToColorConverter.cs" />
     <Compile Include="Mvvm\Rx\StoreHistory\ValueConverters\MethodToValueConverter.cs" />
+    <Compile Include="Ui\Tools\BooleanToVisibilityExtension.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

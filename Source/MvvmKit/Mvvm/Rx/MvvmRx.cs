@@ -613,6 +613,13 @@ namespace MvvmKit
                 .Subscribe();
         }
 
+        public static ReduxStore<T> EnableEnsureHistory<T>(this ReduxStore<T> store)
+            where T : class, IImmutable, new()
+        {
+            EnsureManager.IsHistoryEnabled = true;
+            return store;
+        }
+
         /// <summary>
         /// Opens the Redux Store History browser window
         /// </summary>

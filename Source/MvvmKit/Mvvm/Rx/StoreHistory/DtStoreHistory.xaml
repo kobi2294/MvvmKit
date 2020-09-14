@@ -18,9 +18,15 @@
         </DifferVm>
     </StoreHistoryVm.Differ>
     <StoreHistoryVm.Records>
-        <HistoryRecordVm Caption="Action 1" ActionDetails="[12, 15, 80]"/>
-        <HistoryRecordVm Caption="Action 2" ActionDetails="[12, 15, 80]"/>
-        <HistoryRecordVm Caption="Action 3" ActionDetails="[12, 15, 80]"/>
-        <HistoryRecordVm Caption="Action 4" ActionDetails="[12, 15, 80]"/>
+        <HistoryRecordVm Caption="Action 1" ActionDetails="[12, 15, 80]" EnsureItemsCount="0"/>
+        <HistoryRecordVm Caption="Action 2" ActionDetails="[12, 15, 80]" EnsureItemsCount="12"/>
+        <HistoryRecordVm Caption="Action 3" ActionDetails="[12, 15, 80]" EnsureItemsCount="4"/>
+        <HistoryRecordVm Caption="Action 4" ActionDetails="[12, 15, 80]" EnsureItemsCount="5"/>
     </StoreHistoryVm.Records>
+    <StoreHistoryVm.EnsureItems>
+        <EnsureItemVm EntityType="RootState" Caption="DoSomething"/>
+        <EnsureItemVm EntityType="Display" Caption="DoSomethingElse"/>
+        <EnsureItemVm EntityType="Dashboard" Caption="DoSomethingGood"/>
+        <EnsureItemVm EntityType="Widget" Caption="DoSomethingBad"/>
+    </StoreHistoryVm.EnsureItems>
 </StoreHistoryVm>

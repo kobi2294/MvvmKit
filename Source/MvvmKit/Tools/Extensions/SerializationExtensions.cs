@@ -27,6 +27,11 @@ namespace MvvmKit
                 settings: _settings, formatting: Formatting.Indented);
         }
 
+        public static string ToIndentedJson(this object source)
+        {
+            return source.ToJson();
+        }
+
         public static JToken ToJsonToken(this object source)
         {
             var serializer = new JsonSerializer();

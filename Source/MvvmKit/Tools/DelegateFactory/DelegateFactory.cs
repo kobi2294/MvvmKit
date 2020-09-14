@@ -309,6 +309,11 @@ namespace MvvmKit
             return _getGetter<TEntity, TField>(field);
         }
 
+        public static Func<TEntity, TProp> ToGetter<TEntity, TProp>(this Expression<Func<TEntity, TProp>> expression)
+        {
+            return expression.GetProperty().ToGetter<TEntity, TProp>();
+        }
+
         public static Action<TEntity, TProp> ToSetter<TEntity, TProp>(this PropertyInfo prop)
         {
             return _getSetter<TEntity, TProp>(prop);
@@ -317,6 +322,11 @@ namespace MvvmKit
         public static Action<TEntity, TField> ToSetter<TEntity, TField>(this FieldInfo field)
         {
             return _getSetter<TEntity, TField>(field);
+        }
+
+        public static Action<TEntity, TProp> ToSetter<TEntity, TProp>(this Expression<Func<TEntity, TProp>> expression)
+        {
+            return expression.GetProperty().ToSetter<TEntity, TProp>();
         }
 
         public static Func<TEntity, TValue> ToGetter<TEntity, TValue>(this MemberInfo member)

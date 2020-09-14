@@ -25,15 +25,20 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         private object _NextState;
         public object NextState { get { return _NextState; } set { SetProperty(ref _NextState, value); } }
 
+        private int _EnsureItemsCount;
+        public int EnsureItemsCount { get { return _EnsureItemsCount; } set { SetProperty(ref _EnsureItemsCount, value); } }
+
         #endregion
 
-        public HistoryRecordVm ReadModel(HistoryRecord model)
+        public HistoryRecordVm ReadModel(HistoryRecord model, IDictionary<object, EnsureSessionHistory> ensureSessions)
         {
             Date = model.Date;
             Caption = model.Action.GetType().Name;
             ActionDetails = model.Action;
             PreviousState = model.PreviousState;
             NextState = model.NextState;
+
+            EnsureItemsCount = ensureSessions.TryGetValue(model.Action, out var value) ? value.Items.Count : 0;
             return this;
         }
     }

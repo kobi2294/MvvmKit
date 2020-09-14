@@ -217,6 +217,18 @@ namespace MvvmKit
                 && elementType.IsImmutableType();
         }
 
+        public static bool IsImmutableListOfImmutables(this Type type)
+        {
+            if (!type.IsGenericType) return false;
+            if (type.IsGenericTypeDefinition) return false;
+
+            var genericDefinition = type.GetGenericTypeDefinition();
+            if (genericDefinition != typeof(ImmutableList<>)) return false;
+
+            var elementType = type.GetGenericArguments().First();
+            return elementType.IsImmutableType();
+        }
+
         /// <summary>
         /// takes a collection of items and returns a an ImmutableList of them
         /// expectedType is the type of object the caller expects to get, probably ImmutableList of T

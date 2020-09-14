@@ -21,6 +21,9 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
 
         public void ReadModel(string oldText, string newText)
         {
+            oldText = oldText ?? "";
+            newText = newText ?? "";
+
             var diff = SideBySideDiffBuilder.Diff(oldText, newText, true, false);
 
             OldLines = diff.OldText.Lines.Select(line => new DifferLineVm().ReadModel(line)).ToList();

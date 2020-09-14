@@ -13,29 +13,30 @@
     d:DataContext="{d:DesignData Source=DtStoreHistory.xaml}"
     >
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <local:MethodToValueConverter x:Key="MethodToValueConverter"/>
         <local:ComplexPropertyMethodToValueConverter x:Key="ComplexPropertyMethodToValueConverter"/>
         <local:JValueConverter x:Key="JValueConverter"/>
         <local:JPropertyTypeToColorConverter x:Key="JPropertyTypeToColorConverter"/>
         <local:JValueTypeToColorConverter x:Key="JValueTypeToColorConverter"/>
         <local:JArrayLengthConverter x:Key="JArrayLengthConverter"/>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}">
             <StackPanel Orientation="Horizontal" Margin="1">
                 <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+        <HierarchicalDataTemplate  x:Key="ArrayPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource ComplexPropertyMethodToValueConverter}}">
             <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text="{Binding Name, Mode=OneWay}" />
                 <TextBlock Text=" : "/>
                 <TextBlock Text="array" Foreground="WhiteSmoke" Background="#a40000" Padding="3, 0, 3, 1" Opacity="0.4" Margin="0,0,5,0"/>
                 <TextBlock Text="{Binding Converter={StaticResource JArrayLengthConverter}}" Foreground="#a40000"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource ComplexPropertyMethodToValueConverter}, ConverterParameter='Children'}">
+        <HierarchicalDataTemplate  x:Key="ObjectPropertyTemplate" DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource ComplexPropertyMethodToValueConverter}}">
             <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text="{Binding Name, Mode=OneWay}" />
                 <TextBlock Text=" : "/>
                 <TextBlock Text="{}{ }" Foreground="#729fcf"/>
             </StackPanel>
@@ -43,28 +44,26 @@
         <DataTemplate x:Key="PrimitivePropertyTemplate" DataType="{x:Type jlinq:JProperty}" >
 
             <StackPanel Orientation="Horizontal" Margin="1">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}" />
+                <TextBlock Text="{Binding Name, Mode=OneWay}" />
                 <TextBlock Text=" : "/>
                 <TextBlock Text="  "/>
 
                 <TextBlock  Width="300" 
-                           TextWrapping="Wrap" Text="{Binding Path=Value, Converter={StaticResource JValueConverter}}" 
+                           TextWrapping="Wrap" Text="{Binding Value, Converter={StaticResource JValueConverter}}" 
                            Foreground="{Binding Converter={StaticResource JPropertyTypeToColorConverter}}" />
             </StackPanel>
         </DataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}">
             <StackPanel Orientation="Horizontal" Margin="1">
                 <TextBlock Text=" "/>
                 <TextBlock Text="{}{ }" Foreground="#729fcf"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <TextBlock Text="Constructor">
-            </TextBlock>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}">
+            <TextBlock Text="Constructor"/>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-            <TextBlock Text="Raw">
-            </TextBlock>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}">
+            <TextBlock Text="Raw"/>
         </HierarchicalDataTemplate>
         <local:JPropertyDataTemplateSelector x:Key="JPropertyDataTemplateSelector" 
                                              ArrayPropertyTemplate="{StaticResource ArrayPropertyTemplate}"
@@ -131,23 +130,78 @@
                 <DataTemplate DataType="{x:Type local:HistoryRecordVm}">
                     <DockPanel>
                         <TextBlock 
-                            Text="{Binding Date, Mode=Default, StringFormat=\{0:HH:mm:ss:ffff\}}" 
+                            Text="{Binding Date, Mode=OneWay, StringFormat=\{0:HH:mm:ss:ffff\}}" 
                             DockPanel.Dock="Right"
                             Opacity="0.7"/>
-                        <TextBlock Text="{Binding Caption}" FontWeight="SemiBold"/>
+                        <TextBlock FontWeight="SemiBold">
+                            <Run Text="{Binding Caption, Mode=OneWay}"/>
+                            <Run 
+                                FontWeight="Normal"
+                                Foreground="Blue"
+                                Text="{Binding EnsureItemsCount, Mode=OneWay, StringFormat=' (\{0\})'}"/>
+                        </TextBlock>
                     </DockPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <Grid>
+        <CheckBox x:Name="chkEnsurers" DockPanel.Dock="Top"
+                  Margin="4"
+                  IsChecked="True"
+                  >Show Ensure Fixes</CheckBox>
+
+        <!-- Ensurers -->
+        <DockPanel 
+                   Visibility="{Binding IsChecked, Converter={t:BooleanToVisibility}, ElementName=chkEnsurers}"
+                   >
+            <ListBox DockPanel.Dock="Left" 
+                     Width="400"
+                     ItemsSource="{Binding EnsureItems}"
+                     ItemContainerStyle="{DynamicResource ListBoxItemStyle1}" 
+                     SelectedIndex="{Binding SelectedEnsureItem}"
+                     >
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:EnsureItemVm}">
+                        <TextBlock FontFamily="Consolas">
+                            <Run Text="{Binding EntityType, Mode=OneWay}" Foreground="#2B91AF"/><Run Text="{Binding Caption, Mode=OneWay, StringFormat=.\{0\}}"/>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                
+            </ListBox>
+
+            <GroupBox Header="State" DockPanel.Dock="Top" Height="400">
+                <TreeView Padding="20" Margin="3" 
+                          IsTextSearchEnabled="True" 
+                          ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
+                          BorderThickness="0"
+                          ItemsSource="{Binding EnsureItemState}"
+                          >
+                    <TreeView.ItemContainerStyle>
+                        <Style TargetType="{x:Type TreeViewItem}" >
+                            <Setter Property="IsExpanded" Value="False"/>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </GroupBox>
+            <GroupBox Header="Diff">
+                <local:DifferView DataContext="{Binding EnsureDiffer}"/>
+            </GroupBox>
+
+
+        </DockPanel>
+
+
+
+        <Grid Visibility="{Binding IsChecked, Converter={t:BooleanToVisibility IsInverted=true}, ElementName=chkEnsurers}">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
-            <GroupBox Header="Action" Grid.Row="0">
+            
+            <GroupBox Header="Action" Grid.Row="1">
                 <TreeView Padding="20" Margin="3" 
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
@@ -161,7 +215,7 @@
                     </TreeView.ItemContainerStyle>
                 </TreeView>
             </GroupBox>
-            <GroupBox Header="State" Grid.Row="1">
+            <GroupBox Header="State" Grid.Row="2">
                 <TreeView Padding="20" Margin="3"  
                           IsTextSearchEnabled="True" 
                           ItemTemplateSelector="{StaticResource JPropertyDataTemplateSelector}" 
@@ -175,21 +229,17 @@
                     </TreeView.ItemContainerStyle>
                 </TreeView>
             </GroupBox>
-            <GroupBox Header="Diff" Grid.Row="2">
+            <GroupBox Header="Diff" Grid.Row="3">
                 <local:DifferView DataContext="{Binding Differ}"/>
             </GroupBox>
-            <TextBlock Grid.Row="3" Foreground="Red" 
-                       Text="{Binding Uid, Mode=TwoWay}"
-                       />
 
-
-            <GridSplitter Grid.Row="0" 
+            <GridSplitter Grid.Row="1" 
                           VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
                           ResizeBehavior="CurrentAndNext" ResizeDirection="Rows"   
                           HorizontalAlignment="Stretch" Margin="1"
                           />
 
-            <GridSplitter Grid.Row="1" 
+            <GridSplitter Grid.Row="2" 
                           VerticalAlignment="Bottom" Background="#FFA0BDAA" Height="5"
                           ResizeBehavior="CurrentAndNext" ResizeDirection="Rows" 
                           HorizontalAlignment="Stretch" Margin="1"                

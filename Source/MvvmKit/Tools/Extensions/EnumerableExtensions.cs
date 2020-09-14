@@ -170,6 +170,11 @@ namespace MvvmKit
             return source.Distinct(comparer.ToEqualityComparer());
         }
 
+        public static bool IsDistinct<T>(this IEnumerable<T> source, Func<T, T, bool> comparer)
+        {
+            return source.Distinct().HasSameElementsAs(source);
+        }
+
         public static int IndexOf<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
             int index = 0;
@@ -209,6 +214,7 @@ namespace MvvmKit
             var sourceMap = source
                         .GroupBy(x => x)
                         .ToDictionary(x => x.Key, x => x.Count());
+
             var targetMap = target
                 .GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Count());
