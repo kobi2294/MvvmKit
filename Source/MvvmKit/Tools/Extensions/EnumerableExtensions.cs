@@ -46,6 +46,16 @@ namespace MvvmKit
             return new ObservableCollection<T>(source);
         }
 
+        public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
+        {
+            return new Queue<T>(source);
+        }
+
+        public static Stack<T> ToStack<T>(this IEnumerable<T> source)
+        {
+            return new Stack<T>(source);
+        }
+
         public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> source)
         {
             var builder = new ReadOnlyCollectionBuilder<T>(source);
@@ -207,6 +217,36 @@ namespace MvvmKit
             int padNum = Math.Max(0, length - source.Count());
 
             return Enumerable.Repeat(padding, padNum).Concat(source);
+        }
+
+        public static IEnumerable<T> PadRight<T>(this IEnumerable<T> source, int length, Func<int, T> padding)
+        {
+            var i = 0;
+            foreach (var item in source)
+            {
+                yield return item;
+                i++;
+            }
+
+            for (; i< length; i++)
+            {
+                yield return padding(i);
+            }
+        }
+
+        public static IEnumerable<T> PadLeft<T>(this IEnumerable<T> source, int length, Func<int, T> padding)
+        {
+            var items = source.ToList();
+
+            for (int i = 0; i < length - items.Count; i++)
+            {
+                yield return padding(i);
+            }
+
+            foreach (var item in items)
+            {
+                yield return item;
+            }
         }
 
         public static bool HasSameElementsAs<T>(this IEnumerable<T> source, IEnumerable<T> target)

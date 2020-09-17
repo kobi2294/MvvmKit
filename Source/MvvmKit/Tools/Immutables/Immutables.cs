@@ -62,19 +62,33 @@ namespace MvvmKit
 
 
         public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, TVal value)
-            where T : IImmutable
+            where T : class, IImmutable
         {
             if (instance == null) return default;
             _verifyRemute(instance.GetType());
-            return _remute.With(instance, expression, value);
+            return _with(instance, expression, value);
         }
 
         public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, Func<T, TVal> value)
-            where T : IImmutable
+            where T : class, IImmutable
         {
             if (instance == null) return default;
             _verifyRemute(instance.GetType());
-            return _remute.With(instance, expression, value(instance));
+            return _with(instance, expression, value(instance));
+        }
+
+        private static T _with<T, TVal>(T instance, Expression<Func<T, TVal>> expression, TVal value)
+            where T : class, IImmutable
+        {
+            if (typeof(T) == instance.GetType())
+            {
+                return _remute.With(instance, expression, value);
+            } else
+            {
+                var propName = expression.GetName();
+                var prop = instance.GetType().GetProperty(propName);
+                return instance.With(prop, value) as T;
+            }
         }
 
         public static IImmutable With(this IImmutable instance, PropertyInfo prop, object value)
@@ -85,10 +99,9 @@ namespace MvvmKit
             var instanceType = instance.GetType();
             _verifyRemute(instanceType);
 
-
             var propType = prop.PropertyType;
 
-            var propertyExpression = prop.ToFuncExpression();
+            var propertyExpression = prop.ToFuncExpression(instanceType);
             var withGenericMethod = typeof(Remute).GetMethods()
                 .Single(m => (m.Name == nameof(With))
                             && (m.IsGenericMethodDefinition)
