@@ -17,9 +17,12 @@ namespace MvvmKit
         static readonly Dictionary<(FieldInfo field, Type delegateType), object> _fieldSetters
             = new Dictionary<(FieldInfo field, Type delegateType), object>();
 
+        static readonly Dictionary<Type, object> _constructors
+            = new Dictionary<Type, object>();
+
         #region Delegate Generation
 
-        private static DelegateType _getDelegate<DelegateType>(MethodInfo method)
+        private static DelegateType _getActionDelegate<DelegateType>(MethodInfo method)
         {
             lock (_actions)
             {
@@ -70,20 +73,15 @@ namespace MvvmKit
             }
         }
 
-        private static MethodInfo _methodInfoFromDelegateType(Type delegateType)
-        {
-            return delegateType.GetRuntimeMethods().First(mi => mi.Name == "Invoke");
-        }
-
         public static DelegateType _createDelegateByExpression<DelegateType>(MethodInfo method, params object[] missingParamValues)
         {
             var queueMissingParams = new Queue<object>(missingParamValues);
 
-            var dgtMi = typeof(DelegateType).GetMethod("Invoke");
-            var dgtRet = dgtMi.ReturnType;
-            var dgtParams = dgtMi.GetParameters();
+            var dgtInvokeMethodInfo = typeof(DelegateType).GetMethod("Invoke");
+            var dgtReturnType = dgtInvokeMethodInfo.ReturnType;
+            var dgtParams = dgtInvokeMethodInfo.GetParameters();
 
-            var paramsOfDelegate = dgtParams
+            var paramExpressionsOfDelegate = dgtParams
                 .Select(tp => Expression.Parameter(tp.ParameterType, tp.Name))
                 .ToArray();
 
@@ -92,32 +90,32 @@ namespace MvvmKit
             if (method.IsStatic)
             {
                 var paramsToPass = methodParams
-                    .Select((p, i) => CreateParam(paramsOfDelegate, i, p, queueMissingParams))
+                    .Select((p, i) => _createParam(paramExpressionsOfDelegate, i, p, queueMissingParams))
                     .ToArray();
 
                 var expr = Expression.Lambda<DelegateType>(
                     Expression.Call(method, paramsToPass),
-                    paramsOfDelegate);
+                    paramExpressionsOfDelegate);
 
                 return expr.Compile();
             }
             else
             {
-                var paramThis = Expression.Convert(paramsOfDelegate[0], method.DeclaringType);
+                var paramThis = Expression.Convert(paramExpressionsOfDelegate[0], method.DeclaringType);
 
                 var paramsToPass = methodParams
-                    .Select((p, i) => CreateParam(paramsOfDelegate, i + 1, p, queueMissingParams))
+                    .Select((p, i) => _createParam(paramExpressionsOfDelegate, i + 1, p, queueMissingParams))
                     .ToArray();
 
                 var expr = Expression.Lambda<DelegateType>(
                     Expression.Call(paramThis, method, paramsToPass),
-                    paramsOfDelegate);
+                    paramExpressionsOfDelegate);
 
                 return expr.Compile();
             }
         }
 
-        private static Expression CreateParam(ParameterExpression[] paramsOfDelegate, int i, ParameterInfo callParamType, Queue<object> queueMissingParams)
+        private static Expression _createParam(ParameterExpression[] paramsOfDelegate, int i, ParameterInfo callParamType, Queue<object> queueMissingParams)
         {
             if (i < paramsOfDelegate.Length)
                 return Expression.Convert(paramsOfDelegate[i], callParamType.ParameterType);
@@ -215,13 +213,13 @@ namespace MvvmKit
         private static Func<TEntity, TProp> _getGetter<TEntity, TProp>(PropertyInfo prop)
         {
             var setter = prop.GetGetMethod();
-            return _getDelegate<Func<TEntity, TProp>>(setter);
+            return _getActionDelegate<Func<TEntity, TProp>>(setter);
         }
 
         private static Action<TEntity, TProp> _getSetter<TEntity, TProp>(PropertyInfo prop)
         {
             var setter = prop.GetSetMethod();
-            return _getDelegate<Action<TEntity, TProp>>(setter);
+            return _getActionDelegate<Action<TEntity, TProp>>(setter);
         }
 
         private static Func<TEntity, TField> _getGetter<TEntity, TField>(FieldInfo field)
@@ -239,7 +237,7 @@ namespace MvvmKit
         public static DelegateType ToDelegate<DelegateType>(this MethodInfo method)
             where DelegateType : Delegate
         {
-            return _getDelegate<DelegateType>(method);
+            return _getActionDelegate<DelegateType>(method);
         }
 
         #region Action Apis

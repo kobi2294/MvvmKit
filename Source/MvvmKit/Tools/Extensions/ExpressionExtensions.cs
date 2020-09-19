@@ -113,17 +113,17 @@ namespace MvvmKit
 
         }
 
-        public static String GetName<T>(this Expression<Func<T>> source)
+        public static string GetName<T>(this Expression<Func<T>> source)
         {
             return source.GetProperty().Name;
         }
 
-        public static String GetName<T1, T2>(this Expression<Func<T1, T2>> source)
+        public static string GetName<T1, T2>(this Expression<Func<T1, T2>> source)
         {
             return source.GetProperty().Name;
         }
 
-        public static String GetName(this LambdaExpression source)
+        public static string GetName(this LambdaExpression source)
         {
             return source.GetProperty().Name;
         }
@@ -152,5 +152,13 @@ namespace MvvmKit
                 Expression.Assign(Expression.MakeMemberAccess(@this, memberExpr.Member), value),
                 @this, value);
         }
+
+        public static Expression EnsureConvert(this Expression expression, Type type)
+        {
+            if (expression.Type == type) return expression;
+
+            return Expression.Convert(expression, type);
+        }
+
     }
 }

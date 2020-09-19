@@ -22,6 +22,11 @@ namespace MvvmKit
             yield return obj;
         }
 
+        public static IEnumerable<T> StartWith<T>(this IEnumerable<T> source, T item)
+        {
+            return item.Yield().Concat(source);
+        }
+
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             foreach (var item in source)
@@ -248,6 +253,69 @@ namespace MvvmKit
                 yield return item;
             }
         }
+
+        public static IEnumerable<T> ZipLongset<T1, T2, T>(this IEnumerable<T1> first, IEnumerable<T2> second, Func<T1, T2, T> projection)
+        {
+            using (var iter1 = first.GetEnumerator())
+            using (var iter2 = second.GetEnumerator())
+            {
+                while (iter1.MoveNext())
+                {
+                    if (iter2.MoveNext())
+                    {
+                        yield return projection(iter1.Current, iter2.Current);
+                    }
+                    else
+                    {
+                        yield return projection(iter1.Current, default(T2));
+                    }
+                }
+                while (iter2.MoveNext())
+                {
+                    yield return projection(default(T1), iter2.Current);
+                }
+            }
+        }
+
+        public static IEnumerable<T> ZipThen<T1, T2, T>(this IEnumerable<T1> first, IEnumerable<T2> second, Func<T1, T2, T> projection, Func<T1, T> then)
+        {
+            using (var iter1 = first.GetEnumerator())
+            using (var iter2 = second.GetEnumerator())
+            {
+                while (iter1.MoveNext())
+                {
+                    if (iter2.MoveNext())
+                    {
+                        yield return projection(iter1.Current, iter2.Current);
+                    }
+                    else
+                    {
+                        yield return then(iter1.Current);
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<T> ZipThen<T1, T2, T>(this IEnumerable<T1> first, IEnumerable<T2> second, Func<T1, T2, T> projection, Func<T1, int, T> then)
+        {
+            int i = 0;
+            using (var iter1 = first.GetEnumerator())
+            using (var iter2 = second.GetEnumerator())
+            {
+                while (iter1.MoveNext())
+                {
+                    if (iter2.MoveNext())
+                    {
+                        yield return projection(iter1.Current, iter2.Current);
+                    }
+                    else
+                    {
+                        yield return then(iter1.Current, i++);
+                    }
+                }
+            }
+        }
+
 
         public static bool HasSameElementsAs<T>(this IEnumerable<T> source, IEnumerable<T> target)
         {
