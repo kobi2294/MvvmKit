@@ -70,7 +70,9 @@
     <Compile Include="Samples\AvlList\Main.cs" />
     <Compile Include="Samples\AvlTrees\Main.cs" />
     <Compile Include="Samples\Bindable\Observe.cs" />
-    <Compile Include="Samples\DelegateFactory\LambdaExpressionFactory.cs" />
+    <Compile Include="Samples\DelegateFactory\ArgumentEnumerators.cs" />
+    <Compile Include="Samples\DelegateFactory\ImmutableShape.cs" />
+    <Compile Include="Samples\DelegateFactory\LambaCompiler.cs" />
     <Compile Include="Samples\DelegateFactory\Main.cs" />
     <Compile Include="Samples\DelegateFactory\Person.cs" />
     <Compile Include="Samples\DelegateFactory\Signature.cs" />

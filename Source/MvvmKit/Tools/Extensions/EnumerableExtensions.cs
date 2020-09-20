@@ -22,6 +22,24 @@ namespace MvvmKit
             yield return obj;
         }
 
+        public static IEnumerable<T> Infinite<T>(this T obj)
+        {
+            while(true)
+            {
+                yield return obj;
+            }
+        }
+
+        public static IEnumerable<int> InfiniteRange(int start)
+        {
+            int i = start;
+            while(true)
+            {
+                yield return i++;
+            }
+        }
+
+
         public static IEnumerable<T> StartWith<T>(this IEnumerable<T> source, T item)
         {
             return item.Yield().Concat(source);
