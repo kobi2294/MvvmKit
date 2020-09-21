@@ -20,6 +20,14 @@ namespace MvvmKit
 
         public static readonly ConcurrentDictionary<(MethodBase method, Type delegateType, PropertyInfo prop), object> _copyCtors;
 
+        static LambdaCache()
+        {
+            _openDelegates = new ConcurrentDictionary<(MethodBase method, Type delegateType), object>();
+            _memberGetters = new ConcurrentDictionary<(MemberInfo member, Type delegateType), object>();
+            _memberSetters = new ConcurrentDictionary<(MemberInfo member, Type delegateType), object>();
+            _copyCtors = new ConcurrentDictionary<(MethodBase method, Type delegateType, PropertyInfo prop), object>();
+        }
+
         public static DelegateType AsDelegate<DelegateType>(this MethodBase mb)
             where DelegateType : Delegate
         {
