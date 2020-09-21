@@ -23,7 +23,7 @@ namespace MvvmKit.Tools.Immutables.Fluent
 
         public T Modify(T source)
         {
-            var getter = _expression.GetProperty().ToGetter<T, TTrg>();
+            var getter = _expression.GetProperty().AsGetter<T, TTrg>();
             var target = getter(source);
             var modifiedTarget = Target.Modify(target);
             return source.With(_expression, modifiedTarget);

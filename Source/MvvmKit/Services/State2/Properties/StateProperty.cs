@@ -15,7 +15,7 @@ namespace MvvmKit
         internal StateProperty(ServiceStore<K> store, ServiceBase owner, Expression<Func<K, T>> prop)
             :base(store, owner, prop)
         {
-            _setter = prop.ToSetter();
+            _setter = prop.AsSetter();
         }
 
         public Task Set(T value)

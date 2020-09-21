@@ -8,7 +8,7 @@ namespace MvvmKit
         public static T EnsureNotDefault<T, K>(this T source, Expression<Func<T, K>> prop, Func<K> valueIfDefault)
             where T : class, IImmutable
         {
-            var getter = prop.ToGetter();
+            var getter = prop.AsGetter();
             var value = getter(source);
             if (Equals(value, default))
             {

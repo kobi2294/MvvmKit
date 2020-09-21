@@ -108,7 +108,7 @@ namespace MvvmKit
                             && (m.GetParameters().Length == 3));
 
             var withMethodInfo = withGenericMethod.MakeGenericMethod(instanceType, propType);
-            var withFunc = withMethodInfo.ToFunc<Remute, object, LambdaExpression, object, object>();
+            var withFunc = withMethodInfo.AsFunc<Remute, object, LambdaExpression, object, object>();
 
             var res = withFunc(_remute, instance, propertyExpression, value);
             return res as IImmutable;

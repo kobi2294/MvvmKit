@@ -208,11 +208,11 @@ namespace MvvmKit
             Action<TProperty> onOldValue = null)
             where TVm : BindableBase
         {
-            var setter = property.GetProperty().ToSetter<TVm, TProperty>();
+            var setter = property.GetProperty().AsSetter<TVm, TProperty>();
             Action beforeChange = null;
             if (onOldValue != null)
             {
-                var getter = property.GetProperty().ToGetter<TVm, TProperty>();
+                var getter = property.GetProperty().AsGetter<TVm, TProperty>();
                 beforeChange = () => onOldValue(getter(vm));
             }
 
@@ -393,7 +393,7 @@ namespace MvvmKit
             where TBindable : BindableBase
         {
             var propInfo = property.GetProperty();
-            var getter = propInfo.ToGetter<TBindable, TProp>();
+            var getter = propInfo.AsGetter<TBindable, TProp>();
             var value = getter(owner);
             return Observable.Create<TProp>(observer =>
             {

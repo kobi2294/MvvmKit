@@ -26,8 +26,8 @@ namespace MvvmKit
             Validate();
             var me = member.GetMemberExpression();            
             var m = me.Member;
-            var getter = m.ToGetter<object, object>();
-            var setter = m.ToSetter<object, object>();
+            var getter = m.AsGetter<object, object>();
+            var setter = m.AsSetter<object, object>();
 
             var value = getter(_owner);
             _state.AddMember(m, setter, value);

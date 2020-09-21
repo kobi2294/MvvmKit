@@ -24,7 +24,7 @@ namespace MvvmKit.Tools.Immutables.Fluent
 
         public T Modify(T source)
         {
-            var getter = _expression.GetProperty().ToGetter<T, ImmutableList<TTrg>>();
+            var getter = _expression.GetProperty().AsGetter<T, ImmutableList<TTrg>>();
             var target = getter(source);
             var modifiedTarget = Target.Modify(target);
             return source.With(_expression, modifiedTarget);

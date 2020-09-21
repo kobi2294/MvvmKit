@@ -176,6 +176,10 @@
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\IConsole.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\StringConsole.cs" />
     <Compile Include="Tools\DataStructures\AvlTreeList\TreePrinter\TreePrinter.cs" />
+    <Compile Include="Tools\DelegateFactory\ArgumentEnumerators.cs" />
+    <Compile Include="Tools\DelegateFactory\LambaCompiler.cs" />
+    <Compile Include="Tools\DelegateFactory\LambdaCache.cs" />
+    <Compile Include="Tools\DelegateFactory\Signature.cs" />
     <Compile Include="Tools\Disposables\INotifyDisposable.cs" />
     <Compile Include="Tools\Extensions\BitmapExtensions.cs" />
     <Compile Include="Tools\Extensions\ImmutableExtensions.cs" />
@@ -285,7 +289,6 @@
     <Compile Include="Tools\DataStructures\EditableGrouping.cs" />
     <Compile Include="Tools\DataStructures\EditableLookup.cs" />
     <Compile Include="Tools\DataStructures\LazyDictionary.cs" />
-    <Compile Include="Tools\DelegateFactory\DelegateFactory.cs" />
     <Compile Include="Tools\Disposables\BaseDisposable.cs" />
     <Compile Include="Tools\Disposables\BaseDisposableWithData.cs" />
     <Compile Include="Tools\Disposables\Disposables.Callback.cs" />

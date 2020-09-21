@@ -140,7 +140,7 @@ namespace MvvmKit
             var cmdTypeArg = iEnumT.GenericTypeArguments[0];
             var castMethod = typeof(Enumerable).GetMethod("Cast", BindingFlags.Static | BindingFlags.Public);
             var castGenericMethod = castMethod.MakeGenericMethod(new Type[] { cmdTypeArg });
-            _cmdCast = castGenericMethod.ToFunc<IEnumerable, object>();
+            _cmdCast = castGenericMethod.AsFunc<IEnumerable, object>();
         }
 
         public void SetOnCleanup(Action action)

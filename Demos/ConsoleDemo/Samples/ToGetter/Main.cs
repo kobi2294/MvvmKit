@@ -28,7 +28,7 @@ namespace ConsoleDemo.Samples.ToGetter
             // one way...
             var prop = item.GetType().GetProperty(propname);
 
-            var getter = prop.ToGetter<object, object>();
+            var getter = prop.AsGetter<object, object>();
             var key = getter(item);
 
 

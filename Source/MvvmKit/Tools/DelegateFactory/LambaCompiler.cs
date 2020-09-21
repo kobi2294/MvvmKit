@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleDemo.Samples.DelegateFactory
+namespace MvvmKit
 {
     public static class LambaCompiler
     {
