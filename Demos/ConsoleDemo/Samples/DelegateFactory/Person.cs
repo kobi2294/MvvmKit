@@ -8,6 +8,8 @@ namespace ConsoleDemo.Samples.DelegateFactory
 {
     public class Person
     {
+        private string _secret = "Secret";
+
         public static Person CreateFromName(string firstName, string lastName)
         {
             return new Person { Name = $"{firstName} {lastName}" };
@@ -31,7 +33,7 @@ namespace ConsoleDemo.Samples.DelegateFactory
 
         public override string ToString()
         {
-            return $"Person: {Name}";
+            return $"Person: {Name}, _secret = {_secret}";
         }
     }
 }

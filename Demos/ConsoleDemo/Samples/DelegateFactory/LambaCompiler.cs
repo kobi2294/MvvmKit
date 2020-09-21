@@ -53,6 +53,33 @@ namespace ConsoleDemo.Samples.DelegateFactory
             return _compileTo<Action<TEntity, TProp>>(pi.SetMethod, argumentEnumerator: ArgumentEnumerators.Default);
         }
 
+        public static Func<TEntity, TField> CompileGetter<TEntity, TField>(this FieldInfo fi)
+        {
+            return _compileFieldGetter<TEntity, TField>(fi);
+        }
+
+        public static Action<TEntity, TField> CompileSetter<TEntity, TField>(this FieldInfo fi)
+        {
+            return _compileFieldSetter<TEntity, TField>(fi);
+        }
+
+        public static Func<TEntity, TValue> CompileGetter<TEntity, TValue>(this MemberInfo mi)
+        {
+            if (mi is PropertyInfo pi) return pi.CompileGetter<TEntity, TValue>();
+            if (mi is FieldInfo fi) return fi.CompileGetter<TEntity, TValue>();
+
+            throw new ArgumentException("Expected PropertyInfo or FieldInfo", nameof(mi));
+        }
+
+        public static Action<TEntity, TValue> CompileSetter<TEntity, TValue>(this MemberInfo mi)
+        {
+            if (mi is PropertyInfo pi) return pi.CompileSetter<TEntity, TValue>();
+            if (mi is FieldInfo fi) return fi.CompileSetter<TEntity, TValue>();
+
+            throw new ArgumentException("Expected PropertyInfo or FieldInfo", nameof(mi));
+        }
+
+
         private static DelegateType _compileTo<DelegateType>(MethodBase mb, 
             IEnumerable<object> constants = null, 
             ArgumentEnumerator argumentEnumerator = null)
@@ -86,6 +113,30 @@ namespace ConsoleDemo.Samples.DelegateFactory
             call = call.EnsureConvert(signature.ReturnType);
             return Expression
                 .Lambda<DelegateType>(call, parameters)
+                .Compile();
+        }
+
+        private static Func<TEntity, TValue> _compileFieldGetter<TEntity, TValue>(FieldInfo fi)
+        {
+            var instancePrm = Expression.Parameter(typeof(TEntity));
+
+            var instanceExp = instancePrm.EnsureConvert(fi.DeclaringType);
+            var fieldAccessExp = Expression.Field(instanceExp, fi).EnsureConvert(typeof(TValue));
+
+            return Expression.Lambda<Func<TEntity, TValue>>(fieldAccessExp, instancePrm)
+                .Compile();
+        }
+
+        private static Action<TEntity, TValue> _compileFieldSetter<TEntity, TValue>(FieldInfo fi)
+        {
+            var instancePrm = Expression.Parameter(typeof(TEntity));
+            var valuePrm = Expression.Parameter(typeof(TValue));
+
+            var instanceExp = instancePrm.EnsureConvert(fi.DeclaringType);
+            var valueExp = valuePrm.EnsureConvert(fi.FieldType);
+
+            var fieldAssignExp = Expression.Assign(Expression.Field(instanceExp, fi), valueExp);
+            return Expression.Lambda<Action<TEntity, TValue>>(fieldAssignExp, instancePrm, valuePrm)
                 .Compile();
         }
 

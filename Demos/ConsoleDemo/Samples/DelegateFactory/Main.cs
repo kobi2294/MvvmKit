@@ -76,7 +76,15 @@ namespace ConsoleDemo.Samples.DelegateFactory
             personNameSetter(p1, "Yoyo Ma");
             var newName = personNameGetter(p1);
 
-           
+            var fi = typeof(Person).GetField("_secret", BindingFlags.NonPublic | BindingFlags.Instance);
+            var fieldGetter = fi.CompileGetter<object, object>();
+            var fieldSetter = fi.CompileSetter<object, object>();
+
+            var oldSecret = fieldGetter(p1);
+            fieldSetter(p1, "Covid-19");
+            var newSecret = fieldGetter(p1);
+
+            Console.WriteLine(p1);
 
             //var openCasted = CreateOpenDelegate<Func<Person, string, object>>(mi);
             //var res3 = openCasted(p2, "Hello");
