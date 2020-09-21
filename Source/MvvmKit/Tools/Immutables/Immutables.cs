@@ -1,7 +1,7 @@
 ﻿using MvvmKit.Tools.Immutables.Fluent;
-using Remutable;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -15,109 +15,96 @@ namespace MvvmKit
 {
     public static class Immutables
     {
-        private static HashSet<Type> _verified = new HashSet<Type>();
-        private static Remute _remute;
-        private static ActivationConfiguration _config;
-        private static Dictionary<Type, ConstructorInfo> _ctors = new Dictionary<Type, ConstructorInfo>();
-        private static object _mutex = new object();
+        private static ConcurrentDictionary<Type, ConstructorInfo> _constructorOfType;
 
-        private static void _verifyRemute<T>()
+        private static IEnumerable<(string name, Type type)> _parametersOfCtor(ConstructorInfo ci)
         {
-            lock(_mutex)
-            {
-                if (_verified.Contains(typeof(T))) return;
-                _verified.Add(typeof(T));
-
-                var ctor = typeof(T).GetConstructors()
-                    .OrderByDescending(xtor => xtor.GetParameters().Length)
-                    .First();
-
-                _config.Configure(ctor);
-                _ctors.Add(typeof(T), ctor);
-            }
+            return ci.GetParameters()
+                .Select(prm => (name: prm.Name.ToLower(), type: prm.ParameterType));
         }
 
-        private static void _verifyRemute(Type type)
+        private static IEnumerable<(string name, Type type)> _propertiesOfType(Type type)
         {
-            lock (_mutex)
-            {
-                if (_verified.Contains(type)) return;
-                _verified.Add(type);
+            return type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Select(prop => (name: prop.Name.ToLower(), type: prop.PropertyType));
+        }
 
-                var ctor = type.GetConstructors()
-                    .OrderByDescending(xtor => xtor.GetParameters().Length)
-                    .First();
+        private static ConstructorInfo _findCtorInfoOfType(Type type)
+        {
+            var props = _propertiesOfType(type).ToHashSet();
 
-                _config.Configure(ctor);
-                _ctors.Add(type, ctor);
-            }
+            var ctor = type
+                .GetConstructors()
+                .FirstOrDefault(ci => _parametersOfCtor(ci).HasSameElementsAs(props));
+
+            return ctor;
+        }
+
+        private static Func<object, object, object> _copyCtorFor(Type type, PropertyInfo prop)
+        {
+            var ctor =_constructorOfType.GetOrAdd(type, t => _findCtorInfoOfType(t));
+            if (ctor == null)
+                throw new ArgumentException($"Type {type.Name} does not have a constructor that takes all properties as parameters", nameof(type));
+            return ctor.AsCopyConstructor<object, object>(prop);
+        }
+
+        private static Func<object> _defaultCreatorFor(Type type)
+        {
+            var ctor = _constructorOfType.GetOrAdd(type, t => _findCtorInfoOfType(t));
+            if (ctor == null)
+                throw new ArgumentException($"Type {type.Name} does not have a constructor that takes all properties as parameters", nameof(type));
+            return ctor.AsFunc<object>();
         }
 
 
         static Immutables()
         {
-            _config = new ActivationConfiguration();
-            _remute = new Remute(_config);
+            _constructorOfType = new ConcurrentDictionary<Type, ConstructorInfo>();
         }
 
-
-        public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, TVal value)
-            where T : class, IImmutable
+        private static object _with(object source, PropertyInfo prop, object newValue)
         {
-            if (instance == null) return default;
-            _verifyRemute(instance.GetType());
-            return _with(instance, expression, value);
+            var modifier = _copyCtorFor(source.GetType(), prop);
+            var getter = prop.AsGetter<object, object>();
+            var oldValue = getter(source);
+
+            if (Equals(oldValue, newValue)) return source;
+
+            var modified = modifier(source, newValue);
+            return modified;
+        }
+
+        private static object _create(Type type)
+        {
+            var creator = _defaultCreatorFor(type);
+            return creator();
+        }
+
+        public static IImmutable With(this IImmutable source, PropertyInfo property, object newValue)
+        {
+            return _with(source, property, newValue) as IImmutable;
+        }
+
+        public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> property, TVal newValue)
+            where T: IImmutable
+        {
+            return (T)_with(instance, property.GetProperty(), newValue);
         }
 
         public static T With<T, TVal>(this T instance, Expression<Func<T, TVal>> expression, Func<T, TVal> value)
             where T : class, IImmutable
         {
-            if (instance == null) return default;
-            _verifyRemute(instance.GetType());
-            return _with(instance, expression, value(instance));
+            return (T)_with(instance, expression.GetProperty(), value(instance));
         }
 
-        private static T _with<T, TVal>(T instance, Expression<Func<T, TVal>> expression, TVal value)
-            where T : class, IImmutable
-        {
-            if (typeof(T) == instance.GetType())
-            {
-                return _remute.With(instance, expression, value);
-            } else
-            {
-                var propName = expression.GetName();
-                var prop = instance.GetType().GetProperty(propName);
-                return instance.With(prop, value) as T;
-            }
-        }
 
-        public static IImmutable With(this IImmutable instance, PropertyInfo prop, object value)
-        {
-            if (instance == null) return null;
-            if (prop == null) throw new ArgumentNullException(nameof(prop));
-
-            var instanceType = instance.GetType();
-            _verifyRemute(instanceType);
-
-            var propType = prop.PropertyType;
-
-            var propertyExpression = prop.ToFuncExpression(instanceType);
-            var withGenericMethod = typeof(Remute).GetMethods()
-                .Single(m => (m.Name == nameof(With))
-                            && (m.IsGenericMethodDefinition)
-                            && (m.GetParameters().Length == 3));
-
-            var withMethodInfo = withGenericMethod.MakeGenericMethod(instanceType, propType);
-            var withFunc = withMethodInfo.AsFunc<Remute, object, LambdaExpression, object, object>();
-
-            var res = withFunc(_remute, instance, propertyExpression, value);
-            return res as IImmutable;
-        }
 
         public static VersionedList<T> ToVersionedList<T>(this IEnumerable<T> source)
         {
             return VersionedList<T>.Create(source);
         }
+
+
 
         public static ImmutableInstanceWrapper<TRoot, T> With<TRoot, T>(this TRoot source, Expression<Func<TRoot, T>> expression)
             where TRoot : class, IImmutable
@@ -158,27 +145,17 @@ namespace MvvmKit
         /// <returns></returns>
         public static IImmutable Create(Type type)
         {
-            _verifyRemute(type);
-            ConstructorInfo ctor = null;
-            lock(_mutex)
-            {
-                ctor = _ctors[type];
-            }
+            return _create(type) as IImmutable;
+        }
 
-            var paramsCount = ctor.GetParameters().Length;
-            var prms = Enumerable.Repeat(Type.Missing, paramsCount).ToArray();
-
-            var value = ctor.Invoke(
-                BindingFlags.OptionalParamBinding |
-                BindingFlags.InvokeMethod |
-                BindingFlags.CreateInstance 
-                , null, prms , CultureInfo.CurrentCulture) as IImmutable;
-
-            return value;
+        public static T Create<T>()
+            where T:IImmutable
+        {
+            return (T)_create(typeof(T));
         }
 
 
-        private static IEnumerable<IImmutable> _getAllSubOjectsInProperty(IImmutable obj, PropertyInfo prop)
+        private static IEnumerable<IImmutable> _getAllSubObjectsInProperty(IImmutable obj, PropertyInfo prop)
         {
             if (prop.PropertyType.IsImmutableType())
             {
@@ -207,7 +184,7 @@ namespace MvvmKit
 
             var type = source.GetType();
             var props = type.GetAllProperties();
-            var allSubObjects = props.SelectMany(prop => _getAllSubOjectsInProperty(source, prop));
+            var allSubObjects = props.SelectMany(prop => _getAllSubObjectsInProperty(source, prop));
 
             return source.Yield()
                 .Concat(allSubObjects);
