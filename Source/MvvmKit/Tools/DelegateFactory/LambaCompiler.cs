@@ -21,6 +21,11 @@ namespace MvvmKit
             return _compileTo<DelegateType>(mb, argumentEnumerator: ArgumentEnumerators.ForDetails(argumentEvaluators));
         }
 
+        public static DelegateType CompileTo<DelegateType>(this MethodBase mb, ArgumentEnumerator argumentEnumerator)
+        {
+            return _compileTo<DelegateType>(mb, argumentEnumerator: argumentEnumerator);
+        }
+
         public static DelegateType CompileTo<DelegateType>(this MethodBase mb, params object[] constants)
         {
             return _compileTo<DelegateType>(mb, constants);

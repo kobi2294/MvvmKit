@@ -6,12 +6,14 @@ using System.Linq;
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
 using System.Reflection;
+using System.Collections.Concurrent;
 
 namespace MvvmKit
 {
     public static class EnsureManager
     {
-        private static IDictionary<MethodInfo, Type> _ensureMethods;
+        private static ConcurrentDictionary<MethodInfo, Type> _ensureMethods;
+        private static ConcurrentDictionary<MethodInfo, Func<EnsureContext, object>> _ensureLambdas;
 
         public static bool IsHistoryEnabled { get; set; }
 
@@ -25,7 +27,16 @@ namespace MvvmKit
             _ensureMethods = assemblies.SelectMany(asm => asm.GetTypes())
                                         .SelectMany(type => type.GetMethods())
                                         .Where(method => IsEnsureMethod(method))
-                                        .ToDictionary(method => method, method => method.ReturnType);
+                                        .ToConcurrentDictionary(method => method, method => method.ReturnType);
+
+            _ensureLambdas = _ensureMethods.Keys
+                .Select(method =>
+                {
+                    var argumentEnumerator = ArgumentEnumerators.ForFunc<EnsureContext>(method, (ctxt, type) => ctxt.EntityOfType(type));
+                    return (method: method, lambda: method.CompileTo<Func<EnsureContext, object>>(argumentEnumerator));
+                })
+                .ToConcurrentDictionary(pair => pair.method, pair => pair.lambda);
+
             _history = new List<EnsureSessionHistory>();
             _historySubject = new BehaviorSubject<ImmutableList<EnsureSessionHistory>>(ImmutableList<EnsureSessionHistory>.Empty);
             IsHistoryEnabled = false;
@@ -73,13 +84,9 @@ namespace MvvmKit
 
         public static object _callMethod(MethodInfo method, EnsureContext context)
         {
-            var parameters = method
-                .GetParameters()
-                .Select(prm => prm.ParameterType)
-                .Select(type => context.EntityOfType(type))
-                .ToArray();
+            var lambda = _ensureLambdas[method];
+            var result = lambda(context);
 
-            var result = method.Invoke(null, parameters);
             return result;
         }
 

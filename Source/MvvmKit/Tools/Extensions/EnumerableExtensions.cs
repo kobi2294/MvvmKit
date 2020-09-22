@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -78,6 +79,17 @@ namespace MvvmKit
         {
             return new Stack<T>(source);
         }
+
+        public static ConcurrentDictionary<K, T> ToConcurrentDictionary<K, T>(this IEnumerable<T> source, Func<T, K> keySelector)
+        {
+            return new ConcurrentDictionary<K, T>(source.ToDictionary(keySelector));
+        }
+
+        public static ConcurrentDictionary<K, E> ToConcurrentDictionary<K, T, E>(this IEnumerable<T> source, Func<T, K> keySelector, Func<T, E> elementSelector)
+        {
+            return new ConcurrentDictionary<K, E>(source.ToDictionary(keySelector, elementSelector));
+        }
+
 
         public static ReadOnlyCollection<T> ToReadOnly<T>(this IEnumerable<T> source)
         {

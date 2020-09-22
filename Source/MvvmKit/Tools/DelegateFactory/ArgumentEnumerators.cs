@@ -50,6 +50,18 @@ namespace MvvmKit
             };
         }
 
+        public static ArgumentEnumerator ForFunc<T>(MethodBase mb, Func<T, Type, object> func)
+        {
+            var argumentTypes = mb.GetParameters().Select(pi => pi.ParameterType);
+
+            return prms =>
+            {
+                var source = prms[0].EnsureConvert(typeof(T));
+                return argumentTypes.Select(type =>
+                        Expression.Invoke(Expression.Constant(func), source, Expression.Constant(type, typeof(Type))));                                  
+            };
+        }
+
 
     }
 }

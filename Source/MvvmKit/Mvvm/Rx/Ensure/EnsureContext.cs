@@ -49,7 +49,7 @@ namespace MvvmKit
             _parent = parent;
             _index = -1;
             _property = property;
-            _entity = property.GetValue(_parent._entity);
+            _entity = property.AsGetter<object, object>().Invoke(_parent._entity);
             _findTypeOfCurrent();
         }
 
@@ -167,8 +167,8 @@ namespace MvvmKit
             {
                 var list = _parent._entity;
                 var type = list.GetType();
-                var replaceMethod = type.GetMethod("SetItem");
-                var newList = replaceMethod.Invoke(list, new[] { _index, newValue });
+                var replaceMethod = type.GetMethod("SetItem").AsFunc<object, int, object, object>();
+                var newList = replaceMethod.Invoke(list, _index, newValue);
                 return _parent.ApplyNewValue(newList);
             }
 
