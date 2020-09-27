@@ -66,21 +66,34 @@
         </Style>
 
     </UserControl.Resources>
-    <Grid>
-        <Grid.Resources>
-            <Style TargetType="{x:Type ScrollViewer}">
-                <Setter Property="t:ScrollSync.Group" Value="diff"/>
-            </Style>
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <ListBox Grid.Column="0" 
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+            <CheckBox Content="Show All" IsChecked="{Binding ShowAll, Mode=TwoWay}"
+                  Padding="4" Margin="4"
+                  />
+
+            <TextBlock Text="Extra lines:" VerticalAlignment="Center"/>
+            <Slider Minimum="0" Maximum="10" Value="{Binding LinesAroundDiff, Mode=TwoWay}" VerticalAlignment="Center"
+                    Width="200" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"
+                    />
+
+        </StackPanel>
+        <Grid>
+            <Grid.Resources>
+                <Style TargetType="{x:Type ScrollViewer}">
+                    <Setter Property="t:ScrollSync.Group" Value="diff"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0" 
                  ItemsSource="{Binding OldLines}"
                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
                  />
-        <ListBox Grid.Column="1" 
+            <ListBox Grid.Column="1" 
                  ItemsSource="{Binding NewLines}"/>
-    </Grid>
+        </Grid>
+    </DockPanel>
 </UserControl>

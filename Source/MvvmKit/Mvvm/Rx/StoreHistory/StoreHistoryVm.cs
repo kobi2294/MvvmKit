@@ -55,8 +55,8 @@ namespace MvvmKit.Mvvm.Rx.StoreHistory
         {
             Records = new ObservableCollection<HistoryRecordVm>();
             EnsureItems = new ObservableCollection<EnsureItemVm>();
-            Differ = new DifferVm();
-            EnsureDiffer = new DifferVm();
+            Differ = new DifferVm().DisposedBy(this);
+            EnsureDiffer = new DifferVm().DisposedBy(this);
         }
 
         [InjectionMethod]
