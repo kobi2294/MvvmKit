@@ -45,7 +45,7 @@ namespace MvvmKit
         {
             base.OnDisposed();
             _canExecuteSubscription?.Dispose();
-            _subject.Dispose();
+            _subject.OnCompleted();
         }
 
         #region ICommand
