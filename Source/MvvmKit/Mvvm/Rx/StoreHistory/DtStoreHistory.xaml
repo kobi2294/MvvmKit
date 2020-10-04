@@ -17,6 +17,22 @@
             </DifferVm.NewLines>
         </DifferVm>
     </StoreHistoryVm.Differ>
+    <StoreHistoryVm.EnsureDiffer>
+        <DifferVm>
+            <DifferVm.OldLines>
+                <DifferLineVm Position="1" ChangeType="Deleted" Text="Deleted Line"/>
+                <DifferLineVm Position="2" ChangeType="Unchanged" Text="Not Changed"/>
+                <DifferLineVm Position="" ChangeType="Imaginary" Text=""/>
+                <DifferLineVm Position="3" ChangeType="Modified" Text="Modified"/>
+            </DifferVm.OldLines>
+            <DifferVm.NewLines>
+                <DifferLineVm Position="" ChangeType="Imaginary" Text=""/>
+                <DifferLineVm Position="1" ChangeType="Unchanged" Text="Not Changed"/>
+                <DifferLineVm Position="2" ChangeType="Inserted" Text="Inserted Line"/>
+                <DifferLineVm Position="3" ChangeType="Modified" Text="Modified a bit"/>
+            </DifferVm.NewLines>
+        </DifferVm>
+    </StoreHistoryVm.EnsureDiffer>
     <StoreHistoryVm.Records>
         <HistoryRecordVm Caption="Action 1" ActionDetails="[12, 15, 80]" EnsureItemsCount="0"/>
         <HistoryRecordVm Caption="Action 2" ActionDetails="[12, 15, 80]" EnsureItemsCount="12"/>

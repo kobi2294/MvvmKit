@@ -9,7 +9,7 @@
     xmlns:jlinq="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
     xmlns:diff="clr-namespace:DiffPlex.Wpf.Controls;assembly=DiffPlex.Wpf"
     mc:Ignorable="d" 
-    d:DesignHeight="874" d:DesignWidth="884"
+    d:DesignHeight="874" d:DesignWidth="1200"
     d:DataContext="{d:DesignData Source=DtStoreHistory.xaml}"
     >
     <UserControl.Resources>
