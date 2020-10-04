@@ -15,14 +15,19 @@ namespace MvvmKit.Tools.Immutables.Fluent
         private readonly List<IInstanceModifier<T>> _modifiers;
         private readonly RootWrapper<TRoot> _root;
 
-        public InstanceWrapper(RootWrapper<TRoot> root)
+        public Predicate<T> Predicate { get; }
+
+        public InstanceWrapper(RootWrapper<TRoot> root, Predicate<T> predicate = null)
         {
+            Predicate = predicate ?? (t => true);
             _modifiers = new List<IInstanceModifier<T>>();
             _root = root;
         }
 
         public T Modify(T source)
         {
+            if (!Predicate(source)) return source;
+
             var current = source;
             foreach (var modifier in _modifiers)
             {
@@ -46,16 +51,16 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return modifier.Target;
         }
 
-        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, TVal value)
+        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, TVal value, Predicate<T> predicate = null)
         {
-            var setter = new InstanceSetterModifier<T, TVal>(expression, value);
+            var setter = new InstanceSetterModifier<T, TVal>(expression, value, predicate);
             _modifiers.Add(setter);
             return this;
         }
 
-        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc)
+        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc, Predicate<T> predicate = null)
         {
-            var setter = new InstanceSetterModifier<T, TVal>(expression, valueFunc);
+            var setter = new InstanceSetterModifier<T, TVal>(expression, valueFunc, predicate);
             _modifiers.Add(setter);
             return this;
         }

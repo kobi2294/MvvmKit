@@ -127,7 +127,7 @@ namespace MvvmKit
             return _historySubject.AsObservable();
         }
 
-        public static T Ensure<T>(this T source, object action = null)
+        public static T Ensure<T>(this T source, object action)
             where T: class, IImmutable
         {
             var current = source;
