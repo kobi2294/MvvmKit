@@ -136,8 +136,6 @@ namespace MvvmKit
 
         private void _animateMarkerTo(Matrix translate, double width, double height, Duration duration)
         {
-
-
             var widthAnim = new DoubleAnimation(width, duration) { EasingFunction = EasingFunction };
             var heightAnim = new DoubleAnimation(height, duration) { EasingFunction = EasingFunction };
             _partMarker.BeginAnimation(WidthProperty, widthAnim);

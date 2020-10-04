@@ -82,6 +82,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Ui\DevTools\ConsoleWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Ui\Resources\ScrollBars.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -333,6 +337,9 @@
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Animations\LinearMatrixAnimation.cs" />
+    <Compile Include="Ui\DevTools\ConsoleWindow.xaml.cs">
+      <DependentUpon>ConsoleWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ui\Helpers\ScrollSync\ScrollSync.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelper.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelperBehavior.cs" />

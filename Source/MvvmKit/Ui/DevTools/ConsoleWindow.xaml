@@ -1,0 +1,21 @@
+﻿<Window x:Class="MvvmKit.ConsoleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="ConsoleWindow" Height="450" Width="800">
+    <DockPanel Background="Black">
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="4">
+            <Button Margin="4" Padding="4" Click="Button_Click">Clear</Button>
+        </StackPanel>
+        <ScrollViewer>
+            <TextBlock x:Name="txt" 
+                   Text="Testing"
+                   Foreground="White"
+                   FontFamily="Consolas"
+                   FontSize="20"
+                   />
+        </ScrollViewer>
+    </DockPanel>
+</Window>
