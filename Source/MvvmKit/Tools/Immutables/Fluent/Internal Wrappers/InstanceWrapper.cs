@@ -64,10 +64,24 @@ namespace MvvmKit.Tools.Immutables.Fluent
             _modifiers.Add(setter);
             return this;
         }
+        public override ImmutableInstanceWrapper<TRoot, T> Replace(T value, Predicate<T> predicate = null)
+        {
+            var modifier = new InstanceReplacerModifier<T>(value, predicate);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
+        public override ImmutableInstanceWrapper<TRoot, T> Replace(Func<T, T> value, Predicate<T> predicate = null)
+        {
+            var modifier = new InstanceReplacerModifier<T>(value, predicate);
+            _modifiers.Add(modifier);
+            return this;
+        }
 
         public override TRoot Go()
         {
             return _root.Go();
         }
+
     }
 }

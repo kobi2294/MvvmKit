@@ -21,5 +21,10 @@ namespace MvvmKit
         public abstract ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, TVal value, Predicate<T> predicate = null);
 
         public abstract ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc, Predicate<T> predicate = null);
+
+        public abstract ImmutableInstanceWrapper<TRoot, T> Replace(T value, Predicate<T> predicate = null);
+
+        public abstract ImmutableInstanceWrapper<TRoot, T> Replace(Func<T, T> value, Predicate<T> predicate = null);
+
     }
 }

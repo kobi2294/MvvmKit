@@ -74,7 +74,6 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return this;
         }
 
-
         public override TRoot Go()
         {
             return _root.Go();
