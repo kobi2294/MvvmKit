@@ -16,26 +16,20 @@ namespace MvvmKit.Tools.Immutables.Fluent
 
         private readonly bool _isUsingFunc;
 
-        public Predicate<T> Predicate { get; }
-
-        public InstanceReplacerModifier(T value, Predicate<T> predicate = null)
+        public InstanceReplacerModifier(T value)
         {
             _value = value;
             _isUsingFunc = false;
-            Predicate = predicate ?? (t => true);
         }
 
-        public InstanceReplacerModifier(Func<T, T> valueFunc, Predicate<T> predicate = null)
+        public InstanceReplacerModifier(Func<T, T> valueFunc)
         {
             _valueFunc = valueFunc;
             _isUsingFunc = true;
-            Predicate = predicate ?? (t => true);
         }
 
         public T Modify(T source)
         {
-            if (!Predicate(source)) return source;
-
             if (_isUsingFunc)
                 return _valueFunc(source);
             else

@@ -18,29 +18,23 @@ namespace MvvmKit.Tools.Immutables.Fluent
 
         private readonly bool _isUsingFunc;
 
-        public Predicate<T> Predicate { get; }
 
-
-        public InstanceSetterModifier(Expression<Func<T, TVal>> expression, TVal value, Predicate<T> predicate = null)
+        public InstanceSetterModifier(Expression<Func<T, TVal>> expression, TVal value)
         {
             _expression = expression;
             _value = value;
             _isUsingFunc = false;
-            Predicate = predicate ?? (t => true);
         }
 
-        public InstanceSetterModifier(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc, Predicate<T> predicate = null)
+        public InstanceSetterModifier(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc)
         {
             _expression = expression;
             _valueFunc = valueFunc;
             _isUsingFunc = true;
-            Predicate = predicate ?? (t => true);
         }
 
         public T Modify(T source)
         {
-            if (!Predicate(source)) return source;
-
             if (_isUsingFunc)
                 return source.With(_expression, _valueFunc);
             else

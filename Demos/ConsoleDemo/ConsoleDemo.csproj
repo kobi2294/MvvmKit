@@ -86,6 +86,7 @@
     <Compile Include="Samples\EditableLookupSample.cs" />
     <Compile Include="Samples\HeckelDiff\Start.cs" />
     <Compile Include="Samples\Immutables\Main.cs" />
+    <Compile Include="Samples\Immutables\NicePerson.cs" />
     <Compile Include="Samples\Immutables\Person.cs" />
     <Compile Include="Samples\Immutables\RootState.cs" />
     <Compile Include="Samples\Indexers\IndexerDemo.cs" />

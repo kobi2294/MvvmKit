@@ -16,20 +16,15 @@ namespace MvvmKit.Tools.Immutables.Fluent
         private readonly Expression<Func<T, ImmutableList<TTrg>>> _expression;
         internal ListWrapper<TRoot, TTrg> Target { get; }
 
-        public Predicate<T> Predicate { get; }
-
-        public InstanceWithListModifier(RootWrapper<TRoot> root, Expression<Func<T, ImmutableList<TTrg>>> expression, Predicate<T> predicate = null)
+        public InstanceWithListModifier(RootWrapper<TRoot> root, Expression<Func<T, ImmutableList<TTrg>>> expression)
         {
             _expression = expression;
             Target = new ListWrapper<TRoot, TTrg>(root);
-            Predicate = predicate ?? (t => true);
 
         }
 
         public T Modify(T source)
         {
-            if (!Predicate(source)) return source;
-
             var getter = _expression.GetProperty().AsGetter<T, ImmutableList<TTrg>>();
             var target = getter(source);
             var modifiedTarget = Target.Modify(target);

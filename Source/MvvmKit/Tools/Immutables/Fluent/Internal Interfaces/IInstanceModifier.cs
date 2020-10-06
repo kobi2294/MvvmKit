@@ -10,7 +10,5 @@ namespace MvvmKit.Tools.Immutables.Fluent
         where T: class, IImmutable
     {
         T Modify(T source);
-
-        Predicate<T> Predicate { get; }
     }
 }

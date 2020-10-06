@@ -196,6 +196,8 @@
     <Compile Include="Tools\Algorithms\LisAlgorithm.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Interfaces\IListModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Interfaces\IInstanceModifier.cs" />
+    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceCastModifier.cs" />
+    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceIfModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceReplacerModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceSetterModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListAddModifier.cs" />

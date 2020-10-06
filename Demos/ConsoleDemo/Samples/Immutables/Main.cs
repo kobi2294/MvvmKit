@@ -38,6 +38,38 @@ namespace ConsoleDemo.Samples.Immutables
             Print(state);
         }
 
+        public static void TestIf()
+        {
+            var state = new RootState(42, ImmutableList<Person>.Empty.Add(new NicePerson("Kobi", "Hari", 45, 10)));
+
+            var state1 = state
+                .With(x => x.Humans)
+                .At(0)
+                .If(person => person.Age > 40)
+                .Set(x => x.Age, x => x.Age - 10)
+                .Go();
+
+            var state2 = state
+                .With(x => x.Humans)
+                .At(0)
+                .If(person => person.Age < 40)
+                .Set(x => x.Age, x => x.Age - 10)
+                .Go();
+
+            var state3 = state
+                .With(x => x.Humans)
+                .At(0)
+                .Cast<NicePerson>()
+                .If(np => np.HowNice == 10)
+                .Set(x => x.HowNice, x => x.HowNice + 2)
+                .Go();
+
+            Print(state1);
+            Print(state2);
+            Print(state3);
+
+        }
+
         public static void Print(RootState state)
         {
             var str = JsonConvert.SerializeObject(state, Formatting.Indented);

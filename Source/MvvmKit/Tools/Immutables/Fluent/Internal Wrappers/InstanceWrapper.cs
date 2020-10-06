@@ -15,19 +15,14 @@ namespace MvvmKit.Tools.Immutables.Fluent
         private readonly List<IInstanceModifier<T>> _modifiers;
         private readonly RootWrapper<TRoot> _root;
 
-        public Predicate<T> Predicate { get; }
-
-        public InstanceWrapper(RootWrapper<TRoot> root, Predicate<T> predicate = null)
+        public InstanceWrapper(RootWrapper<TRoot> root)
         {
-            Predicate = predicate ?? (t => true);
             _modifiers = new List<IInstanceModifier<T>>();
             _root = root;
         }
 
         public T Modify(T source)
         {
-            if (!Predicate(source)) return source;
-
             var current = source;
             foreach (var modifier in _modifiers)
             {
@@ -51,31 +46,45 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return modifier.Target;
         }
 
-        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, TVal value, Predicate<T> predicate = null)
+        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, TVal value)
         {
-            var setter = new InstanceSetterModifier<T, TVal>(expression, value, predicate);
+            var setter = new InstanceSetterModifier<T, TVal>(expression, value);
             _modifiers.Add(setter);
             return this;
         }
 
-        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc, Predicate<T> predicate = null)
+        public override ImmutableInstanceWrapper<TRoot, T> Set<TVal>(Expression<Func<T, TVal>> expression, Func<T, TVal> valueFunc)
         {
-            var setter = new InstanceSetterModifier<T, TVal>(expression, valueFunc, predicate);
+            var setter = new InstanceSetterModifier<T, TVal>(expression, valueFunc);
             _modifiers.Add(setter);
             return this;
         }
-        public override ImmutableInstanceWrapper<TRoot, T> Replace(T value, Predicate<T> predicate = null)
+        public override ImmutableInstanceWrapper<TRoot, T> Replace(T value)
         {
-            var modifier = new InstanceReplacerModifier<T>(value, predicate);
+            var modifier = new InstanceReplacerModifier<T>(value);
             _modifiers.Add(modifier);
             return this;
         }
 
-        public override ImmutableInstanceWrapper<TRoot, T> Replace(Func<T, T> value, Predicate<T> predicate = null)
+        public override ImmutableInstanceWrapper<TRoot, T> Replace(Func<T, T> value)
         {
-            var modifier = new InstanceReplacerModifier<T>(value, predicate);
+            var modifier = new InstanceReplacerModifier<T>(value);
             _modifiers.Add(modifier);
             return this;
+        }
+
+        public override ImmutableInstanceWrapper<TRoot, T> If(Predicate<T> predicate)
+        {
+            var modifier = new InstanceIfModifier<TRoot, T>(_root, predicate);
+            _modifiers.Add(modifier);
+            return modifier.Target;
+        }
+
+        public override ImmutableInstanceWrapper<TRoot, TCast> Cast<TCast>()
+        {
+            var modifier = new InstanceCastModifier<TRoot, T, TCast>(_root);
+            _modifiers.Add(modifier);
+            return modifier.Target;
         }
 
         public override TRoot Go()

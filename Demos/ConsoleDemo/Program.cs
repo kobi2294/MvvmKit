@@ -24,7 +24,7 @@ namespace ConsoleDemo
 
         static void Main(string[] args)
         {
-            ConsoleDemo.Samples.DelegateFactory.Main.Run();
+            ConsoleDemo.Samples.Immutables.Main.TestIf();
             Console.ReadLine();
         }
     }
