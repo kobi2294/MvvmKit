@@ -215,6 +215,12 @@ namespace MvvmKit
             return source.Distinct(comparer.ToEqualityComparer());
         }
 
+        public static IEnumerable<T> Distinct<T, K>(this IEnumerable<T> source, Func<T, K> keySelector)
+            where K: IEquatable<K>
+        {
+            return source.Distinct((item1, item2) => keySelector(item1).Equals(keySelector(item2)));
+        }
+
         public static bool IsDistinct<T>(this IEnumerable<T> source, Func<T, T, bool> comparer)
         {
             return source.Distinct().HasSameElementsAs(source);
