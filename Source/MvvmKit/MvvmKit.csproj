@@ -223,6 +223,7 @@
     <Compile Include="Tools\Immutables\IImmutable.cs" />
     <Compile Include="Tools\Immutables\Immutables.cs" />
     <Compile Include="Tools\Algorithms\PermuteAlgorithm.cs" />
+    <Compile Include="Tools\Randoms\Randoms.cs" />
     <Compile Include="Tools\StateStore\StateStore.cs" />
     <Compile Include="Tools\StateStore\StateReader.cs" />
     <Compile Include="Tools\StateStore\StateRestorer.cs" />
@@ -340,6 +341,7 @@
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Animations\LinearMatrixAnimation.cs" />
+    <Compile Include="Ui\Controls\ComboBoxEx.cs" />
     <Compile Include="Ui\DevTools\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
