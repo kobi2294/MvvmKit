@@ -51,7 +51,7 @@ namespace MvvmKit
         }
 
 
-        public void Write(string text, Brush foreground = null, int length = 0)
+        private void _write(string text, Brush foreground = null, int length = 0)
         {
             foreground = foreground ?? Brushes.White;
 
@@ -68,15 +68,38 @@ namespace MvvmKit
             });
         }
 
-        public void WriteLine(string text, string prefix = "")
+        public void Write(string text, Brush foreground = null, int length = 0)
         {
-            Write(DateTime.Now.ToString("mm:ss:ffff"), Brushes.Lime, 11);
+            if (Dispatcher.CheckAccess())
+            {
+                _write(text, foreground, length);
+            } else
+            {
+                Dispatcher.Invoke(() => _write(text, foreground, length));
+            }
+        }
+
+        private void _writeLine(string text, string prefix = "")
+        {
+            _write(DateTime.Now.ToString("mm:ss:ffff"), Brushes.Lime, 11);
 
             if (prefix.HasAnyText())
-                Write(prefix, Brushes.Yellow, 20);
+                _write(prefix, Brushes.Yellow, 20);
 
-            Write(text);
+            _write(text);
             txt.Inlines.Add(new LineBreak());
+        }
+
+        public void WriteLine(string text, string prefix = "")
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                _writeLine(text, prefix);
+            }
+            else
+            {
+                Dispatcher.Invoke(() => _writeLine(text, prefix));
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
