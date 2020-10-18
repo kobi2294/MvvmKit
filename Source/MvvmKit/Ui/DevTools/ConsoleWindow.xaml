@@ -5,6 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="ConsoleWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style TargetType="{x:Type ScrollBar}"/>
+        <Style TargetType="{x:Type ScrollViewer}"/>
+    </Window.Resources>
     <DockPanel Background="Black">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="4">
             <Button Margin="4" Padding="4" Click="Button_Click">Clear</Button>
