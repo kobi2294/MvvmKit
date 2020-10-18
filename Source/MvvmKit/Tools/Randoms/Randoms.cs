@@ -120,7 +120,7 @@ namespace MvvmKit
             }
         }
 
-        public T OneOf<T>(params T[] options)
+        public T OneOfOptions<T>(params T[] options)
         {
             lock (_lock)
             {
@@ -142,17 +142,17 @@ namespace MvvmKit
         {
             return String.Join(" ",
                 Enumerable.Range(0, wordsCount)
-                    .Select(_ => OneOf(_words)));
+                    .Select(_ => OneOfOptions(_words)));
         }
 
         public string NextFirstName()
         {
-            return OneOf(_firstNames);
+            return OneOfOptions(_firstNames);
         }
 
         public string NextLastName()
         {
-            return OneOf(_lastNames);
+            return OneOfOptions(_lastNames);
         }
 
         public string NextFullName()
@@ -183,7 +183,7 @@ namespace MvvmKit
 
         public string NextLinkUrl()
         {
-            return OneOf(_links);
+            return OneOfOptions(_links);
         }
 
         public char _template(char template)
@@ -212,7 +212,7 @@ namespace MvvmKit
         {
             if (!typeof(T).IsEnum) throw new InvalidOperationException($"{typeof(T).Name} is not an enum");
             var values = Enum.GetValues(typeof(T)).Cast<T>().ToArray();
-            var res = OneOf(values);
+            var res = OneOfOptions(values);
             return res;
         }
 
