@@ -9,7 +9,7 @@
         <Style TargetType="{x:Type ScrollBar}"/>
         <Style TargetType="{x:Type ScrollViewer}"/>
     </Window.Resources>
-    <DockPanel Background="Black">
+    <DockPanel x:Name="dock" Background="Black">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="4">
             <Button Margin="4" Padding="4" Click="Button_Click">Clear</Button>
         </StackPanel>

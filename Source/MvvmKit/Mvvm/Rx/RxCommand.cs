@@ -33,7 +33,9 @@ namespace MvvmKit
         public IRxCommand<TParam> WithCanExecute(IObservable<bool> canExecuteObservable)
         {
             _canExecuteSubscription?.Dispose();
-            _canExecuteSubscription = canExecuteObservable.Subscribe(val =>
+            _canExecuteSubscription = canExecuteObservable
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
             {
                 _canExecute = p => val;
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);

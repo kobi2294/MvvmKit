@@ -27,13 +27,19 @@ namespace MvvmKit
             txt.Text = "";
         }
 
-        public static ConsoleWindow CreateAndShow()
+        public static bool IsConsoleWindowEnabled { get; set; }
+
+        public static ConsoleWindow CreateAndShow(string title = "", Color color = default)
         {
+            if (!IsConsoleWindowEnabled) return null;
+
             var tsc = new TaskCompletionSource<ConsoleWindow>();
 
             Thread thread = new Thread(() =>
             {
                 var win = new ConsoleWindow();
+                win.Title = title;
+                win.dock.Background = new SolidColorBrush(color);
                 win.Show();
 
                 win.Closed += (s, e) => win.Dispatcher.InvokeShutdown();
@@ -70,6 +76,7 @@ namespace MvvmKit
 
         public void Write(string text, Brush foreground = null, int length = 0)
         {
+            if (Dispatcher.HasShutdownStarted) return;
             if (Dispatcher.CheckAccess())
             {
                 _write(text, foreground, length);
@@ -92,6 +99,7 @@ namespace MvvmKit
 
         public void WriteLine(string text, string prefix = "")
         {
+            if (Dispatcher.HasShutdownStarted) return;
             if (Dispatcher.CheckAccess())
             {
                 _writeLine(text, prefix);

@@ -192,6 +192,7 @@
     <Compile Include="Tools\Extensions\RxExtensions.cs" />
     <Compile Include="Tools\Extensions\SerializationExtensions.cs" />
     <Compile Include="Tools\Extensions\StringExtensions.cs" />
+    <Compile Include="Tools\Extensions\TimespanExtensions.cs" />
     <Compile Include="Tools\Extensions\VisualTreeExtensions.cs" />
     <Compile Include="Tools\Algorithms\LisAlgorithm.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Interfaces\IListModifier.cs" />
