@@ -16,10 +16,14 @@ namespace MvvmKit
 
         public abstract ImmutableListWrapper<TRoot, T> Add(params T[] items);
 
-        public abstract ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates);
+        public abstract ImmutableListWrapper<TRoot, T> Remove(Predicate<T> predicate);
 
         public abstract ImmutableListWrapper<TRoot, T> Remove(Func<T, int, bool> predicate);
 
         public abstract ImmutableListWrapper<TRoot, T> AddRange(IEnumerable<T> items);
+
+        public abstract ImmutableListWrapper<TRoot, T> Replace(Func<T, T> projection);
+
+        public abstract ImmutableListWrapper<TRoot, T> Replace(Func<T, int, T> projection);
     }
 }

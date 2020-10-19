@@ -207,6 +207,7 @@
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithListModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithInstanceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListRemoveModifier.cs" />
+    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListReplaceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Wrappers\ListWrapper.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Wrappers\RootWrapper.cs" />
     <Compile Include="Tools\Immutables\Fluent\ImmutableInstanceWrapper.cs" />

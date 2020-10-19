@@ -10,13 +10,13 @@ namespace MvvmKit.Tools.Immutables.Fluent
     internal class ListRemoveModifier<T>: IListModifier<T>
         where T: class, IImmutable
     {
-        private readonly Predicate<T>[] _predicates;
+        private readonly Predicate<T> _predicate;
         private readonly Func<T, int, bool> _indexedPredicate;
         private readonly bool _usesIndex = false;
 
-        public ListRemoveModifier(Predicate<T>[] predicates)
+        public ListRemoveModifier(Predicate<T> predicate)
         {
-            _predicates = predicates;
+            _predicate = predicate;
             _indexedPredicate = null;
             _usesIndex = false;
         }
@@ -24,7 +24,7 @@ namespace MvvmKit.Tools.Immutables.Fluent
         public ListRemoveModifier(Func<T, int, bool> predicate)
         {
             _indexedPredicate = predicate;
-            _predicates = null;
+            _predicate = null;
             _usesIndex = true;
         }
 
@@ -38,10 +38,7 @@ namespace MvvmKit.Tools.Immutables.Fluent
                 current = current.RemoveRange(toRemove);
             } else
             {
-                foreach (var predicate in _predicates)
-                {
-                    current = current.RemoveAll(predicate);
-                }
+                current = current.RemoveAll(_predicate);
             }
 
             return current;

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MvvmKit.Tools.Immutables.Fluent
 {
@@ -60,9 +58,9 @@ namespace MvvmKit.Tools.Immutables.Fluent
         }
 
 
-        public override ImmutableListWrapper<TRoot, T> Remove(params Predicate<T>[] predicates)
+        public override ImmutableListWrapper<TRoot, T> Remove(Predicate<T> predicate)
         {
-            var modifier = new ListRemoveModifier<T>(predicates);
+            var modifier = new ListRemoveModifier<T>(predicate);
             _modifiers.Add(modifier);
             return this;
         }
@@ -74,9 +72,24 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return this;
         }
 
+        public override ImmutableListWrapper<TRoot, T> Replace(Func<T, int, T> projection)
+        {
+            var modifier = new ListReplaceModifier<T>(projection);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
+        public override ImmutableListWrapper<TRoot, T> Replace(Func<T, T> projection)
+        {
+            var modifier = new ListReplaceModifier<T>(projection);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
         public override TRoot Go()
         {
             return _root.Go();
         }
+
     }
 }
