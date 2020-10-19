@@ -33,7 +33,16 @@ namespace ConsoleDemo.Samples.Immutables
                 .Remove(p => p.FirstName == "John")
                 .Find(p => p.Age == 45)
                 .Set(x => x.FirstName, "Yakov")
-                .Set(x => x.Age, 44);
+                .Set(x => x.Age, 44);           
+
+            Print(state);
+
+            state = state
+                .With(x => x.Humans)
+                .Find(p => p.Age == 44)
+                .With(p => p.Friends)
+                .Add(new Person(firstName: "Momo", "Levy", 22))
+                .Replace(p => p.With(x => x.FirstName, x => x.FirstName + "..."));
 
             Print(state);
         }
