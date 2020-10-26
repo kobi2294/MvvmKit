@@ -34,6 +34,8 @@ namespace MvvmKit
 
         public static JToken ToJsonToken(this object source)
         {
+            if (source == null) return JValue.CreateNull();
+
             var serializer = new JsonSerializer();
             serializer.Converters.Add(new StringEnumConverter());
             serializer.TypeNameHandling = TypeNameHandling.Auto;
