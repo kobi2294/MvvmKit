@@ -20,6 +20,7 @@ namespace MvvmKit
             _settings.TypeNameHandling = TypeNameHandling.Auto;
         }
 
+
         public static string ToJson(this object source)
         {
             var type = source.GetType();
