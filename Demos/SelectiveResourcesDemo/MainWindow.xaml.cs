@@ -24,5 +24,10 @@ namespace SelectiveResourcesDemo
         {
             InitializeComponent();
         }
+
+        private void ItemsControlDemo_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

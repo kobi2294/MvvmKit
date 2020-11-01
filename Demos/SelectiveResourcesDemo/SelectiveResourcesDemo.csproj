@@ -92,6 +92,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ItemsControlObservable\ItemsControlDemo.xaml.cs">
+      <DependentUpon>ItemsControlDemo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectManyDemo\ItemModel.cs" />
     <Compile Include="SelectManyDemo\ItemVm.cs" />
     <Compile Include="SelectManyDemo\DownloadedBehaviors\SelectedItemsBehavior.cs" />
@@ -100,6 +103,10 @@
       <DependentUpon>SelectManyDemoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SelectManyDemo\SelectManyDemoVm.cs" />
+    <Page Include="ItemsControlObservable\ItemsControlDemo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

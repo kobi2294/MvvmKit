@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,10 @@ namespace ConsoleDemo
 {
     class Program
     {
-
-        static void Main(string[] args)
+        [STAThread]
+        public static void Main(string[] args)
         {
-            ConsoleDemo.Samples.Immutables.Main.Run();
+            ConsoleDemo.Samples.ObserveItemsSource.Main.Run();
             Console.ReadLine();
         }
     }

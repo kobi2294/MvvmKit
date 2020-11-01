@@ -13,8 +13,13 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace MvvmKit
 {
@@ -639,6 +644,31 @@ namespace MvvmKit
                 await navigation.Clear(region);
                 await navigation.UnregisterRegion(region);
             });
+        }
+
+        #endregion
+
+        #region UI Helpers
+
+        public static IObservable<ImmutableList<T>> ObserveItemsChanged<T>(this ItemsControl control)
+        {
+            return Observable.FromEventPattern<ItemsChangedEventHandler, ItemsChangedEventArgs>(
+                h => control.ItemContainerGenerator.ItemsChanged += h,
+                h => control.ItemContainerGenerator.ItemsChanged -= h)
+                .Select(ep => control.ItemsSource?.Cast<T>()?.ToImmutableList() ?? ImmutableList<T>.Empty);
+        }
+
+        public static IObservable<ImmutableList<T>> ObserveItemsGenerator<T>(this ItemsControl control)
+        {
+            return Observable.FromEventPattern<EventHandler, EventArgs>(
+                h => control.ItemContainerGenerator.StatusChanged += h,
+                h => control.ItemContainerGenerator.StatusChanged -= h)
+                .Select(_ =>
+                    control.ItemContainerGenerator
+                        .Items
+                        .Select(item => control.ItemContainerGenerator.ContainerFromItem(item))
+                        .Cast<T>()
+                        .ToImmutableList());
         }
 
         #endregion

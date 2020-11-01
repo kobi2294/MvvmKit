@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:SelectiveResourcesDemo"
         xmlns:t="clr-namespace:MvvmKit;assembly=MvvmKit"
         xmlns:sm="clr-namespace:SelectiveResourcesDemo.SelectManyDemo"
+        xmlns:ic="clr-namespace:SelectiveResourcesDemo.ItemsControlObservable"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" FontFamily="Consolas"
         >
@@ -20,11 +21,13 @@
         <!--<Rectangle Width="{StaticResource myWidth}" Height="200" VerticalAlignment="Center" HorizontalAlignment="Center"
                    Fill="{StaticResource MyFavoriteBg}"
                    />-->
-        <sm:SelectManyDemoView>
+        <!--<sm:SelectManyDemoView>
             <sm:SelectManyDemoView.DataContext>
                 <sm:SelectManyDemoVm/>
             </sm:SelectManyDemoView.DataContext>
-        </sm:SelectManyDemoView>
-                
+        </sm:SelectManyDemoView>-->
+
+        <ic:ItemsControlDemo/>
+
     </Grid>
 </Window>

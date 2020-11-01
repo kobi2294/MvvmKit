@@ -41,6 +41,7 @@
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -100,6 +101,7 @@
     <Compile Include="Samples\LinqProvider\MyTypeExtensions.cs" />
     <Compile Include="Samples\Lis\LisTest.cs" />
     <Compile Include="Samples\Observables\ObservablesDemo.cs" />
+    <Compile Include="Samples\ObserveItemsSource\Main.cs" />
     <Compile Include="Samples\Permute\Main.cs" />
     <Compile Include="Samples\Reflection\Test.cs" />
     <Compile Include="Samples\Remute\A.cs" />
