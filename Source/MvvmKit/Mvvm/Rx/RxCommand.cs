@@ -22,7 +22,9 @@ namespace MvvmKit
             )
         {
             _canExecuteSubscription?.Dispose();
-            _canExecuteSubscription = canExecuteObservable.Subscribe(val =>
+            _canExecuteSubscription = canExecuteObservable
+                .ObserveOnDispatcher()
+                .Subscribe(val =>
             {
                 _canExecute = p => canExecuteSelector(p, val);
                 CanExecuteChanged?.Invoke(this, EventArgs.Empty);
