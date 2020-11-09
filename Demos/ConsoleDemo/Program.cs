@@ -25,7 +25,7 @@ namespace ConsoleDemo
         [STAThread]
         public static void Main(string[] args)
         {
-            ConsoleDemo.Samples.ObserveItemsSource.Main.Run();
+            ConsoleDemo.Samples.ReactivePuzzle.Main.Run();
             Console.ReadLine();
         }
     }

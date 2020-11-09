@@ -103,6 +103,7 @@
     <Compile Include="Samples\Observables\ObservablesDemo.cs" />
     <Compile Include="Samples\ObserveItemsSource\Main.cs" />
     <Compile Include="Samples\Permute\Main.cs" />
+    <Compile Include="Samples\ReactivePuzzle\Main.cs" />
     <Compile Include="Samples\Reflection\Test.cs" />
     <Compile Include="Samples\Remute\A.cs" />
     <Compile Include="Samples\Remute\B.cs" />
