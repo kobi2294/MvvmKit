@@ -35,6 +35,7 @@ namespace ConsoleDemo.Samples.ReactivePuzzle
             // 2. select many to Observable<(displayId, dashboard?)>
                 .SelectMany(many => many)
             // 3. group by displayId
+
                 .GroupBy(tpl => tpl.displayId)
             // 4. each observable: observable.distinctuntilchanged.where not null
                 .Select(go => go
