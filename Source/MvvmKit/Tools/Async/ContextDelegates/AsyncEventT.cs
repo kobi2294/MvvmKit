@@ -9,6 +9,7 @@ namespace MvvmKit
     public class AsyncEvent<T>: IAsyncEventWithData
     {
         private ContextMulticastFuncTask<T> _handlers;
+        private object _mutex = new object();
 
         public T LatestValue { get; private set; }
 
@@ -16,7 +17,10 @@ namespace MvvmKit
 
         public Task Subscribe(object owner, Func<T, Task> callback)
         {
-            _handlers += (owner, callback);
+            lock (_mutex)
+            {
+                _handlers += (owner, callback);
+            }
             return _onSubscribe(callback);
         }
 
@@ -24,11 +28,17 @@ namespace MvvmKit
         {
             if (callback == null)
             {
-                _handlers -= owner;
+                lock(_mutex)
+                {
+                    _handlers -= owner;
+                }
             }
             else
             {
-                _handlers -= (owner, callback);
+                lock(_mutex)
+                {
+                    _handlers -= (owner, callback);
+                }
             }
             return Tasks.Empty;
         }

@@ -23,9 +23,9 @@ namespace ConsoleDemo
     class Program
     {
         [STAThread]
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            ConsoleDemo.Samples.ReactivePuzzle.Main.Run();
+            await ConsoleDemo.Samples.AsyncEventBug.Main.Run();
             Console.ReadLine();
         }
     }

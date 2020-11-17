@@ -66,6 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Samples\AsyncEventBug\Main.cs" />
     <Compile Include="Samples\AsyncEvent\Main.cs" />
     <Compile Include="Samples\AsyncLocal\AsyncLocalDemo.cs" />
     <Compile Include="Samples\AvlList\Main.cs" />
