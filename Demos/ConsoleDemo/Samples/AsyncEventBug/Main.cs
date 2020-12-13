@@ -65,19 +65,13 @@ namespace ConsoleDemo.Samples.AsyncEventBug
             var consumer1 = new Consumer("First", ConsoleColor.Green);
             var consumer2 = new Consumer("Second", ConsoleColor.Red);
 
-            //await Task.WhenAll(
-            //    consumer1.Start(service),
-            //    consumer2.Start(service)
-            //    );
+            await Task.WhenAll(
+                consumer1.Start(service),
+                consumer2.Start(service)
+                );
 
             //await consumer1.Start(service);
             //await consumer2.Start(service);
-
-            var t1 = consumer1.Start(service);
-            var t2 = consumer2.Start(service);
-
-            await Task.Delay(10);
-
 
 
         }
