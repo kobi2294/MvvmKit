@@ -618,6 +618,19 @@ namespace MvvmKit
                 .Subscribe();
         }
 
+        public static IDisposable SubscribeAsyncSynchronized<T>(this IObservable<T> source, Func<T, Task> action)
+        {
+            var mutex = new AsyncMutex();
+
+            return source.SubscribeAsync(async val =>
+            {
+                using (await mutex.Lock())
+                {
+                    await action(val);
+                }
+            });
+        }
+
         public static ReduxStore<T> EnableEnsureHistory<T>(this ReduxStore<T> store)
             where T : class, IImmutable, new()
         {
