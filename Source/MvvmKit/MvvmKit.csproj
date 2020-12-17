@@ -128,7 +128,9 @@
     <Compile Include="Mvvm\Navigation\Service\RegionServiceFactory.cs" />
     <Compile Include="Mvvm\Rx\Ensure\CommonEnsurers.cs" />
     <Compile Include="Mvvm\Rx\Ensure\EnsureAttribute.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureConditionAttribute.cs" />
     <Compile Include="Mvvm\Rx\Ensure\EnsureContext.cs" />
+    <Compile Include="Mvvm\Rx\Ensure\EnsureIfAttribute.cs" />
     <Compile Include="Mvvm\Rx\Ensure\EnsureManager.cs" />
     <Compile Include="Mvvm\Rx\Ensure\EnsureSessionHistory.cs" />
     <Compile Include="Mvvm\Rx\Ensure\EnsureHistoryItem.cs" />

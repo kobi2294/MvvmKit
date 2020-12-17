@@ -161,7 +161,7 @@ namespace MvvmKit
 
         public Task ShutDown()
         {
-            return _shutDownLazy.Task;
+            return _shutDownLazy.Ensure();
         }
 
         protected void RegisterService<ServiceType>(bool shouldInit = true)

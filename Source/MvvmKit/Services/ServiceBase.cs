@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace MvvmKit
         private AsyncLazyInit _initLazy;
         private AsyncLazyInit _shutDownLazy;
 
+        public Task InitCompleted => _initLazy.CompletionTask;
 
         protected virtual Task OnInit()
         {
@@ -26,7 +28,7 @@ namespace MvvmKit
 
         public Task Init()
         {
-            return _initLazy.Task;
+            return _initLazy.Ensure();
         }
 
         protected virtual Task OnShutDown()
@@ -45,7 +47,7 @@ namespace MvvmKit
 
         public Task ShutDown()
         {
-            return _shutDownLazy.Task;
+            return _shutDownLazy.Ensure();
         }
 
         public ServiceBase(TaskScheduler taskScheduler = null)

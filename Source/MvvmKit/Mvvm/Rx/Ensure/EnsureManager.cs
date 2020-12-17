@@ -12,8 +12,25 @@ namespace MvvmKit
 {
     public static class EnsureManager
     {
+        private class ConditionEntry
+        {
+            public MethodInfo Ensurer { get; set; }
+
+            public Func<EnsureContext, bool> Lambda { get; set; }
+
+            public string ConditionName { get; set; }
+
+            public bool ExpectedValue { get; set; }
+        }
+
         private static ConcurrentDictionary<MethodInfo, Type> _ensureMethods;
         private static ConcurrentDictionary<MethodInfo, Func<EnsureContext, object>> _ensureLambdas;
+
+        private static ConcurrentDictionary<string, MethodInfo> _conditionMethodByName;
+        private static ConcurrentDictionary<string, Func<EnsureContext, bool>> _conditionLambdasByName;
+
+        private static ILookup<MethodInfo, ConditionEntry> _conditionsPerEnsurer;
+
 
         public static bool IsHistoryEnabled { get; set; }
 
@@ -36,6 +53,32 @@ namespace MvvmKit
                     return (method: method, lambda: method.CompileTo<Func<EnsureContext, object>>(argumentEnumerator));
                 })
                 .ToConcurrentDictionary(pair => pair.method, pair => pair.lambda);
+
+            _conditionMethodByName = assemblies
+                .SelectMany(asm => asm.GetTypes())
+                .SelectMany(type => type.GetMethods())
+                .Where(method => IsEnsureCondition(method))
+                .ToConcurrentDictionary(method => method.Name);
+
+
+            _conditionLambdasByName = _conditionMethodByName.Values
+                .Select(method =>
+                {
+                    var argumentEnumerator = ArgumentEnumerators.ForFunc<EnsureContext>(method, (ctxt, type) => ctxt.EntityOfType(type));
+                    return (method: method, lambda: method.CompileTo<Func<EnsureContext, bool>>(argumentEnumerator));
+                })
+                .ToConcurrentDictionary(pair => pair.method.Name, pair => pair.lambda);
+
+            _conditionsPerEnsurer = _ensureMethods.Keys
+                .SelectMany(method => method.GetCustomAttributes<EnsureIfAttribute>().Select(attrib => (method, attrib)))
+                .Select(pair => new ConditionEntry
+                {
+                    Ensurer = pair.method,
+                    ExpectedValue = pair.attrib.Value,
+                    ConditionName = pair.attrib.MethodName,
+                    Lambda = _conditionLambdasByName[pair.attrib.MethodName]
+                })
+                .ToLookup(entry => entry.Ensurer);
 
             _history = new List<EnsureSessionHistory>();
             _historySubject = new BehaviorSubject<ImmutableList<EnsureSessionHistory>>(ImmutableList<EnsureSessionHistory>.Empty);
@@ -67,6 +110,27 @@ namespace MvvmKit
             return true;
         }
 
+        public static bool IsEnsureCondition(MethodInfo method)
+        {
+            // 1. has to be static
+            // 2. has to be decorated with [EnsureCondition]
+            if ((!method.IsStatic) || (!method.HasAttribute<EnsureConditionAttribute>())) return false;
+
+
+            // 3. all parameters must either be immutables or ImmutableList<T> where T is immutable
+            var parameters = method.GetParameters();
+            var allParametersAreImmutables = parameters
+                .Select(prm => prm.ParameterType)
+                .All(type => type.IsImmutableType() || type.IsImmutableListOfImmutables());
+
+            if (!allParametersAreImmutables) return false;
+
+            // 4. the return type must be boolean
+            if (method.ReturnType != typeof(bool)) return false;
+
+            return true;
+        }
+
         private static IEnumerable<MethodInfo> _ensureMethodsForType(Type type)
         {
             return _ensureMethods
@@ -84,6 +148,17 @@ namespace MvvmKit
 
         public static object _callMethod(MethodInfo method, EnsureContext context)
         {
+            // the method should only be called if the conditions apply, so first we allow each condition to run and prevent calling the ensurer
+            var conditions = _conditionsPerEnsurer[method];
+
+            foreach (var condition in conditions)
+            {
+                var res = condition.Lambda(context);
+                if (res != condition.ExpectedValue)
+                    return context.Entity;  // return the original entity of he context
+            }
+
+            // if we have got here, all conditions apply, so we can run the ensurer itself
             var lambda = _ensureLambdas[method];
             var result = lambda(context);
 

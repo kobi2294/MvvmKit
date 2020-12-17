@@ -9,8 +9,13 @@ namespace MvvmKit
     public class AsyncLazyInit
     {
         private readonly object _mutex = new object();
+
         private readonly Func<Task> _initFunc;
-        private Lazy<Task> _lazy;
+
+        private readonly Lazy<Task> _lazy;
+
+        private readonly TaskCompletionSource<bool> _completionTask = new TaskCompletionSource<bool>();
+
 
         public AsyncLazyInit(Func<Task> initFunc)
         {
@@ -18,17 +23,24 @@ namespace MvvmKit
                 throw new ArgumentNullException(nameof(initFunc));
 
             _initFunc = initFunc;
-            _lazy = new Lazy<Task>(_initFunc);
+            _lazy = new Lazy<Task>(_doActualInit);
         }
 
-        public Task Task
+        private async Task _doActualInit()
         {
-            get
-            {
-                lock (_mutex)
-                    return _lazy.Value;
-            }
+            await _initFunc();
+            _completionTask.SetResult(true);
         }
+
+        /// <summary>
+        /// Ensures the init function has started and returns a task that can be awaited for completion
+        /// </summary>
+        public Task Ensure() => _lazy.Value;
+
+        /// <summary>
+        /// returns a task that can be awaited, but does not eagerly start the init function
+        /// </summary>
+        public Task CompletionTask => _completionTask.Task;
 
     }
 }
