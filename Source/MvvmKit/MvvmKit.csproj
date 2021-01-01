@@ -349,6 +349,7 @@
     <Compile Include="Ui\DevTools\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Ui\Helpers\Grid\GridHelper.cs" />
     <Compile Include="Ui\Helpers\ScrollSync\ScrollSync.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelper.cs" />
     <Compile Include="Ui\Helpers\SelectionHelper\SelectionHelperBehavior.cs" />
