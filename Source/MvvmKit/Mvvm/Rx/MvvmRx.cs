@@ -496,7 +496,7 @@ namespace MvvmKit
                 {
                     var finalValue = value(item, val);
                     observer.OnNext(finalValue);
-                }, observer.OnError, observer.OnCompleted));
+                }, observer.OnError));
                 subscriptions.Add(item, subscription);
             }
         }
@@ -597,7 +597,7 @@ namespace MvvmKit
         {
             return Observable
                 .Create((IObserver<T> observer) => _subscribeCollectMany(owner, collection, selector, value, observer))
-                .CompletedBy(owner);
+                .CompletedBy(owner);               
         }
 
         #endregion
