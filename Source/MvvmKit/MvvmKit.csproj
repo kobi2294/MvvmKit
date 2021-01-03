@@ -346,6 +346,7 @@
     <Compile Include="Tools\Weak\WeakFuncT.cs" />
     <Compile Include="Tools\Weak\Weaks.cs" />
     <Compile Include="Ui\Animations\LinearMatrixAnimation.cs" />
+    <Compile Include="Ui\Behaviors\SetStateBehavior.cs" />
     <Compile Include="Ui\Controls\ComboBoxEx.cs" />
     <Compile Include="Ui\DevTools\ConsoleWindow.xaml.cs">
       <DependentUpon>ConsoleWindow.xaml</DependentUpon>
