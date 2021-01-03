@@ -29,6 +29,8 @@ namespace MvvmKit
         private static ConcurrentDictionary<string, MethodInfo> _conditionMethodByName;
         private static ConcurrentDictionary<string, Func<EnsureContext, bool>> _conditionLambdasByName;
 
+        private static ConcurrentDictionary<Type, MethodInfo[]> _ensureMethodsPerType;
+
         private static ILookup<MethodInfo, ConditionEntry> _conditionsPerEnsurer;
 
 
@@ -45,6 +47,8 @@ namespace MvvmKit
                                         .SelectMany(type => type.GetMethods())
                                         .Where(method => IsEnsureMethod(method))
                                         .ToConcurrentDictionary(method => method, method => method.ReturnType);
+
+            _ensureMethodsPerType = new ConcurrentDictionary<Type, MethodInfo[]>();
 
             _ensureLambdas = _ensureMethods.Keys
                 .Select(method =>
@@ -133,9 +137,15 @@ namespace MvvmKit
 
         private static IEnumerable<MethodInfo> _ensureMethodsForType(Type type)
         {
-            return _ensureMethods
-                .Where(pair => type.IsInheritedFrom(pair.Value))
-                .Select(pair => pair.Key);
+            var res = _ensureMethodsPerType.GetOrAdd(type, t =>
+            _ensureMethods
+                .Where(pair => t.IsInheritedFrom(pair.Value))
+                .OrderBy(pair => pair.Key.MetadataToken)
+                .Select(pair => pair.Key)
+                .ToArray()
+                );
+
+            return res;
         }
 
         public static IEnumerable<(EnsureContext context, MethodInfo method)> _createPlan(EnsureContext rootContext)
@@ -166,7 +176,7 @@ namespace MvvmKit
         }
 
         public static T _runCycle<T>(T source, List<EnsureHistoryItem> history)
-            where T: class, IImmutable
+            where T : class, IImmutable
         {
             var rootContext = new EnsureContext(source);
 
@@ -183,9 +193,9 @@ namespace MvvmKit
                     if (history != null)
                     {
                         var item = new EnsureHistoryItem(
-                            ensureMethod: step.method.Name, 
-                            before: source, 
-                            after: changedSource, 
+                            ensureMethod: step.method.Name,
+                            before: source,
+                            after: changedSource,
                             context: step.context
                             );
                         history.Add(item);
@@ -203,7 +213,7 @@ namespace MvvmKit
         }
 
         public static T Ensure<T>(this T source, object action)
-            where T: class, IImmutable
+            where T : class, IImmutable
         {
             var current = source;
             bool success;
