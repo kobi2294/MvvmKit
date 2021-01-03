@@ -86,6 +86,13 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return this;
         }
 
+        public override ImmutableListWrapper<TRoot, T> Upsert<K>(IEnumerable<T> items, Func<T, K> keySelector)
+        {
+            var modifier = new ListUpsertModifier<T, K>(items.ToArray(), keySelector);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
         public override TRoot Go()
         {
             return _root.Go();

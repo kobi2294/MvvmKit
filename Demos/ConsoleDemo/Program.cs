@@ -23,9 +23,9 @@ namespace ConsoleDemo
     class Program
     {
         [STAThread]
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            await ConsoleDemo.Samples.AsyncEventBug.Main.Run();
+            ConsoleDemo.Samples.Immutables.Main.Run();
             Console.ReadLine();
         }
     }

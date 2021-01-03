@@ -45,6 +45,16 @@ namespace ConsoleDemo.Samples.Immutables
                 .Replace(p => p.With(x => x.FirstName, x => x.FirstName + "..."));
 
             Print(state);
+
+            var upsertables = ImmutableList.Create(
+                new Person(firstName: "Adva", lastName: "Hari", age: 55),
+                new Person(firstName: "Shimon", lastName: "Dahan", age: 37));
+
+            state = state
+                .With(x => x.Humans)
+                .Upsert(upsertables, p => p.FirstName + p.LastName);
+
+            Print(state);
         }
 
         public static void TestIf()

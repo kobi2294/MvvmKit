@@ -25,5 +25,7 @@ namespace MvvmKit
         public abstract ImmutableListWrapper<TRoot, T> Replace(Func<T, T> projection);
 
         public abstract ImmutableListWrapper<TRoot, T> Replace(Func<T, int, T> projection);
+
+        public abstract ImmutableListWrapper<TRoot, T> Upsert<K>(IEnumerable<T> items, Func<T, K> keySelector);
     }
 }
