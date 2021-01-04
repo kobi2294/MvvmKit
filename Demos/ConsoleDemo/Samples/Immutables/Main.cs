@@ -55,6 +55,16 @@ namespace ConsoleDemo.Samples.Immutables
                 .Upsert(upsertables, p => p.FirstName + p.LastName);
 
             Print(state);
+
+            state = state
+                .With(x => x.Humans)
+                .PadAfter(8)
+                .PadAfter(10, i => new Person(firstName: "Person " + i))
+                .At(2)
+                .With(x => x.Friends)
+                .PadAfter(4, i => new Person(firstName: "Friend", lastName: i.ToString()));
+
+            Print(state);
         }
 
         public static void TestIf()

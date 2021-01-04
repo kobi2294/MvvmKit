@@ -50,6 +50,13 @@ namespace MvvmKit.Tools.Immutables.Fluent
             return this;
         }
 
+        public override ImmutableListWrapper<TRoot, T> PadAfter(int count, Func<int, T> factory = null)
+        {
+            var modifier = new ListPadAfterModifier<T>(count, factory);
+            _modifiers.Add(modifier);
+            return this;
+        }
+
         public override ImmutableListWrapper<TRoot, T> AddRange(IEnumerable<T> items)
         {
             var modifier = new ListAddModifier<T>(items.ToArray());
