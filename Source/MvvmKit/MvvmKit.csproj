@@ -208,7 +208,7 @@
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListFindInstanceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithListModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\InstanceWithInstanceModifier.cs" />
-    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListPadAfterModifier.cs" />
+    <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListPadModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListRemoveModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListReplaceModifier.cs" />
     <Compile Include="Tools\Immutables\Fluent\Internal Modifiers\ListUpsertModifier.cs" />

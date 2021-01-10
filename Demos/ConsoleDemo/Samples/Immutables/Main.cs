@@ -60,6 +60,7 @@ namespace ConsoleDemo.Samples.Immutables
                 .With(x => x.Humans)
                 .PadAfter(8)
                 .PadAfter(10, i => new Person(firstName: "Person " + i))
+                .PadBefore(13, i => new Person(firstName: "Person Before " + i))
                 .At(2)
                 .With(x => x.Friends)
                 .PadAfter(4, i => new Person(firstName: "Friend", lastName: i.ToString()));

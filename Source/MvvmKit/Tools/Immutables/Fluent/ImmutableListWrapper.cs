@@ -18,6 +18,8 @@ namespace MvvmKit
 
         public abstract ImmutableListWrapper<TRoot, T> PadAfter(int count, Func<int, T> factory = null);
 
+        public abstract ImmutableListWrapper<TRoot, T> PadBefore(int count, Func<int, T> factory = null);
+
         public abstract ImmutableListWrapper<TRoot, T> Remove(Predicate<T> predicate);
 
         public abstract ImmutableListWrapper<TRoot, T> Remove(Func<T, int, bool> predicate);
