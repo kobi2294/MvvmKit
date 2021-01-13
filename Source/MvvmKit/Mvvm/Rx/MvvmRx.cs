@@ -226,7 +226,13 @@ namespace MvvmKit
                 .Subscribe(val =>
             {
                 beforeChange?.Invoke();
-                setter(vm, val);
+                try
+                {
+                    setter(vm, val);
+                } catch
+                {
+                    var x = property;
+                }
             })
                 .DisposedBy(vm);
 
