@@ -16,6 +16,7 @@ namespace MvvmKit
     public class OpenWindowRegionBehavior : RegionBehavior
     {
         private HashSet<Window> _myWindows = new HashSet<Window>();
+        private Action _onClosing = null;
 
         public Style WindowStyle { get; private set; }
 
@@ -28,11 +29,32 @@ namespace MvvmKit
             return this;
         }
 
+        public OpenWindowRegionBehavior WithOnClosing(Action onClosing)
+        {
+            _onClosing = onClosing;
+            return this;
+        }
+
         private Task _ensureWindowOpen(RegionService service)
         {
             if (!service.Hosts.OfType<Window>().Any())
             {
                 var w = new Window();
+
+                w.Unloaded += (s, e) =>
+                {
+                    var action = _onClosing;
+                    _onClosing = null;
+                    action?.Invoke();
+                };
+
+                Application.Current.Exit += (s, e) =>
+                {
+                    var action = _onClosing;
+                    _onClosing = null;
+                    action?.Invoke();
+                };
+
                 _myWindows.Add(w);
                 w.Style = WindowStyle;
                 RegionHost.SetRegion(w, service.Region);
