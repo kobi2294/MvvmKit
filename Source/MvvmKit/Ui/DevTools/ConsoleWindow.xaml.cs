@@ -31,6 +31,8 @@ namespace MvvmKit
 
         public static ConsoleWindow CreateAndShow(string title = "", Color color = default)
         {
+            if (color == default) color = Colors.Black;
+
             if (!IsConsoleWindowEnabled) return null;
 
             var tsc = new TaskCompletionSource<ConsoleWindow>();
@@ -109,6 +111,20 @@ namespace MvvmKit
                 Dispatcher.Invoke(() => _writeLine(text, prefix));
             }
         }
+
+        public void Clear()
+        {
+            if (Dispatcher.HasShutdownStarted) return;
+            if (Dispatcher.CheckAccess())
+            {
+                txt.Text = "";
+            }
+            else
+            {
+                Dispatcher.Invoke(() => txt.Text = "");
+            }
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

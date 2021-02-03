@@ -190,6 +190,22 @@ namespace MvvmKit
             notifier.Dispose();
         }
 
+        void _removeAllItemsFromLookups()
+        {
+            var allNotifiers = _itemToNotifier.Values.ToArray();
+
+            // disconnect from all notifiers
+            allNotifiers.ForEach(notifier => notifier.Changed -= Notifier_Changed);
+
+            // clear all lookups
+            _itemToKey.Clear();
+            _keyToItems.Clear();
+            _itemToNotifier.Clear();
+
+            // dispose all notifiers
+            allNotifiers.ForEach(notifier => notifier.Dispose());
+        }
+
         /// <summary>
         /// remove from key->items lookup
         /// replace item -> key entry
@@ -232,10 +248,7 @@ namespace MvvmKit
                 (itemsSource as INotifyCollectionChanged).CollectionChanged -= ItemsSource_CollectionChanged;
             }
 
-            foreach (var item in itemsSource)
-            {
-                _removeItemFromLookups(item);
-            }
+            _removeAllItemsFromLookups();
         }
 
         /// <summary>
@@ -323,11 +336,12 @@ namespace MvvmKit
                 _dettachFromListBox();
 
                 // improvisation to make sure we call the bulk update only if there is a bulk of changes, and the listbox supports it
-                if ((_listBox is FasterMultiSelectListBox mlb) && 
+                if ((_listBox is FasterMultiSelectListBox mlb) &&
                     ((diff.Added.Count > 1) || (diff.Removed.Count > 1)))
                 {
                     mlb.SetSelectedItems(selectedItems);
-                } else
+                }
+                else
                 {
                     (_listBox.SelectedItems as ObservableCollection<object>).ApplyDiff(diff);
                 }
@@ -365,7 +379,7 @@ namespace MvvmKit
                 var casted = _cmdCast(selectedValues);
                 _command.Execute(casted);
             }
-            
+
 
         }
 
@@ -392,12 +406,17 @@ namespace MvvmKit
         // A2. Items Source collection change event
         private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            // due to race conditions, it is possible that the items source was replaced and only then the event was fired, 
+            // if that is the case, we should not respond to this event
+            if (sender != _itemsSource) return;
+
+            // if we got here, we are truely listening to the sender, so we shoudl respond to it.
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                 case NotifyCollectionChangedAction.Remove:
                 case NotifyCollectionChangedAction.Replace:
-                    foreach (var item in e.OldItems?.Cast<object>()?.ToArray()??Enumerable.Empty<object>())
+                    foreach (var item in e.OldItems?.Cast<object>()?.ToArray() ?? Enumerable.Empty<object>())
                     {
                         _removeItemFromLookups(item);
                     }
