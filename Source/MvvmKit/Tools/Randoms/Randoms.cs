@@ -97,7 +97,11 @@ namespace MvvmKit
             {
                 _rand = new Random(Randoms.Default.Next(0, int.MaxValue));
             }
+        }
 
+        public Randoms(int seed)
+        {
+            _rand = new Random(seed);
         }
 
 
@@ -186,6 +190,12 @@ namespace MvvmKit
             return OneOfOptions(_links);
         }
 
+        public Guid NextGuid()
+        {
+            var val = FromTemplate("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            return Guid.Parse(val);
+        }
+
         public char _template(char template)
         {
             lock (_lock)
@@ -198,6 +208,12 @@ namespace MvvmKit
 
                 if (template == 'A')
                     return (char)('A' + _rand.Next(26));
+
+                if (template == 'X')
+                    return Next(0, 16).ToString("X").ToUpper()[0];
+
+                if (template == 'x')
+                    return Next(0, 16).ToString("X").ToLower()[0];
 
                 return template;
             }

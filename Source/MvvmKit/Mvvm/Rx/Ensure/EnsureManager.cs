@@ -217,6 +217,7 @@ namespace MvvmKit
         {
             var current = source;
             bool success;
+            int counter = 0;
 
             var history = IsHistoryEnabled ? new List<EnsureHistoryItem>() : null;
 
@@ -225,6 +226,12 @@ namespace MvvmKit
                 var next = _runCycle(current, history);
                 success = ReferenceEquals(next, current);
                 current = next;
+                counter++;
+
+                if (counter > 100)
+                {
+                    Debug.WriteLine("ENSURE WARNING, infinite loop suspected");
+                }
             } while (!success);
 
             if (IsHistoryEnabled)
