@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmKitExtension", "Extensi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvvmKitAppSample", "Extensions\MvvmKitAppSample\MvvmKitAppSample.csproj", "{19672FFA-4527-45B5-85EA-0A4618224125}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagalDemo", "MagalDemo\MagalDemo.csproj", "{9F97CAF1-8D03-46BA-A598-58643BC49269}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,14 @@ Global
 		{19672FFA-4527-45B5-85EA-0A4618224125}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19672FFA-4527-45B5-85EA-0A4618224125}.Release|x86.ActiveCfg = Release|x86
 		{19672FFA-4527-45B5-85EA-0A4618224125}.Release|x86.Build.0 = Release|x86
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F97CAF1-8D03-46BA-A598-58643BC49269}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +87,7 @@ Global
 		{FCF6FF87-A5FD-4FCA-881A-954BFD243B7B} = {DA873BBD-9C18-4401-8821-57DB17DF16FE}
 		{3C30CB9A-AC81-4D5E-96AD-DF00EA6FF82B} = {B60BF0F6-17AF-44ED-A561-7A053183B188}
 		{19672FFA-4527-45B5-85EA-0A4618224125} = {B60BF0F6-17AF-44ED-A561-7A053183B188}
+		{9F97CAF1-8D03-46BA-A598-58643BC49269} = {DA873BBD-9C18-4401-8821-57DB17DF16FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3375F479-F225-49C7-92F5-F618857DD1C2}
