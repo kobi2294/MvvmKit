@@ -29,6 +29,18 @@ namespace MagalDemo
             p = p.With(x => x.LastName, "Cohen");
             p = p.With(x => x.Age, q => q.Age + 1);
             p = p.With(x => x.Aliases, q => q.Aliases.Add("Jonathan"));
+
+            // creates 2 Person objects
+            p = p.With(x => x.FirstName, "Paul")
+                 .With(x => x.LastName, "McCartney");
+
+            // creates 1 wrapper object and finally generates a Person with all the changes at once
+            p = p.Set(x => x.FirstName, "Paul")
+                .Set(x => x.LastName, "McCartney")
+                .With(x => x.MainAddress)
+                .Set(x => x.City, "Haifa")
+                .Go();
+                
         }
 
         private static IEnumerable<Person> _myPersonCreator()

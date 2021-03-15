@@ -148,12 +148,14 @@ namespace MvvmKit
             return res;
         }
 
-        public static IEnumerable<(EnsureContext context, MethodInfo method)> _createPlan(EnsureContext rootContext)
+        public static IEnumerable<(int index, EnsureContext context, MethodInfo method)> _createPlan(EnsureContext rootContext)
         {
             var allContexts = rootContext.FlattenSubContexts();
 
-            return allContexts.SelectMany(ctxt => _ensureMethodsForType(ctxt.Entity.GetType())
-                                                        .Select(method => (context: ctxt, method: method)));
+            return allContexts
+                .SelectMany(ctxt => _ensureMethodsForType(ctxt.Entity.GetType())
+                                                        .Select(method => (context: ctxt, method: method)))
+                .Select((pair, index) => (index: index, context: pair.context, method: pair.method));
         }
 
         public static object _callMethod(MethodInfo method, EnsureContext context)

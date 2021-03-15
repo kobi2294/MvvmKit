@@ -51,6 +51,29 @@ namespace MvvmKit
             var comparer = isEqual.ToEqualityComparer();
             return source.DistinctUntilChanged(comparer);
         }
+
+        public static IObservable<T> PublishAndConnect<T>(this IObservable<T> source, INotifyDisposable owner, T initialValue)
+        {
+            var res = source
+                .Publish(initialValue);
+
+            res
+                .Connect()
+                .DisposedBy(owner);
+
+            return res;
+        }
+
+        public static IObservable<T> PublishAndConnect<T>(this IObservable<T> source, INotifyDisposable owner)
+        {
+            var res = source.Publish();
+            res.Connect()
+                .DisposedBy(owner);
+
+            return res;
+        }
+
+
     }
 
 }
