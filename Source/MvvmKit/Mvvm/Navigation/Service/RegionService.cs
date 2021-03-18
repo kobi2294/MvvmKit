@@ -22,7 +22,7 @@ namespace MvvmKit
         }
 
         private async Task<TVM> _navigateTo<TVM>(object param = null)
-            where TVM: ComponentBase
+            where TVM : ComponentBase
         {
             var entry = RegionEntry.Create<TVM>(param);
             var vm = await _navigateTo(entry);
@@ -43,7 +43,7 @@ namespace MvvmKit
         }
 
         public Task<TVM> NavigateTo<TVM>(object param = null)
-            where TVM: ComponentBase
+            where TVM : ComponentBase
         {
             return Run(() =>
             {
@@ -62,7 +62,7 @@ namespace MvvmKit
         }
 
         public Task<T> RunDialog<TVM, T>(object param = null)
-            where TVM: DialogBase<T> 
+            where TVM : DialogBase<T>
         {
             return Run(async () =>
             {
@@ -219,10 +219,7 @@ namespace MvvmKit
             _hosts.Add(cc);
 
             // remember to remove it when it is unloaded
-            cc.Unloaded += (s, e) =>
-            {
-                RemoveHost(cc);
-            };
+            cc.Unloaded += _onHostUnloaded;
 
             // for window objects, unload is not enough, so we also listen to closed
             if (cc is Window w)
@@ -234,6 +231,29 @@ namespace MvvmKit
             }
 
             ChangeHostContentProperty(cc, null, RegionHost.GetContentProperty(cc));
+        }
+
+        private void _onHostUnloaded(object sender, RoutedEventArgs e)
+        {
+            var cc = sender as ContentControl;
+            if (cc != null)
+            {
+                // catering for the chance that the content control may be "reloaded" we are prepaired to return it to the hosts collection
+                cc.Unloaded -= _onHostUnloaded;
+                cc.Loaded += _onHostLoaded;
+                RemoveHost(cc);
+            }
+        }
+
+        private void _onHostLoaded(object sender, RoutedEventArgs e)
+        {
+            var cc = sender as ContentControl;
+            if (cc != null)
+            {
+                cc.Loaded -= _onHostLoaded;
+                AddHost(cc);
+                cc.Unloaded += _onHostUnloaded;
+            }
         }
 
         internal void RemoveHost(ContentControl cc)
@@ -433,7 +453,8 @@ namespace MvvmKit
                         await vm.RestoreState(restorer);
                         state.Clear();
                     }
-                } else
+                }
+                else
                 {
                     await vm.NewState();
                 }
@@ -450,7 +471,7 @@ namespace MvvmKit
 
             // call behaviors after navigation
             await Task.WhenAll(
-                _invokeOnAllBehaviors(b => b.AfterNavigation), 
+                _invokeOnAllBehaviors(b => b.AfterNavigation),
                 _invokeOnAllHostBehaviors(b => b.AfterNavigation)
                 );
 
