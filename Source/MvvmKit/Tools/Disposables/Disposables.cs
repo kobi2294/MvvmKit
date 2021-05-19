@@ -24,17 +24,28 @@ namespace MvvmKit
                 throw new ArgumentException("Can not register Task for late disposal", nameof(child));
             }
 
-            disposer.Disposing += (s, e) => child?.Dispose();
+            EventHandler handler = null;
+            handler = (s, e) =>
+            {
+                child?.Dispose();
+                disposer.Disposing -= handler;
+            };
+
+            disposer.Disposing += handler;
             return child;
         }
 
         public static C AllDisposedBy<C>(this C children, INotifyDisposable disposer)
             where C : IEnumerable<IDisposable>
         {
-            disposer.Disposing += (s, e) =>
+            EventHandler handler = null;
+            handler = (s, e) =>
             {
                 children.ForEach(x => x.Dispose());
+                disposer.Disposing -= handler;
             };
+
+            disposer.Disposing += handler;
             return children;
         }
 

@@ -691,7 +691,5 @@ namespace MvvmKit
         }
 
         #endregion
-
-
     }
 }
