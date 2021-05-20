@@ -80,6 +80,8 @@
     <Compile Include="Samples\Diff\Main.cs" />
     <Compile Include="Samples\Disposables\CallDisposableWithSelfAndData.cs" />
     <Compile Include="Samples\Disposables\DisposableWithCallback.cs" />
+    <Compile Include="Samples\Disposables\Main.cs" />
+    <Compile Include="Samples\Disposables\NotifyDisposableImpl.cs" />
     <Compile Include="Samples\Disposables\OneTimeCalc.cs" />
     <Compile Include="Samples\Dynamic\Dynamic.cs" />
     <Compile Include="Samples\Dynamic\IPoco.cs" />

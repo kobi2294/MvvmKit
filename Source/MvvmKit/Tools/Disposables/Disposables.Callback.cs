@@ -8,7 +8,7 @@ namespace MvvmKit
 {
     public static partial class Disposables
     {
-        public static IDisposable Call(Action action)
+        public static INotifyDisposable Call(Action action)
         {
             return new Callback(action);
         }

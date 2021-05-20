@@ -8,9 +8,13 @@ namespace MvvmKit
 {
     public class BaseDisposable : INotifyDisposable
     {
-        public bool IsDisposed { get; private set; } = false;
+        private INotifyDisposable _handler = MvvmKit.Disposables.Notifier();
 
-        public event EventHandler Disposing;
+        public bool IsDisposed => _handler.IsDisposed;
+
+        public void Attach(IDisposable child, bool keepAlive = false) => _handler.Attach(child, keepAlive);
+
+        public void Dettach(IDisposable child) => _handler.Dettach(child);
 
         public void Validate()
         {
@@ -32,11 +36,9 @@ namespace MvvmKit
 
         public void Dispose()
         {
-            Validate();
-            IsDisposed = true;
+            if (IsDisposed) return;
+            _handler.Dispose();
             OnDisposed();
-            Disposing?.Invoke(this, EventArgs.Empty);
-            Disposing = null;
         }
     }
 }

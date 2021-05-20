@@ -410,14 +410,15 @@ namespace MvvmKit
             {
                 owner.Observe<TProp>(propInfo.Name, val => observer.OnNext(val));
 
-                EventHandler handler = (s, e) => observer.OnCompleted();
-                owner.Disposing += handler;
+                var handler = Disposables.Call(() => observer.OnCompleted());
+                owner.Attach(handler);
+
                 observer.OnNext(getter(owner));
 
                 return Disposables.Call(() =>
                 {
                     owner.Unobserve(propInfo.Name, owner);
-                    owner.Disposing -= handler;
+                    owner.Dettach(handler);
                 });
             }).ObserveOnDispatcher();
         }

@@ -25,7 +25,7 @@ namespace ConsoleDemo
         [STAThread]
         public static void Main(string[] args)
         {
-            ConsoleDemo.Samples.Immutables.Main.Run();
+            ConsoleDemo.Samples.Disposables.Main.Run();
             Console.ReadLine();
         }
     }

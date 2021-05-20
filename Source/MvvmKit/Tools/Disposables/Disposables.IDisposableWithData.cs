@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvvmKit
 {
-    public interface IDisposableWithData : IDisposable
+    public interface IDisposableWithData : INotifyDisposable
     {
         object Data { get; }
     }

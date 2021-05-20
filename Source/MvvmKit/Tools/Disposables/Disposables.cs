@@ -11,6 +11,8 @@ namespace MvvmKit
     {
         public static IDisposable Empty { get; } = Disposables.Call(() => { });
 
+        public static INotifyDisposable Notifier() => new NotifyDisposableHandler();
+
         public static BaseDisposableWithData<T> WithData<T>(T data)
         {
             return new BaseDisposableWithData<T>(data);
@@ -24,28 +26,18 @@ namespace MvvmKit
                 throw new ArgumentException("Can not register Task for late disposal", nameof(child));
             }
 
-            EventHandler handler = null;
-            handler = (s, e) =>
-            {
-                child?.Dispose();
-                disposer.Disposing -= handler;
-            };
+            disposer.Attach(child);
 
-            disposer.Disposing += handler;
             return child;
         }
 
         public static C AllDisposedBy<C>(this C children, INotifyDisposable disposer)
             where C : IEnumerable<IDisposable>
         {
-            EventHandler handler = null;
-            handler = (s, e) =>
+            foreach (var item in children)
             {
-                children.ForEach(x => x.Dispose());
-                disposer.Disposing -= handler;
-            };
-
-            disposer.Disposing += handler;
+                disposer.Attach(item);
+            }
             return children;
         }
 
@@ -60,16 +52,17 @@ namespace MvvmKit
                     return Disposables.Empty;
                 }
 
-                EventHandler handler = (s, e) =>
+                var handler = Disposables.Call(() =>
                 {
                     if (lastValue != null) observer.OnNext(lastValue());
                     observer.OnCompleted();
-                };
+                });
 
-                disposable.Disposing += handler;
+                disposable.Attach(handler, keepAlive: true);
+
                 return Disposables.Call(() =>
                 {
-                    disposable.Disposing -= handler;
+                    disposable.Dettach(handler);
                 });
             });
         }
@@ -78,6 +71,14 @@ namespace MvvmKit
         {
             var completer = disposable.AsObservable<bool>(() => true);
             return source.TakeUntil(completer);
+        }
+
+        public static INotifyDisposable WhenDisposed(this INotifyDisposable source, Action action)
+        {
+            var call = Disposables.Call(action);
+            source.Attach(call, keepAlive: true);
+
+            return source;
         }
 
     }

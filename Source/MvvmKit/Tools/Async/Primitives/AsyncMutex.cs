@@ -26,18 +26,18 @@ namespace MvvmKit
 
     public class AsyncMutex
     {
-        private IDisposable _currentToken;
-        private Queue<DeferredTask<IDisposable>> _requests;
+        private INotifyDisposable _currentToken;
+        private Queue<DeferredTask<INotifyDisposable>> _requests;
         private object _mutex;
 
         public AsyncMutex()
         {
             _currentToken = null;
-            _requests = new Queue<DeferredTask<IDisposable>>();
+            _requests = new Queue<DeferredTask<INotifyDisposable>>();
             _mutex = new object();
         }
 
-        public Task<IDisposable> Lock()
+        public Task<INotifyDisposable> Lock()
         {
             //if (we are not locked) 
             //{

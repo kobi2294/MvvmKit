@@ -9,8 +9,8 @@ namespace MvvmKit
     public class AsyncSemaphore
     {
         private object _mutex;
-        private HashSet<IDisposable> _currentTokens;
-        private Queue<DeferredTask<IDisposable>> _queue;
+        private HashSet<INotifyDisposable> _currentTokens;
+        private Queue<DeferredTask<INotifyDisposable>> _queue;
 
         public int LocksLimit { get; private set; }
 
@@ -27,11 +27,11 @@ namespace MvvmKit
         {
             LocksLimit = locksLimit;
             _mutex = new object();
-            _currentTokens = new HashSet<IDisposable>();
-            _queue = new Queue<DeferredTask<IDisposable>>();
+            _currentTokens = new HashSet<INotifyDisposable>();
+            _queue = new Queue<DeferredTask<INotifyDisposable>>();
         }
 
-        public Task<IDisposable> Lock()
+        public Task<INotifyDisposable> Lock()
         {
             lock(_mutex)
             {
@@ -53,7 +53,7 @@ namespace MvvmKit
         {
             lock (_mutex)
             {
-                _currentTokens.Remove(token);
+                _currentTokens.Remove((INotifyDisposable)token);
 
                 while ((_queue.Any()) && (LocksCount < LocksLimit))
                 {
