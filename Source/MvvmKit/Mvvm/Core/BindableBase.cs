@@ -22,6 +22,18 @@ namespace MvvmKit
 
         public void Dettach(IDisposable child) => _handler.Dettach(child);
 
+        public void AttachMany<T>(IEnumerable<T> children, bool keepAlive = false)
+            where T : IDisposable
+        {
+            _handler.AttachMany(children, keepAlive);
+        }
+
+        public void DettachMany<T>(IEnumerable<T> children)
+            where T : IDisposable
+        {
+            _handler.DettachMany(children);
+        }
+
         public void Validate()
         {
             if (IsDisposed)
@@ -254,6 +266,7 @@ namespace MvvmKit
         {
             Unobserve(property.GetName(), this, action);
         }
+
         #endregion
     }
 }

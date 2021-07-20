@@ -27,8 +27,19 @@ namespace ConsoleDemo.Samples.Disposables
                     MvvmKit.Disposables.Call(() =>
                     {
                         Console.WriteLine("Item 3 in list disposed");
+                    }),
+                    MvvmKit.Disposables.Call(() =>
+                    {
+                        Console.WriteLine("This will be removed and should actually not be disposed");
                     })
                 }.AllDisposedBy(dsource);
+
+                dl.RemoveAt(dl.Count - 1);
+
+                dl.Add(MvvmKit.Disposables.Call(() =>
+                {
+                    Console.WriteLine("Tricky item, since it is added after calling All Disposed By");
+                }));
 
                 var ob = dsource.AsObservable(() => "42!!!");
 
@@ -41,8 +52,6 @@ namespace ConsoleDemo.Samples.Disposables
                 })
                 .WhenDisposed(() => Console.WriteLine("and responding to it"))
                 .DisposedBy(dsource);
-
-                
             }
 
         }

@@ -34,10 +34,8 @@ namespace MvvmKit
         public static C AllDisposedBy<C>(this C children, INotifyDisposable disposer)
             where C : IEnumerable<IDisposable>
         {
-            foreach (var item in children)
-            {
-                disposer.Attach(item);
-            }
+            disposer.AttachMany(children);
+
             return children;
         }
 
